@@ -1,55 +1,43 @@
 import wx
 from Plugin.Main.src import Functionality
-from Plugin.Modules.Counting.UI.CountingUI import CountingPanel
+from Plugin.Modules.Counting.UI.CountingUI import CountingTab
+from Plugin.Modules.LeafAnnotation.UI.LeafAnnotationUI import LeafAnnotationTab
+from Plugin.Modules.Tray.UI.TrayAnalysisUI import TrayTab
+from Plugin.Modules.DataExtraction.UI.DataExtractionUI import DataExtractionTab
 
 
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, wx.ID_ANY,
-                          "Phenotiki")
+        wx.Frame.__init__(self, None, title="Information", size=(1200, 700))
+        p = wx.Panel(self)
+        nb = wx.Notebook(p)
+        self.mainTab = MainTab(nb, self)
+        self.countingTab = CountingTab(nb, self)
+        self.leafTab = LeafAnnotationTab(nb, self)
+        self.trayTab = TrayTab(nb, self)
+        self.dataExTab = DataExtractionTab(nb, self)
+        nb.AddPage(self.mainTab, "Main")
+        nb.AddPage(self.countingTab, "Leaf Counting")
+        nb.AddPage(self.leafTab, "Leaf Annotation")
+        nb.AddPage(self.trayTab, "Tray Analysis")
+        nb.AddPage(self.dataExTab, "Data Extraction")
+        sizer = wx.BoxSizer()
+        sizer.Add(nb, 1, wx.EXPAND)
+        p.SetSizer(sizer)
 
-        self.mainPanel = MainPanel(self)
-        self.countingPanel = CountingPanel(self)
-        self.countingPanel.Hide()
-
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.mainPanel, 1, wx.EXPAND)
-        self.sizer.Add(self.countingPanel, 1, wx.EXPAND)
-        self.SetSizer(self.sizer)
-
-        menubar = wx.MenuBar()
-        fileMenu = wx.Menu()
-        switch_panels_menu_item = fileMenu.Append(wx.ID_ANY,
-                                                  "Counting Panel",
-                                                  "Test text")
-        self.Bind(wx.EVT_MENU, self.onSwitchPanels,
-                  switch_panels_menu_item)
-        menubar.Append(fileMenu, '&Modules')
-        self.SetMenuBar(menubar)
-
-    def onSwitchPanels(self, event):
-        """"""
-        if self.mainPanel.IsShown():
-            self.SetTitle("Main Panel")
-            self.mainPanel.Hide()
-            self.countingPanel.Show()
-        else:
-            self.SetTitle("Counting")
-            self.mainPanel.Show()
-            self.countingPanel.Hide()
-        self.Layout()
-
-
-class MainPanel(wx.Panel):
-    def __init__(self,parent):
+class MainTab(wx.Panel):
+    def __init__(self, parent, mainFrame):
         wx.Panel.__init__(self, parent=parent)
-        self.countingPanel = CountingPanel(self)
-        self.countingPanel.Hide()
-        headerText = wx.StaticText(self, label="Phenotiki", pos=(20,20))
+        self._mainFrame = mainFrame
+        headerText = wx.StaticText(self, label="Main Page", pos=(20,20))
+
+    def OnClick(self, event):
+        # I use the main frame to access the instance of class TabTwo.
+        a = self._mainFrame.tab2.getTab2info()
+        print("a")
 
 
 if __name__ == "__main__":
-    app = wx.App(False)
-    frame = MainFrame()
-    frame.Show()
+    app = wx.App()
+    MainFrame().Show()
     app.MainLoop()
