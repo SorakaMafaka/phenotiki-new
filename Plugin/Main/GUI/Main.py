@@ -1,35 +1,55 @@
 import wx
-import os, sys
-from Plugin.Main.src import *
-
-
-class PhenotikiApp(wx.App):
-    def __init__(self):
-        super().__init__(clearSigInt=True)
-
-        self.initFrame()
-
-    def initFrame(self):
-        frame = MainFrame(parent=None, title="Phenotiki", pos = (200, 200))
-        frame.Show()
+from Plugin.Main.src import Functionality
+from Plugin.Modules.Counting.UI.CountingUI import CountingPanel
 
 
 class MainFrame(wx.Frame):
-    def __init__(self, parent, title, pos):
-        super().__init__(parent=parent, title=title, pos=pos)
-        self.OnInit()
+    def __init__(self):
+        wx.Frame.__init__(self, None, wx.ID_ANY,
+                          "Phenotiki")
 
-    def OnInit(self):
-        panel = MainPanel(parent=self)
+        self.mainPanel = MainPanel(self)
+        self.countingPanel = CountingPanel(self)
+        self.countingPanel.Hide()
+
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer.Add(self.mainPanel, 1, wx.EXPAND)
+        self.sizer.Add(self.countingPanel, 1, wx.EXPAND)
+        self.SetSizer(self.sizer)
+
+        menubar = wx.MenuBar()
+        fileMenu = wx.Menu()
+        switch_panels_menu_item = fileMenu.Append(wx.ID_ANY,
+                                                  "Counting Panel",
+                                                  "Test text")
+        self.Bind(wx.EVT_MENU, self.onSwitchPanels,
+                  switch_panels_menu_item)
+        menubar.Append(fileMenu, '&Modules')
+        self.SetMenuBar(menubar)
+
+    def onSwitchPanels(self, event):
+        """"""
+        if self.mainPanel.IsShown():
+            self.SetTitle("Panel Two Showing")
+            self.mainPanel.Hide()
+            self.countingPanel.Show()
+        else:
+            self.SetTitle("Panel One Showing")
+            self.mainPanel.Show()
+            self.countingPanel.Hide()
+        self.Layout()
 
 
 class MainPanel(wx.Panel):
     def __init__(self,parent):
-        super().__init__(parent=parent)
-
-        headerText = wx.StaticText(self, id=wx.ID_ANY, label="Phenotiki", pos=(20, 20))
+        wx.Panel.__init__(self, parent=parent)
+        self.countingPanel = CountingPanel(self)
+        self.countingPanel.Hide()
+        headerText = wx.StaticText(self, label="Phenotiki", pos=(20,20))
 
 
 if __name__ == "__main__":
-    app = PhenotikiApp()
+    app = wx.App(False)
+    frame = MainFrame()
+    frame.Show()
     app.MainLoop()
