@@ -11,11 +11,15 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, None, title="Information", size=(1200, 700))
         p = wx.Panel(self)
         nb = wx.Notebook(p)
+
+        # Add Modules
         self.mainTab = MainTab(nb, self)
         self.countingTab = CountingTab(nb, self)
         self.leafTab = LeafAnnotationTab(nb, self)
         self.trayTab = TrayTab(nb, self)
         self.dataExTab = DataExtractionTab(nb, self)
+
+        # Add Module Tabs
         nb.AddPage(self.mainTab, "Main")
         nb.AddPage(self.countingTab, "Leaf Counting")
         nb.AddPage(self.leafTab, "Leaf Annotation")
@@ -25,11 +29,12 @@ class MainFrame(wx.Frame):
         sizer.Add(nb, 1, wx.EXPAND)
         p.SetSizer(sizer)
 
+
 class MainTab(wx.Panel):
     def __init__(self, parent, mainFrame):
         wx.Panel.__init__(self, parent=parent)
         self._mainFrame = mainFrame
-        headerText = wx.StaticText(self, label="Main Page", pos=(20,20))
+        headerText = wx.StaticText(self, label="Main Page", pos=(20, 20))
 
 
 if __name__ == "__main__":

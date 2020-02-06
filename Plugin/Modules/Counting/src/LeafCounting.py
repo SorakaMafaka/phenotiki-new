@@ -1,7 +1,6 @@
 from typing import List, Any
 import os  # Used to get absolute current working directory
 import numpy
-import wx
 import struct
 
 
