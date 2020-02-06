@@ -30,11 +30,11 @@ class MainFrame(wx.Frame):
     def onSwitchPanels(self, event):
         """"""
         if self.mainPanel.IsShown():
-            self.SetTitle("Panel Two Showing")
+            self.SetTitle("Main Panel")
             self.mainPanel.Hide()
             self.countingPanel.Show()
         else:
-            self.SetTitle("Panel One Showing")
+            self.SetTitle("Counting")
             self.mainPanel.Show()
             self.countingPanel.Hide()
         self.Layout()
