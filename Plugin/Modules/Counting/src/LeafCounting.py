@@ -37,3 +37,9 @@ class LeafCounting:
                                  'CategoricalField', 'Group', ...,
                                  'Fields', 'ProjectedLeafArea', ...,
                                  'TimeFeature', '')  # unix - delta
+
+    def leafCounting(self,Dataset,Name):
+        Dataset = self.Dataset
+        if 'Name' in locals():
+            self.properties.experimentName = Name
+        internalListener: object = listener(object, 'ComputationInProgress', )
