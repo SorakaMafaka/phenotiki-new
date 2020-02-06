@@ -38,6 +38,12 @@ class LeafCounting:
                                  'TimeFeature' : ''}  # unix - delta
 
 ##Matts function
+    def leafCounting(self,Dataset,Name):
+        Dataset = self.Dataset
+        if 'Name' in locals():
+            self.properties.experimentName = Name
+        internalListener: object = listener(object, 'ComputationInProgress', )
+    # Not finished
 
     def extractingImagePatches(self, IDX):
         ##LogPolar Reprocessing#
