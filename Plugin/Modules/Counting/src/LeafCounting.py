@@ -7,7 +7,7 @@ import struct
 
 class LeafCounting():
     property()  # Transient doesn't exist in Python, TODO: https://stackoverflow.com/questions/6313421/can-i-mark-variables-as-transient-so-they-wont-be-pickled
-    Dataset = struct()  # Not sure if correct?
+    Dataset = struct  # Not sure if correct?
     InternalListener: []
     property
 
