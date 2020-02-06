@@ -16,32 +16,30 @@ class LeafCounting:
 
     def properties(self):
         experimentName: str = 'noname'
-        parameters = struct.pack('PatchSize', 19, ...,
-                                 'RatioCurveWindowWidth', 20, ...,
-                                 'LogPolarPoolingBands', 5, ...,
-                                 'CartesianPoolingBands', 3, ...,
-                                 'PoolingCallback', max, ...,
-                                 'LogPolarNormalization', 0, ...,  # it means dynamic
-                                 'CartesianNormalization', 100, ...,
-                                 'CartesianFeatures', True, ...,
-                                 'LogPolarFeatures', True, ...,
-                                 'DictionarySize', 50, ...,
-                                 'PoolingShifts', 4, ...,
-                                 'SVMMatrixNormalization', 'zscore', ...,
-                                 'Fast', False, ...,
-                                 'CacheDirectory', print(self.currentDirectory), ...,
-                                 'Autosave', True, ...,
-                                 'SVR_OPT', struct.pack('C', 1, 'gamma', 0.003, 'epsilon', 1), ...,
-                                 'RF_OPT', struct.pack('NumTrees', 100, 'MinLeafSize', 5), ...,
-                                 'CategoricalField', 'Group', ...,
-                                 'Fields', 'ProjectedLeafArea', ...,
-                                 'TimeFeature', '')  # unix - delta
+        parameters = {'PatchSize': 19,
+                                 'RatioCurveWindowWidth': 20,
+                                 'LogPolarPoolingBands': 5,
+                                 'CartesianPoolingBands': 3,
+                                 'PoolingCallback': max,
+                                 'LogPolarNormalization': 0,  # it means dynamic
+                                 'CartesianNormalization' : 100,
+                                 'CartesianFeatures' : True,
+                                 'LogPolarFeatures': True,
+                                 'DictionarySize' : 50,
+                                 'PoolingShifts' : 4,
+                                 'SVMMatrixNormalization' : 'zscore',
+                                 'Fast': False,
+                                 'CacheDirectory': print(self.currentDirectory),
+                                 'Autosave': True,
+                                 'SVR_OPT' : {'C' : 1, 'gamma' : 0.003, 'epsilon' : 1},
+                                 'RF_OPT' : {'NumTrees' : 100, 'MinLeafSize' : 5},
+                                 'CategoricalField' : 'Group',
+                                 'Fields' : 'ProjectedLeafArea',
+                                 'TimeFeature' : ''}  # unix - delta
 
-   # def getPar(self, obj, field):
-    #    v = getattr(obj, field)
-     #   return v
+##Matts function
 
-    def extractingImagePatches(self, obj, IDX):
+    def extractingImagePatches(self, IDX):
         ##LogPolar Reprocessing#
-        if (getattr(obj, 'Fast'))
-
+        if (not parameters['Fast'])
+            ##progress update
