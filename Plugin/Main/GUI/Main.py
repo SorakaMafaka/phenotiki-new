@@ -31,11 +31,6 @@ class MainTab(wx.Panel):
         self._mainFrame = mainFrame
         headerText = wx.StaticText(self, label="Main Page", pos=(20,20))
 
-    def OnClick(self, event):
-        # I use the main frame to access the instance of class TabTwo.
-        a = self._mainFrame.tab2.getTab2info()
-        print("a")
-
 
 if __name__ == "__main__":
     app = wx.App()
