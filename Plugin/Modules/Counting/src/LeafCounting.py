@@ -38,9 +38,11 @@ class LeafCounting:
                                  'Fields', 'ProjectedLeafArea', ...,
                                  'TimeFeature', '')  # unix - delta
 
-    def leafCounting(self,Dataset,Name):
-        Dataset = self.Dataset
-        if 'Name' in locals():
-            self.properties.experimentName = Name
-        internalListener: object = listener(object, 'ComputationInProgress', )
-    # Not finished
+   # def getPar(self, obj, field):
+    #    v = getattr(obj, field)
+     #   return v
+
+    def extractingImagePatches(self, obj, IDX):
+        ##LogPolar Reprocessing#
+        if (getattr(obj, 'Fast'))
+
