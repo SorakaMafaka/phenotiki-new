@@ -8,7 +8,7 @@ from Plugin.Modules.DataExtraction.UI.DataExtractionUI import DataExtractionTab
 
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Information", size=(1200, 700))
+        wx.Frame.__init__(self, None, title="Phenotiki", size=(1200, 700))
         p = wx.Panel(self)
         nb = wx.Notebook(p)
 
