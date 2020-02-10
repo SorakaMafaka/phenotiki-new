@@ -1,4 +1,5 @@
 import wx
+from Plugin.Modules.DataExtraction.src.Functionality import *
 
 
 class DataExtractionTab(wx.Panel):
@@ -15,4 +16,5 @@ class DataExtractionTab(wx.Panel):
     def onFileOpen(self, event):
         dialog = wx.FileDialog(self, "Open", "", "", "CSV files (*.csv)|*.csv", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         dialog.ShowModal()
-
+        path = dialog.GetPath()
+        openCSV(path)
