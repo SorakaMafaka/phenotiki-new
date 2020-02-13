@@ -33,5 +33,6 @@ def plot_graph(selection):
 
     for i in data_array:
         live_data.append(i[selection])
+
     print(live_dates)
     print(live_data)
