@@ -1,4 +1,5 @@
 import csv
+import scipy.io as spio
 import matplotlib.pyplot as plt
 from Plugin.Modules.DataExtraction.UI import DataExtractionUI
 
@@ -13,6 +14,11 @@ def open_file(filename):  # Load csv with following settings
         for row in reader:
             data_array.append(row)
             # data_array.clear()
+
+
+def open_mat_file(filename):  # Load mat with following settings
+    mat = spio.loadmat(filename)
+    print(type(mat))
 
 
 # [0] = Date
@@ -40,13 +46,12 @@ def plot_graph(selection):
     for i in data_array:
         live_data.append(i[selection])
 
-    print(live_dates)
-    print(live_data)
-    y_axis = live_dates[1::]
-    x_axis = live_data[1::]
-    print(y_axis)
-    print(x_axis)
-    fig, axs = plt.subplots(2, 2, figsize=(5, 5))
-    axs[0, 0].hist(live_data)
-    plt.show()
-    #test
+#    print(live_dates)
+#    print(live_data)
+#    y_axis = live_dates[1::]
+#    x_axis = live_data[1::]
+#    print(y_axis)
+#    print(x_axis)
+#    fig, axs = plt.subplots(2, 2, figsize=(5, 5))
+#    axs[0, 0].hist(live_data)
+#    plt.show()
