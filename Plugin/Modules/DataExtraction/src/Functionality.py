@@ -1,4 +1,6 @@
 import csv
+import matplotlib
+from Plugin.Modules.DataExtraction.UI import DataExtractionUI
 
 data_array = []
 
