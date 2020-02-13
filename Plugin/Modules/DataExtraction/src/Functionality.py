@@ -47,6 +47,6 @@ def plot_graph(selection):
     print(y_axis)
     print(x_axis)
     fig, axs = plt.subplots(2, 2, figsize=(5, 5))
-    axs[0, 0].hist(live_data)
+    axs[0, 0].plot(live_data)
     plt.show()
     #test
