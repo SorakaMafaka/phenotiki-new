@@ -37,4 +37,4 @@ class DataExtractionTab(wx.Panel):
         dialog = wx.FileDialog(self, "Open", "", "", "CSV files (*.csv)|*.csv", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         dialog.ShowModal()
         path = dialog.GetPath()
-        openCSV(path)
+        open_file(path)
