@@ -1,5 +1,5 @@
 import csv
-import matplotlib
+import matplotlib.pyplot as plt
 from Plugin.Modules.DataExtraction.UI import DataExtractionUI
 
 data_array = []
@@ -7,11 +7,13 @@ live_data = []
 live_dates = []
 
 
-def open_file(filename):
+def open_file(filename):  # Load csv with following settings
     with open(filename, newline='') as File:
         reader = csv.reader(File, delimiter=',', quotechar=',', quoting=csv.QUOTE_MINIMAL)
         for row in reader:
             data_array.append(row)
+            # data_array.clear()
+
 
 # [0] = Date
 # [1] = ID
@@ -44,3 +46,6 @@ def plot_graph(selection):
     x_axis = live_data[1::]
     print(y_axis)
     print(x_axis)
+    fig, axs = plt.subplots(2, 2, figsize=(5, 5))
+    axs[0, 0].hist(live_data)
+    plt.show()
