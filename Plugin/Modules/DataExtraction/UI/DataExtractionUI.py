@@ -38,3 +38,4 @@ class DataExtractionTab(wx.Panel):
         dialog.ShowModal()
         path = dialog.GetPath()
         open_file(path)
+        plot_graph(3)

@@ -3,6 +3,8 @@ import matplotlib
 from Plugin.Modules.DataExtraction.UI import DataExtractionUI
 
 data_array = []
+live_data = []
+live_dates = []
 
 def open_file(filename):
     with open(filename, newline='') as File:
@@ -23,4 +25,13 @@ def open_file(filename):
 # [10] = RelativeRateChange
 # [11] = AbsoluteGrowthRate
 # [12] = RelativeGrowthRate
+
+
 def plot_graph(selection):
+    for i in data_array:
+        live_dates.append(i[0])
+
+    for i in data_array:
+        live_data.append(i[selection])
+    print(live_dates)
+    print(live_data)
