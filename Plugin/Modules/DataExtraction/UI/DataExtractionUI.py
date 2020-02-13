@@ -34,6 +34,7 @@ class DataExtractionTab(wx.Panel):
         self.axes.plot(t, s)
 
     def onFileOpen(self, event):
+        data_array.clear()
         dialog = wx.FileDialog(self, "Open", "", "", "CSV files (*.csv)|*.csv", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         dialog.ShowModal()
         path = dialog.GetPath()

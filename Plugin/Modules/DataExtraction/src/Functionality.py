@@ -8,7 +8,6 @@ live_dates = []
 
 
 def open_file(filename):
-    data_array.clear()
     with open(filename, newline='') as File:
         reader = csv.reader(File, delimiter=',', quotechar=',', quoting=csv.QUOTE_MINIMAL)
         for row in reader:
@@ -30,12 +29,14 @@ def open_file(filename):
 
 
 def plot_graph(selection):
+    live_dates.clear()
+    live_data.clear()
+
     for i in data_array:
         live_dates.append(i[0])
 
     for i in data_array:
         live_data.append(i[selection])
 
-
-print(live_dates)
-print(live_data)
+    print(live_dates)
+    print(live_data)
