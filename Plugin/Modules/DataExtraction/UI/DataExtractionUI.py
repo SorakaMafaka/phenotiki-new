@@ -17,7 +17,7 @@ class DataExtractionTab(wx.Panel):
         self.dataSelections = ["ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness", "Hue", "Count", "RelativeRateChange", "AbsoluteGrowthRate", "RelativeGrowthRate"]
         self.btnLoadDataset = wx.Button(self, label="Load Dataset")
         self.choiceData = wx.Choice(self, choices=self.dataSelections)
-        self.btnLoadDataset.Bind(wx.EVT_BUTTON, self.onFileOpen)
+        self.btnLoadDataset.Bind(wx.EVT_BUTTON, self.onMatFileOpen)
         self.figure = Figure()
         self.axes = self.figure.add_subplot(111)
         self.canvas = FigureCanvas(self, -1, self.figure)
@@ -39,4 +39,12 @@ class DataExtractionTab(wx.Panel):
         dialog.ShowModal()
         path = dialog.GetPath()
         open_file(path)
+        plot_graph(3)
+
+    def onMatFileOpen(self, event):
+        data_array.clear() #Data will be appended at the end of the line without this
+        dialog = wx.FileDialog(self, "Open", "", "", "MAT files (*.mat)|*.mat", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        dialog.ShowModal()
+        path = dialog.GetPath()
+        open_mat_file(path)
         plot_graph(3)

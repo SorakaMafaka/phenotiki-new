@@ -1,10 +1,13 @@
 import csv
+import scipy.io
 import matplotlib.pyplot as plt
+from collections import Counter
 from Plugin.Modules.DataExtraction.UI import DataExtractionUI
 
 data_array = []
 live_data = []
 live_dates = []
+live_data_float = []
 
 
 def open_file(filename):  # Load csv with following settings
@@ -13,6 +16,11 @@ def open_file(filename):  # Load csv with following settings
         for row in reader:
             data_array.append(row)
             # data_array.clear()
+
+
+def open_mat_file(filename):  # Load mat with following settings
+    mat = scipy.io.loadmat(filename)
+
 
 
 # [0] = Date
@@ -37,16 +45,21 @@ def plot_graph(selection):
     for i in data_array:
         live_dates.append(i[0])
 
+    count = dict(Counter(live_dates))
+
     for i in data_array:
         live_data.append(i[selection])
 
+    for i in live_data[1::]:
+        live_data_float.append(float(i))
+
+
+    print(live_data_float[1:24])
+    print(sum(live_data_float[1:24]))
+    print(data_array)
+    print(count)
     print(live_dates)
     print(live_data)
     y_axis = live_dates[1::]
-    x_axis = live_data[1::]
-    print(y_axis)
-    print(x_axis)
-    fig, axs = plt.subplots(2, 2, figsize=(5, 5))
-    axs[0, 0].hist(live_data)
-    plt.show()
-    #test
+    y = list(dict.fromkeys(y_axis))
+    print(y)
