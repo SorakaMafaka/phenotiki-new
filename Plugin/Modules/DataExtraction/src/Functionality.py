@@ -49,3 +49,4 @@ def plot_graph(selection):
     fig, axs = plt.subplots(2, 2, figsize=(5, 5))
     axs[0, 0].hist(live_data)
     plt.show()
+    #test
