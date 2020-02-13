@@ -40,3 +40,7 @@ def plot_graph(selection):
 
     print(live_dates)
     print(live_data)
+    y_axis = live_dates[1::]
+    x_axis = live_data[1::]
+    print(y_axis)
+    print(x_axis)
