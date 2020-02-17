@@ -1,24 +1,52 @@
 import csv
 import scipy.io as spio
 import matplotlib.pyplot as plt
+from matplotlib import dates
+
 from Plugin.Modules.DataExtraction.UI import DataExtractionUI
+import datetime
+import numpy as np
 
 data_array = []
 live_data = []
 live_dates = []
 
 
+class dataset:
+    def __init__(self):
+        self.dict = {"Date": [],
+                     "ProjectedLeafArea": [],
+                     "Diameter": [],
+                     "Perimeter": [],
+                     "Stockiness": [],
+                     "Compactness": [],
+                     "Hue": [],
+                     "Count": [],
+                     "RelativeRateChange": [],
+                     "AbsoluteGrowthRate": [],
+                     "RelativeGrowthRate": []}
+
+
 def open_file(filename):  # Load csv with following settings
+    data = dataset()
     with open(filename, newline='') as File:
         reader = csv.reader(File, delimiter=',', quotechar=',', quoting=csv.QUOTE_MINIMAL)
         for row in reader:
-            data_array.append(row)
+            column = 0
+            for key in data.dict:
+                if column != 1:
+                    data.dict[key].append(row[column])
+                    print(row[column])
+                column += 1
             # data_array.clear()
 
 
 def open_mat_file(filename):  # Load mat with following settings
     mat = spio.loadmat(filename)
     print(type(mat))
+    print(mat)
+    print(mat['None'])
+    print(mat['None']['dataset'])
 
 
 # [0] = Date
