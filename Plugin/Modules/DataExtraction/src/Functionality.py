@@ -44,9 +44,8 @@ def open_file(filename):  # Load csv with following settings
 def open_mat_file(filename):  # Load mat with following settings
     mat = spio.loadmat(filename)
     print(type(mat))
-    print(mat)
-    print(mat['None'])
-    print(mat['None']['dataset'])
+    print(mat['ans'])
+
 
 
 # [0] = Date
