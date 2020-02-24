@@ -47,16 +47,19 @@ class DataExtractionTab(wx.Panel):
         dialog = wx.FileDialog(self, "Open", "", "", "MAT files (*.mat)|*.mat", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         dialog.ShowModal()
         #need to build try catch around this....
-        path = dialog.GetPath()
-        open_mat_file(path)
-        self.fileOpened = True
+        try:
+            path = dialog.GetPath()
+            open_mat_file(path)
+            self.fileOpened = True
+
+        except:
+            print("Invalid path")
         #plot can get plotted when choice is selected?
 
     def onChoice(self, event):
        # print("on_choice was triggered. Selected item is: " + str(self.GetSelection()))
         choice = self.choiceData.GetSelection()
         selection = self.dataSelections[choice]
-        print("Converted selection is: " + selection)
         if self.fileOpened:
             plot_graph(selection)
 
