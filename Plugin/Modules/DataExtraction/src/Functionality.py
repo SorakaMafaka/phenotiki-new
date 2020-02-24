@@ -1,11 +1,7 @@
 import csv
-import scipy.io as spio
-import matplotlib.pyplot as plt
-from matplotlib import dates
 
-from Plugin.Modules.DataExtraction.UI import DataExtractionUI
-import datetime
-import numpy as np
+from pymatreader import read_mat
+
 
 data_array = []
 live_data = []
@@ -41,10 +37,17 @@ def open_file(filename):  # Load csv with following settings
             # data_array.clear()
 
 
-def open_mat_file(filename):  # Load mat with following settings
-    mat = spio.loadmat(filename)
-    print(type(mat))
-    print(mat['ans'])
+def open_mat_file(filename, dataSelections):  # Load mat with following settings
+    data = read_mat(filename)
+    mdata = data['ans']
+    mdata = mdata['Sequences']
+    print(mdata['Filename'][0])
+    mdata = mdata['Subject']
+    mdata = mdata[0]
+    for key in dataSelections:
+        print(key, mdata[key])
+
+    print("Diameter - ", mdata['Diameter'])
 
 
 

@@ -46,5 +46,5 @@ class DataExtractionTab(wx.Panel):
         dialog = wx.FileDialog(self, "Open", "", "", "MAT files (*.mat)|*.mat", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         dialog.ShowModal()
         path = dialog.GetPath()
-        open_mat_file(path)
+        open_mat_file(path, self.dataSelections)
       #  plot_graph(3)
