@@ -15,8 +15,10 @@ class DataExtractionTab(wx.Panel):
         wx.Panel.__init__(self, parent)
         self._mainFrame = mainFrame
         self.dataSelections = ["ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness", "Hue", "Count", "RelativeRateChange", "AbsoluteGrowthRate", "RelativeGrowthRate"]
+        self.fileOpened = False;
         self.btnLoadDataset = wx.Button(self, label="Load Dataset")
         self.choiceData = wx.Choice(self, choices=self.dataSelections)
+        self.choiceData.Bind(wx.EVT_CHOICE, self.onChoice)
         self.btnLoadDataset.Bind(wx.EVT_BUTTON, self.onMatFileOpen)
         self.figure = Figure()
         self.axes = self.figure.add_subplot(111)
@@ -34,17 +36,27 @@ class DataExtractionTab(wx.Panel):
         self.axes.plot(t, s)
 
     def onFileOpen(self, event):
-        data_array.clear() #Data will be appended at the end of the line without this
+     #   data_array.clear() #Data will be appended at the end of the line without this
         dialog = wx.FileDialog(self, "Open", "", "", "CSV files (*.csv)|*.csv", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         dialog.ShowModal()
         path = dialog.GetPath()
         open_file(path)
-      #  plot_graph(3)
 
     def onMatFileOpen(self, event):
-        data_array.clear() #Data will be appended at the end of the line without this
+    #    data_array.clear() #Data will be appended at the end of the line without this
         dialog = wx.FileDialog(self, "Open", "", "", "MAT files (*.mat)|*.mat", wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         dialog.ShowModal()
+        #need to build try catch around this....
         path = dialog.GetPath()
-        open_mat_file(path, self.dataSelections)
-      #  plot_graph(3)
+        open_mat_file(path)
+        self.fileOpened = True
+        #plot can get plotted when choice is selected?
+
+    def onChoice(self, event):
+       # print("on_choice was triggered. Selected item is: " + str(self.GetSelection()))
+        choice = self.choiceData.GetSelection()
+        selection = self.dataSelections[choice]
+        print("Converted selection is: " + selection)
+        if self.fileOpened:
+            plot_graph(selection)
+

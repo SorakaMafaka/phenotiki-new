@@ -2,11 +2,10 @@ import csv
 
 from pymatreader import read_mat
 
-
+matdata = {}
 data_array = []
 live_data = []
 live_dates = []
-
 
 class dataset:
     def __init__(self):
@@ -37,17 +36,20 @@ def open_file(filename):  # Load csv with following settings
             # data_array.clear()
 
 
-def open_mat_file(filename, dataSelections):  # Load mat with following settings
+def open_mat_file(filename):  # Load mat with following settings
+    #This could probably get cleaned up...
+    global matdata
     data = read_mat(filename)
-    mdata = data['ans']
-    mdata = mdata['Sequences']
-    print(mdata['Filename'][0])
+    data = data['ans']
+    mdata = data['Sequences']
+    #Subject holds the main plantdatasets
     mdata = mdata['Subject']
+    #By setting this to 0 only the first plant data set gets used.
+    #This is just, so we can access the keys of the individual datasets.
+    #So at the moment it will only save the first one.
     mdata = mdata[0]
-    for key in dataSelections:
-        print(key, mdata[key])
+    matdata = mdata
 
-    print("Diameter - ", mdata['Diameter'])
 
 
 
@@ -67,14 +69,16 @@ def open_mat_file(filename, dataSelections):  # Load mat with following settings
 
 
 def plot_graph(selection):
-    live_dates.clear()
-    live_data.clear()
+   # live_dates.clear()
+   # live_data.clear()
 
-    for i in data_array:
-        live_dates.append(i[0])
-
-    for i in data_array:
-        live_data.append(i[selection])
+   # for i in data_array:
+   #     live_dates.append(i[0])
+   #prints selection from choice buttton and then the selected values for the first plantdataset
+    print(selection)
+    print(matdata[selection])
+    #for i in data_array:
+        #live_data.append(i[selection])
 
 #    print(live_dates)
 #    print(live_data)
