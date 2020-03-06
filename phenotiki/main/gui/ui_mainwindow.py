@@ -16,6 +16,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 
 from phenotiki.main.gui.mplwidget import MplWidget
+from phenotiki.main.gui.example_for_mila import update_graph
 
 
 class Ui_MainWindow(object):
@@ -377,6 +378,8 @@ class Ui_MainWindow(object):
         self.tabPotTray.setCurrentIndex(0)
         self.cmbType.setCurrentIndex(0)
 
+        update_graph(self)
+
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -497,4 +500,3 @@ class Ui_MainWindow(object):
         self.gbxMatPlot.setTitle(QCoreApplication.translate("MainWindow", u"Plot", None))
         self.tabPotTray.setTabText(self.tabPotTray.indexOf(self.tabDataExtraction), QCoreApplication.translate("MainWindow", u"Data Extraction", None))
     # retranslateUi
-
