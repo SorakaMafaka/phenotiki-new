@@ -1,6 +1,7 @@
 import random
 import numpy as np
 
+
 def update_graph(self):
     fs = 500
     f = random.randint(1, 100)

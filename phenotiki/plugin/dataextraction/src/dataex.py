@@ -11,7 +11,7 @@ live_dates = []
 def open_mat_file():  # Load mat with following settings
     #This could probably get cleaned up...
     global matdata
-    data = read_mat("C:/Users/shtee/PycharmProjects/phenotikiqtpy2/phenotiki/plugin/dataextraction/src/testmat.mat")
+    data = read_mat("testmat.mat")
     data = data['ans']
     mdata = data['Sequences']
     #Subject holds the main plantdatasets

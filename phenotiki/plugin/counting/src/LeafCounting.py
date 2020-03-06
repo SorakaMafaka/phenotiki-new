@@ -42,10 +42,10 @@ class LeafCounting:
         Dataset = self.Dataset
         if 'Name' in locals():
             self.properties.experimentName = Name
-        internalListener: object = listener(object, 'ComputationInProgress', )
+        #internalListener: object = listener(object, 'ComputationInProgress', )
     # Not finished
 
-    def extractingImagePatches(self, IDX):
-        ##LogPolar Reprocessing#
-        if (not parameters['Fast'])
+    #def extractingImagePatches(self, IDX):
+        #LogPolar Reprocessing#
+        #if (not parameters['Fast'])
             ##progress update
