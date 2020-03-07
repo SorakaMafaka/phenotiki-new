@@ -8,7 +8,6 @@ class LeafCounting:
         self.properties()  # Transient doesn't exist in Python, TODO: https://stackoverflow.com/questions/6313421/can-i-mark-variables-as-transient-so-they-wont-be-pickled
         dataset = {} # Not sure if correct?
         internalListener: []
-      #  parameters = {}
 
     def currentDirectory(self):
         os.getcwd()
@@ -43,12 +42,12 @@ class LeafCounting:
         Dataset = self.Dataset
         if 'Name' in locals():
             self.properties.experimentName = Name
-        internalListener: object = addlistener(object, 'ComputationInProgress', )
+        internalListener: object = listener(object, 'ComputationInProgress', )
     # Not finished
 
     def extractingImagePatches(self, IDX):
         ##LogPolar Reprocessing#
-        if not parameters['Fast']:
+        if (not parameters['Fast'])
             ##progress update
             progressUpdate('LeafCountingTrain', 1/8*100, 'Logpolar reprocessing')
             if parameters['LogPolarFeatures']:
@@ -59,5 +58,5 @@ class LeafCounting:
         Pathsize = parameters['PatchSize']
         resp_curve_width = parameters['RatioCurveWindowWidth']
         D = parameters['LogPolarNormalization']
-###UGH....
+
         for x in IDX
