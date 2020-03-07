@@ -16,8 +16,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 
 from phenotiki.main.gui.mplwidget import MplWidget
-from phenotiki.main.gui.example_for_mila import update_graph
-
+from phenotiki.main.gui.DE_UIFunction import update_graph, openFileDialog, plot_graph
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -295,25 +294,35 @@ class Ui_MainWindow(object):
         self.gbxPhenoData = QGroupBox(self.tabDataExtraction)
         self.gbxPhenoData.setObjectName(u"gbxPhenoData")
         self.gbxPhenoData.setGeometry(QRect(10, 20, 251, 511))
+        #changed this part because it was hard to understand how to access sorry...
         self.wgtPhenoData = QListWidget(self.gbxPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
-        QListWidgetItem(self.wgtPhenoData)
+        self.dataSelections = ["ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness", "Hue", "Count", "RelativeRateChange", "AbsoluteGrowthRate", "RelativeGrowthRate"]
+        self.wgtPhenoData.addItems(self.dataSelections)
+        self.wgtPhenoData.clicked.connect(self.on_Choice)
+
+
+
+      #  self.wgtPhenoData.connect(self.on_Choice)
+     #   QListWidgetItem(self.wgtPhenoData)
+      #  QListWidgetItem(self.wgtPhenoData)
+       # QListWidgetItem(self.wgtPhenoData)
+        #QListWidgetItem(self.wgtPhenoData)
+        #QListWidgetItem(self.wgtPhenoData)
+        #QListWidgetItem(self.wgtPhenoData)
+        #QListWidgetItem(self.wgtPhenoData)
+        #QListWidgetItem(self.wgtPhenoData)
+        #QListWidgetItem(self.wgtPhenoData)
+        #QListWidgetItem(self.wgtPhenoData)
         self.wgtPhenoData.setObjectName(u"wgtPhenoData")
-        self.wgtPhenoData.setEnabled(False)
+        self.wgtPhenoData.setEnabled(True)
         self.wgtPhenoData.setGeometry(QRect(10, 20, 231, 361))
+      #  self.wgtPhenoData.
         self.cbxCm = QCheckBox(self.gbxPhenoData)
         self.cbxCm.setObjectName(u"cbxCm")
         self.cbxCm.setGeometry(QRect(40, 390, 151, 21))
         self.btnLoadDE = QPushButton(self.gbxPhenoData)
         self.btnLoadDE.setObjectName(u"btnLoadDE")
+        self.btnLoadDE.clicked.connect(openFileDialog)
         self.btnLoadDE.setGeometry(QRect(60, 430, 121, 51))
         self.gbxPlotParams = QGroupBox(self.tabDataExtraction)
         self.gbxPlotParams.setObjectName(u"gbxPlotParams")
@@ -379,7 +388,6 @@ class Ui_MainWindow(object):
         self.cmbType.setCurrentIndex(0)
 
         update_graph(self)
-
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -466,27 +474,28 @@ class Ui_MainWindow(object):
 
         __sortingEnabled = self.wgtPhenoData.isSortingEnabled()
         self.wgtPhenoData.setSortingEnabled(False)
-        ___qlistwidgetitem = self.wgtPhenoData.item(0)
-        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"ProjectedLeafArea", None));
-        ___qlistwidgetitem1 = self.wgtPhenoData.item(1)
-        ___qlistwidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Diameter", None));
-        ___qlistwidgetitem2 = self.wgtPhenoData.item(2)
-        ___qlistwidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Perimeter", None));
-        ___qlistwidgetitem3 = self.wgtPhenoData.item(3)
-        ___qlistwidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Stockiness", None));
-        ___qlistwidgetitem4 = self.wgtPhenoData.item(4)
-        ___qlistwidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Compactness", None));
-        ___qlistwidgetitem5 = self.wgtPhenoData.item(5)
-        ___qlistwidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Hue", None));
-        ___qlistwidgetitem6 = self.wgtPhenoData.item(6)
-        ___qlistwidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Count", None));
-        ___qlistwidgetitem7 = self.wgtPhenoData.item(7)
-        ___qlistwidgetitem7.setText(QCoreApplication.translate("MainWindow", u"RelativeRateChange", None));
-        ___qlistwidgetitem8 = self.wgtPhenoData.item(8)
-        ___qlistwidgetitem8.setText(QCoreApplication.translate("MainWindow", u"AbsoluteGrowthRate", None));
-        ___qlistwidgetitem9 = self.wgtPhenoData.item(9)
-        ___qlistwidgetitem9.setText(QCoreApplication.translate("MainWindow", u"RelativeGrowthRate", None));
+      #  ___qlistwidgetitem = self.wgtPhenoData.item(0)
+       # ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"ProjectedLeafArea", None));
+       # ___qlistwidgetitem1 = self.wgtPhenoData.item(1)
+       # ___qlistwidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Diameter", None));
+        #___qlistwidgetitem2 = self.wgtPhenoData.item(2)
+        #___qlistwidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Perimeter", None));
+       # ___qlistwidgetitem3 = self.wgtPhenoData.item(3)
+        #___qlistwidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Stockiness", None));
+        #___qlistwidgetitem4 = self.wgtPhenoData.item(4)
+        #___qlistwidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Compactness", None));
+        #___qlistwidgetitem5 = self.wgtPhenoData.item(5)
+        #___qlistwidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Hue", None));
+        #___qlistwidgetitem6 = self.wgtPhenoData.item(6)
+        #___qlistwidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Count", None));
+        #___qlistwidgetitem7 = self.wgtPhenoData.item(7)
+        #___qlistwidgetitem7.setText(QCoreApplication.translate("MainWindow", u"RelativeRateChange", None));
+        #___qlistwidgetitem8 = self.wgtPhenoData.item(8)
+        #___qlistwidgetitem8.setText(QCoreApplication.translate("MainWindow", u"AbsoluteGrowthRate", None));
+        #___qlistwidgetitem9 = self.wgtPhenoData.item(9)
+        #___qlistwidgetitem9.setText(QCoreApplication.translate("MainWindow", u"RelativeGrowthRate", None));
         self.wgtPhenoData.setSortingEnabled(__sortingEnabled)
+
 
         self.cbxCm.setText(QCoreApplication.translate("MainWindow", u"Convert values to cm", None))
         self.btnLoadDE.setText(QCoreApplication.translate("MainWindow", u"Load Dataset", None))
@@ -500,3 +509,7 @@ class Ui_MainWindow(object):
         self.gbxMatPlot.setTitle(QCoreApplication.translate("MainWindow", u"Plot", None))
         self.tabPotTray.setTabText(self.tabPotTray.indexOf(self.tabDataExtraction), QCoreApplication.translate("MainWindow", u"Data Extraction", None))
     # retranslateUi
+
+    def on_Choice(self):
+        select = self.wgtPhenoData.currentItem().text()
+        plot_graph(self, select)

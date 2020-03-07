@@ -1,20 +1,21 @@
 from typing import List, Any
 import os  # Used to get absolute current working directory
 import numpy
-import struct
 
 
 class LeafCounting:
     def __init__(self):
         self.properties()  # Transient doesn't exist in Python, TODO: https://stackoverflow.com/questions/6313421/can-i-mark-variables-as-transient-so-they-wont-be-pickled
-        dataset = struct  # Not sure if correct?
+        dataset = {} # Not sure if correct?
         internalListener: []
+      #  parameters = {}
 
     def currentDirectory(self):
         os.getcwd()
         pass
 
     def properties(self):
+        global parameters
         experimentName: str = 'noname'
         parameters = {'PatchSize': 19,
                                  'RatioCurveWindowWidth': 20,
@@ -42,10 +43,21 @@ class LeafCounting:
         Dataset = self.Dataset
         if 'Name' in locals():
             self.properties.experimentName = Name
-        internalListener: object = listener(object, 'ComputationInProgress', )
+        internalListener: object = addlistener(object, 'ComputationInProgress', )
     # Not finished
 
     def extractingImagePatches(self, IDX):
         ##LogPolar Reprocessing#
-        if (not parameters['Fast'])
+        if not parameters['Fast']:
             ##progress update
+            progressUpdate('LeafCountingTrain', 1/8*100, 'Logpolar reprocessing')
+            if parameters['LogPolarFeatures']:
+                computeLogPolarPreprocessing(IDX)
+
+    def computeLogPolarPreprocessing(self, IDX):
+        N = len(IDX)
+        Pathsize = parameters['PatchSize']
+        resp_curve_width = parameters['RatioCurveWindowWidth']
+        D = parameters['LogPolarNormalization']
+###UGH....
+        for x in IDX

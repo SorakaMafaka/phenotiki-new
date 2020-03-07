@@ -1,0 +1,81 @@
+import random
+import numpy as np
+from PySide2.QtWidgets import QWidget, QFileDialog
+import datetime
+
+
+from phenotiki.plugin.dataextraction.src.dataex import *
+from matplotlib import dates
+
+fileOpened = False
+matdata = {}
+selection = ""
+
+
+def update_graph(self):
+    fs = 500
+    f = random.randint(1, 100)
+    ts = 1 / fs
+    length_of_signal = 100
+    t = np.linspace(0, 1, length_of_signal)
+
+    cosinus_signal = np.cos(2 * np.pi * f * t)
+    sinus_signal = np.sin(2 * np.pi * f * t)
+
+    self.MplWidget.canvas.axes.clear()
+    self.MplWidget.canvas.axes.plot(t, cosinus_signal)
+    self.MplWidget.canvas.axes.plot(t, sinus_signal)
+    self.MplWidget.canvas.axes.legend(('cosinus', 'sinus'), loc='upper right')
+    self.MplWidget.canvas.axes.set_title('Cosinus - Sinus Signal')
+    self.MplWidget.canvas.draw()
+
+def openFileDialog(self):
+    global fileOpened, matdata
+    w = QWidget()
+    fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("MATLAB files (*mat)"))
+    fname = fname[0]
+    try:
+        matdata = open_mat_file(fname)
+        fileOpened = True
+    except:
+        print("invalid path")
+
+    print(fname)
+
+def plot_graph(self, select):
+    global selection
+    selection = select
+    if fileOpened:
+        timestamps = matdata['Timestamp']
+        ys = matdata['Subject']
+        x_values = []
+        y_values = []
+
+        amount = 0
+        for i in ys:
+            sub = i
+            select = sub[selection]
+            for d in select:
+                try:
+                    amount += float(d)
+                except:
+                    amount += 0
+
+            y_values.append(amount / 24)
+            amount = 0
+        #matlab time conversion     M{t+2,1} = datestr(dataset.Sequences(t).Timestamp,'dd-mmm-yyyy HH:MM');
+        print(timestamps)
+        formatter = dates.DateFormatter("%d/%b %H:%m")
+        for i in timestamps:
+            time = datetime.datetime.fromtimestamp(i)
+           #time = datetime.datetime.strptime(str(i), "%d-%m-%y %H:%M")
+            x_values.append(time)
+
+        print(x_values)
+
+        self.MplWidget.canvas.axes.clear()
+        self.MplWidget.canvas.axes.xaxis.set_major_formatter(formatter)
+        self.MplWidget.canvas.axes.plot(x_values, y_values)
+        #self.MplWidget.canvas.axes.legend(('xvalues', 'yvalues'), loc='upper right')
+        self.MplWidget.canvas.axes.set_title(selection)
+        self.MplWidget.canvas.draw()
