@@ -29,7 +29,8 @@ def update_graph(self):
     self.MplWidget.canvas.axes.set_title('Cosinus - Sinus Signal')
     self.MplWidget.canvas.draw()
 
-def openFileDialog(self):
+
+def loadDataset(self):
     global fileOpened, matdata
     w = QWidget()
     fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("MATLAB files (*mat)"))
@@ -41,6 +42,11 @@ def openFileDialog(self):
         print("invalid path")
 
     print(fname)
+
+def openFileDialog(self):
+    w = QWidget()
+    path = str(QFileDialog.getExistingDirectory(w,  "Select Directory"))
+    return path
 
 def plot_graph(self, select):
     global selection

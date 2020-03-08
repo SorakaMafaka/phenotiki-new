@@ -16,7 +16,8 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 
 from phenotiki.main.gui.mplwidget import MplWidget
-from phenotiki.main.gui.DE_UIFunction import update_graph, openFileDialog, plot_graph
+from phenotiki.main.gui.DE_UIFunction import update_graph, loadDataset, plot_graph, openFileDialog
+from phenotiki.plugin.dataextraction.src.dataex import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -325,7 +326,7 @@ class Ui_MainWindow(object):
         self.cbxCm.setGeometry(QRect(40, 390, 151, 21))
         self.btnLoadDE = QPushButton(self.gbxPhenoData)
         self.btnLoadDE.setObjectName(u"btnLoadDE")
-        self.btnLoadDE.clicked.connect(openFileDialog)
+        self.btnLoadDE.clicked.connect(loadDataset)
         self.btnLoadDE.setGeometry(QRect(60, 430, 121, 51))
         self.gbxPlotParams = QGroupBox(self.tabDataExtraction)
         self.gbxPlotParams.setObjectName(u"gbxPlotParams")
@@ -372,6 +373,7 @@ class Ui_MainWindow(object):
         self.MplWidget = MplWidget(self.gbxMatPlot)
         self.MplWidget.setObjectName(u"MplWidget")
         self.MplWidget.setGeometry(QRect(10, 20, 721, 481))
+        self.btnSaveDE.clicked.connect(self.save_plot)
         self.tabPotTray.addTab(self.tabDataExtraction, "")
         self.gbxMatPlot.raise_()
         self.gbxPhenoData.raise_()
@@ -390,7 +392,7 @@ class Ui_MainWindow(object):
         self.tabPotTray.setCurrentIndex(0)
         self.cmbType.setCurrentIndex(0)
 
-        update_graph(self)
+       # update_graph(self)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -516,3 +518,12 @@ class Ui_MainWindow(object):
     def on_Choice(self):
         select = self.wgtPhenoData.currentItem().text()
         plot_graph(self, select)
+
+    def save_plot(self):
+        w = QWidget()
+        path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
+        print(path[0])
+        self.MplWidget.canvas.figure.savefig(path[0])
+        self.MplWidget
+
+
