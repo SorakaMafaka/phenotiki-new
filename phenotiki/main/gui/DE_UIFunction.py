@@ -2,6 +2,7 @@ import random
 import numpy as np
 from PySide2.QtWidgets import QWidget, QFileDialog
 import datetime
+import sys
 
 
 from phenotiki.plugin.dataextraction.src.dataex import *
@@ -56,20 +57,36 @@ def plot_graph(self, select):
         ys = matdata['Subject']
         x_values = []
         y_values = []
+        std_values = []
+        maxstd_values = []
+        minstd_values = []
 
-        amount = 0
         for i in ys:
             sub = i
-            select = sub[selection]
-            for d in select:
-                try:
-                    amount += float(d)
-                except:
-                    amount += 0
+            try:
+                y_values.append(np.mean(sub[selection]))
+            except:
+                y_values.append(None)
 
-            y_values.append(amount / 24)
-            amount = 0
-        #matlab time conversion     M{t+2,1} = datestr(dataset.Sequences(t).Timestamp,'dd-mmm-yyyy HH:MM');
+            try:
+                std_values.append(np.std(sub[selection]))
+            except:
+                std_values.append(0.0)
+
+        try:
+            maxstd_values = np.add(std_values, y_values)
+            minstd_values = np.subtract(y_values, std_values)
+        except:
+            count = 0
+            for i in y_values:
+                if i == None:
+                    maxstd_values.append(float(0) + float(std_values[count]))
+                    minstd_values.append(float(0) - float(std_values[count]))
+                else:
+                    maxstd_values.append(float(i) + float(std_values[count]))
+                    minstd_values.append(float(i) - float(std_values[count]))
+                count+= 1
+
         print(timestamps)
         formatter = dates.DateFormatter("%d/%b %H:%m")
         for i in timestamps:
@@ -82,6 +99,9 @@ def plot_graph(self, select):
         self.MplWidget.canvas.axes.clear()
         self.MplWidget.canvas.axes.xaxis.set_major_formatter(formatter)
         self.MplWidget.canvas.axes.plot(x_values, y_values)
+        self.MplWidget.canvas.axes.fill_between(x_values, minstd_values, maxstd_values, alpha=0.2)
         #self.MplWidget.canvas.axes.legend(('xvalues', 'yvalues'), loc='upper right')
         self.MplWidget.canvas.axes.set_title(selection)
         self.MplWidget.canvas.draw()
+
+
