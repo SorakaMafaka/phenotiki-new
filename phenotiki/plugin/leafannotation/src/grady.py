@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage import io
@@ -9,9 +8,7 @@ import skimage
 import cv2
 
 # Generate noisy synthetic data
-img = cv2.imread(
-    'C:\\Users\\SorakaMafaka\\PycharmProjects\\Phenotiki\\phenotiki\\plugin\\leafannotation\\src\\IMG_2013-09-28_08' \
-    '-00.png ', -1)
+img = cv2.imread("../IMG_2013-09-28_08-00.png", -1)
 alpha = img[:, :, 2]  # extract it
 binary = ~alpha  # invert b/w
 # cv2.imshow("Gay", img)
