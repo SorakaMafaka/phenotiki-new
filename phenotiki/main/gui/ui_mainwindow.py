@@ -499,5 +499,5 @@ class Ui_MainWindow(object):
         w = QWidget()
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
         print(path[0])
-        self.MplWidget.canvas.figure.savefig(path[0])
-        self.MplWidget
+        self.de_MplWidget.canvas.figure.savefig(path[0])
+        self.de_MplWidget
