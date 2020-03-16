@@ -2,16 +2,18 @@ import random
 import numpy as np
 from PySide2.QtWidgets import QWidget, QFileDialog
 import datetime
-import sys
-
-
+from phenotiki.main.gui.mplwidget import MplWidget
 from phenotiki.plugin.dataextraction.src.dataex import *
 from matplotlib import dates
 
 fileOpened = False
 matdata = {}
 selection = ""
-
+times = []
+x_values = []
+y_values = []
+fr = 0
+to = 0
 
 def update_graph(self):
     fs = 500
@@ -32,7 +34,7 @@ def update_graph(self):
 
 
 def loadDataset(self):
-    global fileOpened, matdata
+    global fileOpened, matdata, x_values, to, uiRef
     w = QWidget()
     fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("MATLAB files (*mat)"))
     fname = fname[0]
@@ -42,6 +44,14 @@ def loadDataset(self):
     except:
         print("invalid path")
 
+    timestamps = matdata['Timestamp']
+    for i in timestamps:
+        time = datetime.datetime.fromtimestamp(i)
+        x_values.append(time)
+        if len(times) <= len(timestamps):
+            times.append(time.strftime("%d-%b-%Y %H:%m:%S"))
+
+    to = len(times)
     print(fname)
 
 def openFileDialog(self):
@@ -50,12 +60,11 @@ def openFileDialog(self):
     return path
 
 def plot_graph(self, select):
-    global selection
+    global selection, times, x_values, y_values, fr, to
     selection = select
     if fileOpened:
-        timestamps = matdata['Timestamp']
         ys = matdata['Subject']
-        x_values = []
+#        x_values = []
         y_values = []
         std_values = []
         maxstd_values = []
@@ -87,19 +96,50 @@ def plot_graph(self, select):
                     minstd_values.append(float(i) - float(std_values[count]))
                 count+= 1
 
-        print(timestamps)
-        formatter = dates.DateFormatter("%d/%b %H:%m")
-        for i in timestamps:
-            time = datetime.datetime.fromtimestamp(i)
-            x_values.append(time)
-
+       # print(timestamps)
+        formatter = dates.DateFormatter("%d/%b")
         print(x_values)
+     #   x = x_values.
+        self.de_MplWidget.canvas.axes.clear()
+        self.de_MplWidget.canvas.axes.xaxis.set_major_formatter(formatter)
+        self.de_MplWidget.canvas.figure.autofmt_xdate()
+        #I think maybe this should be zoomed in instead of changed, didn't realise earlier
+        self.de_MplWidget.canvas.axes.plot(x_values[fr:to], y_values[fr:to])
+        self.de_MplWidget.canvas.axes.fill_between(x_values[fr:to], minstd_values[fr:to], maxstd_values[fr:to], alpha=0.2)
+        self.de_MplWidget.canvas.axes.set_title(selection)
+        self.de_MplWidget.canvas.draw()
+      #  self.de_MplWidget.canvas.figure.autofmt_xdate()
 
-        self.MplWidget.canvas.axes.clear()
-        self.MplWidget.canvas.axes.xaxis.set_major_formatter(formatter)
-        self.MplWidget.canvas.axes.plot(x_values, y_values)
-        self.MplWidget.canvas.axes.fill_between(x_values, minstd_values, maxstd_values, alpha=0.2)
-        self.MplWidget.canvas.axes.set_title(selection)
-        self.MplWidget.canvas.draw()
+        if not self.de_cbxFrom.isEnabled():
+            setupPlotParams(self)
 
 
+def getDataset(self):
+    return matdata
+
+
+def setupPlotParams(self):
+    self.de_cbxFrom.clear()
+    self.de_cbxTo.clear()
+    self.de_cbxFrom.addItems(times)
+    self.de_cbxTo.addItems(times)
+    self.de_cbxTo.setCurrentIndex(self.de_cbxTo.count()-1)
+    self.de_cbxFrom.setEnabled(True)
+    self.de_cbxTo.setEnabled(True)
+    self.de_btnSaveDE.setEnabled(True)
+    self.de_btnExportDE.setEnabled(True)
+
+    #Setup show and specify butons
+    self.de_cbxShow.addItems(["Specific Group", "Specific Subject"])
+    self.de_cbxShow.setEnabled(True)
+
+
+def UpdateFrom(self, index):
+    global fr
+    fr = index
+    plot_graph(self, selection)
+
+def UpdateTo(self, index):
+    global to
+    to = index
+    plot_graph(self, selection)

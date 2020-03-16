@@ -16,7 +16,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 
 from phenotiki.main.gui.mplwidget import MplWidget
-from phenotiki.main.gui.DE_UIFunction import update_graph, loadDataset, plot_graph, openFileDialog
+from phenotiki.main.gui.DE_UIFunction import *
 from phenotiki.plugin.dataextraction.src.dataex import *
 
 
@@ -330,16 +330,26 @@ class Ui_MainWindow(object):
         self.de_gbxPlotParams.setGeometry(QRect(10, 530, 1001, 171))
         self.de_cbxFrom = QComboBox(self.de_gbxPlotParams)
         self.de_cbxFrom.setObjectName(u"de_cbxFrom")
+        self.de_cbxFrom.addItem("N/A")
         self.de_cbxFrom.setGeometry(QRect(160, 50, 221, 31))
+        self.de_cbxFrom.setEnabled(False)
+        self.de_cbxFrom.activated[int].connect(self.update_from)
         self.de_cbxTo = QComboBox(self.de_gbxPlotParams)
         self.de_cbxTo.setObjectName(u"de_cbxTo")
+        self.de_cbxTo.addItem("N/A")
         self.de_cbxTo.setGeometry(QRect(160, 120, 221, 31))
+        self.de_cbxTo.setEnabled(False)
+        self.de_cbxTo.activated[int].connect(self.update_from)
         self.de_cbxShow = QComboBox(self.de_gbxPlotParams)
         self.de_cbxShow.setObjectName(u"de_cbxShow")
         self.de_cbxShow.setGeometry(QRect(490, 50, 221, 31))
+        self.de_cbxShow.addItem("All")
+        self.de_cbxShow.setEnabled(False)
         self.de_cbxSpecify = QComboBox(self.de_gbxPlotParams)
         self.de_cbxSpecify.setObjectName(u"de_cbxSpecify")
         self.de_cbxSpecify.setGeometry(QRect(490, 120, 221, 31))
+        self.de_cbxSpecify.addItem("N/A")
+        self.de_cbxSpecify.setEnabled(False)
         self.de_lblFrom = QLabel(self.de_gbxPlotParams)
         self.de_lblFrom.setObjectName(u"de_lblFrom")
         self.de_lblFrom.setGeometry(QRect(100, 60, 55, 16))
@@ -361,10 +371,12 @@ class Ui_MainWindow(object):
         self.de_btnSaveDE = QPushButton(self.de_gbxPlotParams)
         self.de_btnSaveDE.setObjectName(u"de_btnSaveDE")
         self.de_btnSaveDE.setGeometry(QRect(830, 30, 131, 51))
+        self.de_btnSaveDE.setEnabled(False)
         self.de_btnSaveDE.clicked.connect(self.save_plot)
         self.de_btnExportDE = QPushButton(self.de_gbxPlotParams)
         self.de_btnExportDE.setObjectName(u"de_btnExportDE")
         self.de_btnExportDE.setGeometry(QRect(830, 100, 131, 51))
+        self.de_btnExportDE.setEnabled(False)
         self.de_gbxMatPlot = QGroupBox(self.tabDataExtraction)
         self.de_gbxMatPlot.setObjectName(u"de_gbxMatPlot")
         self.de_gbxMatPlot.setGeometry(QRect(270, 20, 741, 511))
@@ -383,6 +395,9 @@ class Ui_MainWindow(object):
         self.pt_cmbType.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(MainWindow)
+
+        if self.de_cbxFrom.isEnabled():
+            self.on_Choice()
 
     # setupUi
 
@@ -500,4 +515,10 @@ class Ui_MainWindow(object):
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
         print(path[0])
         self.de_MplWidget.canvas.figure.savefig(path[0])
-        self.de_MplWidget
+        #self.de_MplWidget
+
+    def update_from(self, index):
+        UpdateFrom(self, index)
+
+    def update_to(self, index):
+        UpdateTo(self, index)
