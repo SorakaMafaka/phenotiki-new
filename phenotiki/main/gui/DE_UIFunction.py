@@ -4,7 +4,6 @@ from PySide2.QtWidgets import QWidget, QFileDialog
 import datetime
 import sys
 
-
 from phenotiki.plugin.dataextraction.src.dataex import *
 from matplotlib import dates
 
@@ -44,10 +43,12 @@ def loadDataset(self):
 
     print(fname)
 
+
 def openFileDialog(self):
     w = QWidget()
-    path = str(QFileDialog.getExistingDirectory(w,  "Select Directory"))
+    path = str(QFileDialog.getExistingDirectory(w, "Select Directory"))
     return path
+
 
 def plot_graph(self, select):
     global selection
@@ -85,23 +86,21 @@ def plot_graph(self, select):
                 else:
                     maxstd_values.append(float(i) + float(std_values[count]))
                     minstd_values.append(float(i) - float(std_values[count]))
-                count+= 1
+                count += 1
 
         print(timestamps)
         formatter = dates.DateFormatter("%d/%b %H:%m")
         for i in timestamps:
             time = datetime.datetime.fromtimestamp(i)
-           #time = datetime.datetime.strptime(str(i), "%d-%m-%y %H:%M")
+            # time = datetime.datetime.strptime(str(i), "%d-%m-%y %H:%M")
             x_values.append(time)
 
         print(x_values)
 
-        self.MplWidget.canvas.axes.clear()
-        self.MplWidget.canvas.axes.xaxis.set_major_formatter(formatter)
-        self.MplWidget.canvas.axes.plot(x_values, y_values)
-        self.MplWidget.canvas.axes.fill_between(x_values, minstd_values, maxstd_values, alpha=0.2)
-        #self.MplWidget.canvas.axes.legend(('xvalues', 'yvalues'), loc='upper right')
-        self.MplWidget.canvas.axes.set_title(selection)
-        self.MplWidget.canvas.draw()
-
-
+        self.de_MplWidget.canvas.axes.clear()
+        self.de_MplWidget.canvas.axes.xaxis.set_major_formatter(formatter)
+        self.de_MplWidget.canvas.axes.plot(x_values, y_values)
+        self.de_MplWidget.canvas.axes.fill_between(x_values, minstd_values, maxstd_values, alpha=0.2)
+        # self.de_MplWidget.canvas.axes.legend(('xvalues', 'yvalues'), loc='upper right')
+        self.de_MplWidget.canvas.axes.set_title(selection)
+        self.de_MplWidget.canvas.draw()

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>768</height>
+    <height>740</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>1024</width>
-    <height>768</height>
+    <height>740</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1024</width>
-    <height>768</height>
+    <height>740</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
    <enum>QTabWidget::Triangular</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tabPotTray">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -54,7 +54,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tabMain">
      <property name="sizePolicy">
@@ -66,7 +66,7 @@
      <attribute name="title">
       <string>Main</string>
      </attribute>
-     <widget class="QPushButton" name="btnAbout">
+     <widget class="QPushButton" name="main_btnAbout">
       <property name="geometry">
        <rect>
         <x>900</x>
@@ -79,7 +79,7 @@
        <string>About</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lblHeader">
+     <widget class="QLabel" name="main_lblHeader">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -103,7 +103,7 @@
        <set>Qt::NoTextInteraction</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="main_lblSubHeader">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -130,7 +130,7 @@
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="lblLogo">
+     <widget class="QLabel" name="main_lblLogo">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -146,7 +146,7 @@
        <pixmap>:/images/Logo.png</pixmap>
       </property>
      </widget>
-     <widget class="QGroupBox" name="groupBox_2">
+     <widget class="QGroupBox" name="main_gbxNews">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -158,7 +158,7 @@
       <property name="title">
        <string>Updates / News</string>
       </property>
-      <widget class="QLabel" name="lblNews">
+      <widget class="QLabel" name="main_lblNews">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -177,7 +177,7 @@
      <attribute name="title">
       <string>Pot Tray Analysis</string>
      </attribute>
-     <widget class="QGroupBox" name="gbxFileList">
+     <widget class="QGroupBox" name="pt_gbxFileList">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -189,7 +189,7 @@
       <property name="title">
        <string>File List</string>
       </property>
-      <widget class="QPushButton" name="btnLoad">
+      <widget class="QPushButton" name="pt_btnLoad">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -202,7 +202,7 @@
         <string>Load Dataset</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnImport">
+      <widget class="QPushButton" name="pt_btnImport">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -215,7 +215,7 @@
         <string>Import</string>
        </property>
       </widget>
-      <widget class="QListWidget" name="lstFileList">
+      <widget class="QListWidget" name="pt_lstFileList">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -226,7 +226,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbxImage">
+     <widget class="QGroupBox" name="pt_gbxImage">
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -238,7 +238,7 @@
       <property name="title">
        <string>Image</string>
       </property>
-      <widget class="QSlider" name="horizontalSlider">
+      <widget class="QSlider" name="pt_horizontalSlider">
        <property name="geometry">
         <rect>
          <x>90</x>
@@ -251,7 +251,7 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-      <widget class="QComboBox" name="cmbType">
+      <widget class="QComboBox" name="pt_cmbType">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -293,7 +293,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QListWidget" name="lstPlots">
+      <widget class="QListWidget" name="pt_lstPlots">
        <property name="geometry">
         <rect>
          <x>510</x>
@@ -304,7 +304,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbxToolbox_PTA">
+     <widget class="QGroupBox" name="pt_gbxToolbox">
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -316,7 +316,7 @@
       <property name="title">
        <string>Toolbox</string>
       </property>
-      <widget class="QProgressBar" name="progressBar">
+      <widget class="QProgressBar" name="pt_progressBar">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -332,7 +332,7 @@
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnSettings">
+      <widget class="QPushButton" name="pt_btnSettings">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -348,7 +348,7 @@
         <string>Settings</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnMask">
+      <widget class="QPushButton" name="pt_btnMask">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -364,7 +364,7 @@
         <string>Extract Mask</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnTraits">
+      <widget class="QPushButton" name="pt_btnTraits">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -380,7 +380,7 @@
         <string>Get Traits</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnSave">
+      <widget class="QPushButton" name="pt_btnSave">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -402,7 +402,7 @@
      <attribute name="title">
       <string>Leaf Labelling</string>
      </attribute>
-     <widget class="QGroupBox" name="gbxFileList_2">
+     <widget class="QGroupBox" name="ll_gbxFileList_2">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -414,7 +414,7 @@
       <property name="title">
        <string>File List</string>
       </property>
-      <widget class="QComboBox" name="cbxSubject">
+      <widget class="QComboBox" name="ll_cbxSubject">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -424,7 +424,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="lblSubject">
+      <widget class="QLabel" name="ll_lblSubject">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -437,7 +437,7 @@
         <string>Subject:</string>
        </property>
       </widget>
-      <widget class="QListView" name="lstFileListLL">
+      <widget class="QListView" name="ll_lstFileListLL">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -447,7 +447,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnLoad_2">
+      <widget class="QPushButton" name="ll_btnLoad">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -461,7 +461,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbxImage_LL">
+     <widget class="QGroupBox" name="ll_gbxImage">
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -473,7 +473,7 @@
       <property name="title">
        <string>Image</string>
       </property>
-      <widget class="QSlider" name="horizontalSlider_2">
+      <widget class="QSlider" name="ll_horizontalSlider">
        <property name="geometry">
         <rect>
          <x>120</x>
@@ -486,7 +486,7 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-      <widget class="QCheckBox" name="cbxAnnotations">
+      <widget class="QCheckBox" name="ll_cbxAnnotations">
        <property name="geometry">
         <rect>
          <x>560</x>
@@ -512,7 +512,7 @@
         <string>Current Label: new</string>
        </property>
       </widget>
-      <widget class="QListWidget" name="lstFileView">
+      <widget class="QListWidget" name="ll_lstFileView">
        <property name="geometry">
         <rect>
          <x>550</x>
@@ -523,7 +523,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbxToolbox">
+     <widget class="QGroupBox" name="ll_gbxToolbox">
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -541,7 +541,7 @@
      <attribute name="title">
       <string>Leaf Counting</string>
      </attribute>
-     <widget class="QGroupBox" name="gbxPlantList">
+     <widget class="QGroupBox" name="lc_gbxPlantList">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -553,7 +553,7 @@
       <property name="title">
        <string>Plant List</string>
       </property>
-      <widget class="QComboBox" name="cmbSequence">
+      <widget class="QComboBox" name="lc_cmbSequence">
        <property name="geometry">
         <rect>
          <x>100</x>
@@ -568,7 +568,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QLabel" name="lblSequ">
+      <widget class="QLabel" name="lc_lblSequ">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -587,7 +587,7 @@
         <string>Sequence:</string>
        </property>
       </widget>
-      <widget class="QListWidget" name="listWidget_2">
+      <widget class="QListWidget" name="lc_listWidget">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -597,7 +597,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnLoad_LC">
+      <widget class="QPushButton" name="lc_btnLoad">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -610,7 +610,7 @@
         <string>Load Dataset</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnLoad_4">
+      <widget class="QPushButton" name="lc_import">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -623,7 +623,7 @@
         <string>Import Count from CSV</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTotalNumPlants">
+      <widget class="QLabel" name="lc_lblTotalNumPlants">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -636,7 +636,7 @@
         <string>Total Number of Plants:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTrainingSetSize">
+      <widget class="QLabel" name="lc_lblTrainingSetSize">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -649,7 +649,7 @@
         <string>Training Set Size:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTestingSetSize">
+      <widget class="QLabel" name="lc_lblTestingSetSize">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -662,7 +662,7 @@
         <string>Testing Set Size:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTotalNumber">
+      <widget class="QLabel" name="lc_lblTotalNumber">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -675,7 +675,7 @@
         <string>-</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTrainingSizeNumber">
+      <widget class="QLabel" name="lc_lblTrainingSizeNumber">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -688,7 +688,7 @@
         <string>-</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTestingNumber">
+      <widget class="QLabel" name="lc_lblTestingNumber">
        <property name="geometry">
         <rect>
          <x>180</x>
@@ -702,7 +702,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbxtt">
+     <widget class="QGroupBox" name="lc_gbx_tt">
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -714,7 +714,7 @@
       <property name="title">
        <string>Training/Testing Setup</string>
       </property>
-      <widget class="QComboBox" name="cbxTraining">
+      <widget class="QComboBox" name="lc_cbxTraining">
        <property name="geometry">
         <rect>
          <x>280</x>
@@ -734,7 +734,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QComboBox" name="cbxTesting">
+      <widget class="QComboBox" name="lc_cbxTesting">
        <property name="geometry">
         <rect>
          <x>280</x>
@@ -764,7 +764,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QLineEdit" name="leName">
+      <widget class="QLineEdit" name="lc__tbName">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -780,7 +780,7 @@
         <string>No name</string>
        </property>
       </widget>
-      <widget class="QProgressBar" name="progressBar_2">
+      <widget class="QProgressBar" name="lc_progressBar">
        <property name="geometry">
         <rect>
          <x>60</x>
@@ -796,7 +796,7 @@
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnTraining">
+      <widget class="QPushButton" name="lc_btnTraining">
        <property name="geometry">
         <rect>
          <x>90</x>
@@ -812,7 +812,7 @@
         <string>Start Training</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnAdvanced">
+      <widget class="QPushButton" name="lc_btnAdvanced">
        <property name="geometry">
         <rect>
          <x>360</x>
@@ -828,7 +828,7 @@
         <string>Advanced Options...</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnTesting">
+      <widget class="QPushButton" name="lc_btnTesting">
        <property name="geometry">
         <rect>
          <x>90</x>
@@ -844,7 +844,7 @@
         <string>Start Testing</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnSave_2">
+      <widget class="QPushButton" name="lc_btnSave">
        <property name="geometry">
         <rect>
          <x>360</x>
@@ -860,7 +860,7 @@
         <string>Save</string>
        </property>
       </widget>
-      <widget class="QGroupBox" name="gbxResults">
+      <widget class="QGroupBox" name="lc_gbxResults">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -872,7 +872,7 @@
        <property name="title">
         <string>Results</string>
        </property>
-       <widget class="QComboBox" name="cbxType">
+       <widget class="QComboBox" name="lc_cbxType">
         <property name="geometry">
          <rect>
           <x>80</x>
@@ -902,7 +902,7 @@
          </property>
         </item>
        </widget>
-       <widget class="QComboBox" name="cbxLog">
+       <widget class="QComboBox" name="lc_cbxLog">
         <property name="geometry">
          <rect>
           <x>370</x>
@@ -927,7 +927,7 @@
          </property>
         </item>
        </widget>
-       <widget class="QComboBox" name="cbxTT">
+       <widget class="QComboBox" name="lc_cbxTT">
         <property name="geometry">
          <rect>
           <x>80</x>
@@ -947,7 +947,7 @@
          </property>
         </item>
        </widget>
-       <widget class="QListView" name="lstView">
+       <widget class="QListView" name="lc_lstView">
         <property name="geometry">
          <rect>
           <x>40</x>
@@ -957,7 +957,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QTableView" name="tblView">
+       <widget class="QTableView" name="lc_tblView">
         <property name="geometry">
          <rect>
           <x>40</x>
@@ -967,7 +967,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnAssignCount">
+       <widget class="QPushButton" name="lc_btnAssignCount">
         <property name="geometry">
          <rect>
           <x>370</x>
@@ -981,7 +981,7 @@
         </property>
        </widget>
       </widget>
-      <widget class="QLabel" name="lblTrainingSamples">
+      <widget class="QLabel" name="lc_lblTrainingSamples">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -994,7 +994,7 @@
         <string>Training Samples:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTestingSamples">
+      <widget class="QLabel" name="lc_lblTestingSamples">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -1007,7 +1007,7 @@
         <string>Testing Samples:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblNameTest">
+      <widget class="QLabel" name="lc_lblNameTest">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -1026,7 +1026,7 @@
      <attribute name="title">
       <string>Data Extraction</string>
      </attribute>
-     <widget class="QGroupBox" name="gbxPhenoData">
+     <widget class="QGroupBox" name="de_gbxPhenoData">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1038,7 +1038,7 @@
       <property name="title">
        <string>Phenotyping Data</string>
       </property>
-      <widget class="QListWidget" name="wgtPhenoData">
+      <widget class="QListWidget" name="de_wgtPhenoData">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1101,7 +1101,7 @@
         </property>
        </item>
       </widget>
-      <widget class="QCheckBox" name="cbxCm">
+      <widget class="QCheckBox" name="de_cbxCm">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -1114,7 +1114,7 @@
         <string>Convert values to cm</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnLoadDE">
+      <widget class="QPushButton" name="de_btnLoadDE">
        <property name="geometry">
         <rect>
          <x>60</x>
@@ -1128,7 +1128,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbxPlotParams">
+     <widget class="QGroupBox" name="de_gbxPlotParams">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1140,7 +1140,7 @@
       <property name="title">
        <string>Plot Patameters</string>
       </property>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="de_cbxFrom">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -1150,7 +1150,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="de_cbxTo">
        <property name="geometry">
         <rect>
          <x>160</x>
@@ -1160,7 +1160,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_3">
+      <widget class="QComboBox" name="de_cbxShow">
        <property name="geometry">
         <rect>
          <x>490</x>
@@ -1170,7 +1170,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_4">
+      <widget class="QComboBox" name="de_cbxSpecify">
        <property name="geometry">
         <rect>
          <x>490</x>
@@ -1180,7 +1180,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="lblFrom">
+      <widget class="QLabel" name="de_lblFrom">
        <property name="geometry">
         <rect>
          <x>100</x>
@@ -1198,7 +1198,7 @@
         <string>From:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTo">
+      <widget class="QLabel" name="de_lblTo">
        <property name="geometry">
         <rect>
          <x>120</x>
@@ -1216,7 +1216,7 @@
         <string>To:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblShow">
+      <widget class="QLabel" name="de_lblShow">
        <property name="geometry">
         <rect>
          <x>420</x>
@@ -1234,7 +1234,7 @@
         <string>Show:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="lblSpecify">
+      <widget class="QLabel" name="de_lblSpecify">
        <property name="geometry">
         <rect>
          <x>410</x>
@@ -1252,7 +1252,7 @@
         <string>Specify:</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnSaveDE">
+      <widget class="QPushButton" name="de_btnSaveDE">
        <property name="geometry">
         <rect>
          <x>830</x>
@@ -1265,7 +1265,7 @@
         <string>Save Plot As...</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnExportDE">
+      <widget class="QPushButton" name="de_btnExportDE">
        <property name="geometry">
         <rect>
          <x>830</x>
@@ -1279,7 +1279,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="gbxMatPlot">
+     <widget class="QGroupBox" name="de_gbxMatPlot">
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -1291,7 +1291,7 @@
       <property name="title">
        <string>Plot</string>
       </property>
-      <widget class="mplWidget" name="MplWidget" native="true">
+      <widget class="mplWidget" name="de_MplWidget" native="true">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1302,23 +1302,12 @@
        </property>
       </widget>
      </widget>
-     <zorder>gbxMatPlot</zorder>
-     <zorder>gbxPhenoData</zorder>
-     <zorder>gbxPlotParams</zorder>
+     <zorder>de_gbxMatPlot</zorder>
+     <zorder>de_gbxPhenoData</zorder>
+     <zorder>de_gbxPlotParams</zorder>
     </widget>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1024</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <customwidgets>
   <customwidget>
