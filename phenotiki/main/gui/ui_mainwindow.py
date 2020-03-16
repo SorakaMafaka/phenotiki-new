@@ -22,6 +22,7 @@ from phenotiki.plugin.dataextraction.src.dataex import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        # set main window
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
@@ -35,6 +36,7 @@ class Ui_MainWindow(object):
         MainWindow.setMaximumSize(QSize(1024, 740))
         icon = QIcon()
         icon.addFile(u"../gui/img/icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         MainWindow.setAnimated(False)
         MainWindow.setTabShape(QTabWidget.Triangular)
         self.centralwidget = QWidget(MainWindow)
@@ -42,6 +44,8 @@ class Ui_MainWindow(object):
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setGeometry(QRect(0, 0, 1031, 771))
+
+        # set up main tab
         self.tabMain = QWidget()
         self.tabMain.setObjectName(u"tabMain")
         sizePolicy.setHeightForWidth(self.tabMain.sizePolicy().hasHeightForWidth())
@@ -383,6 +387,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
+        # add main tab items
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Phenotiki", None))
         MainWindow.setWindowFilePath("")
         self.main_btnAbout.setText(QCoreApplication.translate("MainWindow", u"About", None))
@@ -494,5 +499,5 @@ class Ui_MainWindow(object):
         w = QWidget()
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
         print(path[0])
-        self.MplWidget.canvas.figure.savefig(path[0])
-        self.MplWidget
+        self.de_MplWidget.canvas.figure.savefig(path[0])
+        self.de_MplWidget
