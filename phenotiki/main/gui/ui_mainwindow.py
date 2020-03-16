@@ -35,6 +35,7 @@ class Ui_MainWindow(object):
         MainWindow.setMaximumSize(QSize(1024, 740))
         icon = QIcon()
         icon.addFile(u"../gui/img/icon.png", QSize(), QIcon.Normal, QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         MainWindow.setAnimated(False)
         MainWindow.setTabShape(QTabWidget.Triangular)
         self.centralwidget = QWidget(MainWindow)
