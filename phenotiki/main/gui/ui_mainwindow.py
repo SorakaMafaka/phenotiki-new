@@ -22,6 +22,7 @@ from phenotiki.plugin.dataextraction.src.dataex import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        # set main window
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
@@ -43,6 +44,8 @@ class Ui_MainWindow(object):
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setGeometry(QRect(0, 0, 1031, 771))
+
+        # set up main tab
         self.tabMain = QWidget()
         self.tabMain.setObjectName(u"tabMain")
         sizePolicy.setHeightForWidth(self.tabMain.sizePolicy().hasHeightForWidth())
@@ -384,6 +387,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
+        # add main tab items
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Phenotiki", None))
         MainWindow.setWindowFilePath("")
         self.main_btnAbout.setText(QCoreApplication.translate("MainWindow", u"About", None))
