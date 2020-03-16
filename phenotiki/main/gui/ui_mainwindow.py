@@ -100,6 +100,12 @@ class Ui_MainWindow(object):
         self.pt_gbxImage = QGroupBox(self.tabPotTrayAnalysis)
         self.pt_gbxImage.setObjectName(u"pt_gbxImage")
         self.pt_gbxImage.setGeometry(QRect(270, 20, 741, 521))
+        self.pt_lblViewImage = QLabel(self.pt_gbxImage)
+        self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
+        self.pt_lblViewImage.mousePressEvent = self.getPos
+        self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/IMG_2013-09-28_08-00.png"))
+        self.pt_lblViewImage.setGeometry(QRect(10, 40, 491, 401))
+        self.pt_lblViewImage.setScaledContents(True)
         self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
         self.pt_horizontalSlider.setObjectName(u"pt_horizontalSlider")
         self.pt_horizontalSlider.setGeometry(QRect(90, 470, 321, 31))
@@ -396,9 +402,6 @@ class Ui_MainWindow(object):
 
         QMetaObject.connectSlotsByName(MainWindow)
 
-        if self.de_cbxFrom.isEnabled():
-            self.on_Choice()
-
     # setupUi
 
     def retranslateUi(self, MainWindow):
@@ -426,6 +429,7 @@ class Ui_MainWindow(object):
         self.pt_cmbType.setItemText(2, QCoreApplication.translate("MainWindow", u"Contour", None))
         self.pt_cmbType.setItemText(3, QCoreApplication.translate("MainWindow", u"FG Mask", None))
         self.pt_cmbType.setCurrentText(QCoreApplication.translate("MainWindow", u"Raw Image", None))
+        self.pt_lblViewImage.setText("")
         self.pt_gbxToolbox.setTitle(QCoreApplication.translate("MainWindow", u"Toolbox", None))
         self.pt_btnSettings.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
         self.pt_btnMask.setText(QCoreApplication.translate("MainWindow", u"Extract Mask", None))
@@ -522,3 +526,7 @@ class Ui_MainWindow(object):
 
     def update_to(self, index):
         UpdateTo(self, index)
+    def getPos(self, event):
+        x = event.pos().x()
+        y = event.pos().y()
+        print(x, y)
