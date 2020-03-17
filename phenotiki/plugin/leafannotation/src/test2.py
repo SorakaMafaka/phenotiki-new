@@ -37,30 +37,30 @@ def do_things(image):
         a_max_out = 114
         b_max_out = 207
 
-        LMin = 111
-        AMin = 49
-        BMin = 137
-        LMax = 240
-        AMax = 114
-        BMax = 240
+        l_min = 111
+        a_min = 49
+        b_min = 137
+        l_max = 240
+        a_max = 114
+        b_max = 240
 
-        minLAB = np.array([LMin, AMin, BMin])
-        maxLAB = np.array([LMax, AMax, BMax])
-        minLABout = np.array([l_min_out, a_min_out, b_min_out])
-        maxLABout = np.array([l_max_out, a_max_out, b_max_out])
+        min_lab = np.array([l_min, a_min, b_min])
+        max_lab = np.array([l_max, a_max, b_max])
+        min_la_bout = np.array([l_min_out, a_min_out, b_min_out])
+        max_la_bout = np.array([l_max_out, a_max_out, b_max_out])
 
         # Convert the BGR image to other color spaces
-        imageLAB = cv2.cvtColor(original, cv2.COLOR_BGR2LAB)
+        image_lab = cv2.cvtColor(original, cv2.COLOR_BGR2LAB)
 
         # Create the mask using the min and max values obtained from trackbar and apply bitwise and operation to get the results
-        maskLAB = cv2.inRange(imageLAB, minLAB, maxLAB)
-        resultLAB = cv2.bitwise_and(original, original, mask=maskLAB)
-        maskLABout = cv2.inRange(imageLAB, minLABout, maxLABout)
-        resultLABout = cv2.bitwise_and(original, original, mask=maskLABout)
+        mask_lab = cv2.inRange(image_lab, min_lab, max_lab)
+        result_lab = cv2.bitwise_and(original, original, mask=mask_lab)
+        mask_la_bout = cv2.inRange(image_lab, min_la_bout, max_la_bout)
+        result_la_bout = cv2.bitwise_and(original, original, mask=mask_la_bout)
 
         # Show the results
-        cv2.imshow('Segmentation', resultLAB)
-        cv2.imshow('Outline', resultLABout)
+        cv2.imshow('Segmentation', result_lab)
+        cv2.imshow('Outline', result_la_bout)
 
 
-do_things('./crop_test.png')
+do_things("./crop_test.png")

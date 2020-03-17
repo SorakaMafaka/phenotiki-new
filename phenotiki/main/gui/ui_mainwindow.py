@@ -7,22 +7,24 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-
+from PyQt5.uic.properties import QtCore
 from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
                             QRect, QSize, QUrl, Qt)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
                            QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
-                           QRadialGradient)
+                           QRadialGradient, QPen, QImage)
 from PySide2.QtWidgets import *
 
 from phenotiki.main.gui.mplwidget import MplWidget
 from phenotiki.main.gui.DE_UIFunction import *
 from phenotiki.plugin.dataextraction.src.dataex import *
+from phenotiki.main.src.import_functionality import *
 
 
 class Ui_MainWindow(object):
     def __init__(self):
-        self.array = []
+        self.img_plots_array = []
+        self.img_file_list_array = []
 
     def setupUi(self, MainWindow):
         # set main window
@@ -97,16 +99,19 @@ class Ui_MainWindow(object):
         self.pt_btnImport = QPushButton(self.pt_gbxFileList)
         self.pt_btnImport.setObjectName(u"pt_btnImport")
         self.pt_btnImport.setGeometry(QRect(10, 610, 231, 41))
+        self.pt_btnImport.clicked.connect(self.on_import_click)
         self.pt_lstFileList = QListWidget(self.pt_gbxFileList)
         self.pt_lstFileList.setObjectName(u"pt_lstFileList")
         self.pt_lstFileList.setGeometry(QRect(10, 20, 231, 521))
+        self.pt_lstFileList.clicked.connect(self.on_treeView_clicked)
         self.pt_gbxImage = QGroupBox(self.tabPotTrayAnalysis)
         self.pt_gbxImage.setObjectName(u"pt_gbxImage")
         self.pt_gbxImage.setGeometry(QRect(270, 20, 741, 521))
         self.pt_lblViewImage = QLabel(self.pt_gbxImage)
         self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
+        self.pt_lblViewImage.setCursor(QCursor(Qt.CrossCursor))
         self.pt_lblViewImage.mousePressEvent = self.getPos
-        self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/IMG_2013-09-28_08-00.png"))
+        self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/holder.jpg"))
         self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
         self.pt_lblViewImage.setScaledContents(True)
         self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
@@ -522,7 +527,7 @@ class Ui_MainWindow(object):
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
         print(path[0])
         self.de_MplWidget.canvas.figure.savefig(path[0])
-        #self.de_MplWidget
+        # self.de_MplWidget
 
     def update_from(self, index):
         UpdateFrom(self, index)
@@ -533,9 +538,28 @@ class Ui_MainWindow(object):
     def build_pos_array(self, array, x, y):
         array.append(str(x) + ", " + str(y))
         self.pt_lstPlots.clear()
-        self.pt_lstPlots.addItems(self.array)
+        self.pt_lstPlots.addItems(self.img_plots_array)
 
     def getPos(self, event):
         x = event.pos().x()
         y = event.pos().y()
-        self.build_pos_array(self.array, x, y)
+        self.build_pos_array(self.img_plots_array, x, y)
+
+    def on_import_click(self, event):
+        self.img_file_list_array.clear()
+        for i in print_image_files(self):
+            self.img_file_list_array.append(i)
+        self.pt_lstFileList.clear()
+        self.pt_lstFileList.addItems(self.img_file_list_array)
+        self.pt_btnMask.setEnabled(True)
+        self.pt_btnSave.setEnabled(True)
+        self.pt_btnSettings.setEnabled(True)
+        self.pt_btnTraits.setEnabled(True)
+        self.pt_cmbType.setEnabled(True)
+
+        if len(self.img_file_list_array) > 0:
+            self.pt_lblViewImage.setPixmap(QPixmap(self.img_file_list_array[0]))
+
+    def on_treeView_clicked(self, index):
+        self.pt_lblViewImage.setPixmap(QPixmap(str(index.data())))
+
