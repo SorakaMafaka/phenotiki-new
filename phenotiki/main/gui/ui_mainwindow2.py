@@ -8,16 +8,14 @@
 ## WARNING! All changes made in this file will be lost when recompiling gui file!
 ################################################################################
 
-from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
-    QRect, QSize, QUrl, Qt)
-from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
-    QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
-    QRadialGradient)
+from PySide2.QtCore import (QCoreApplication, QMetaObject, QRect, QSize, Qt)
+from PySide2.QtGui import (QFont,
+                           QIcon, QPixmap)
 from PySide2.QtWidgets import *
 
 from phenotiki.main.gui.mplwidget import MplWidget
-from phenotiki.main.gui.DE_UIFunction import update_graph, loadDataset, plot_graph, openFileDialog
-from phenotiki.plugin.dataextraction.src.dataex import *
+from phenotiki.plugin.dataextraction.src.DE_UIFunction import loadDataset, plot_graph
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
