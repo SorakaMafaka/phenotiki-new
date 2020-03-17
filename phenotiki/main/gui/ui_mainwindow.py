@@ -21,6 +21,9 @@ from phenotiki.plugin.dataextraction.src.dataex import *
 
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.array = []
+
     def setupUi(self, MainWindow):
         # set main window
         if MainWindow.objectName():
@@ -104,7 +107,7 @@ class Ui_MainWindow(object):
         self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
         self.pt_lblViewImage.mousePressEvent = self.getPos
         self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/IMG_2013-09-28_08-00.png"))
-        self.pt_lblViewImage.setGeometry(QRect(10, 40, 491, 401))
+        self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
         self.pt_lblViewImage.setScaledContents(True)
         self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
         self.pt_horizontalSlider.setObjectName(u"pt_horizontalSlider")
@@ -121,7 +124,7 @@ class Ui_MainWindow(object):
         self.pt_cmbType.setFrame(True)
         self.pt_lstPlots = QListWidget(self.pt_gbxImage)
         self.pt_lstPlots.setObjectName(u"pt_lstPlots")
-        self.pt_lstPlots.setGeometry(QRect(510, 30, 221, 431))
+        self.pt_lstPlots.setGeometry(QRect(540, 30, 191, 431))
         self.pt_gbxToolbox = QGroupBox(self.tabPotTrayAnalysis)
         self.pt_gbxToolbox.setObjectName(u"pt_gbxToolbox")
         self.pt_gbxToolbox.setGeometry(QRect(270, 550, 741, 141))
@@ -437,7 +440,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabLeafLabelling),
                                   QCoreApplication.translate("MainWindow", u"Leaf Labelling", None))
 
-        #add leaf counting items
+        # add leaf counting items
         self.lc_gbxPlantList.setTitle(QCoreApplication.translate("MainWindow", u"Plant List", None))
         self.lc_cmbSequence.setItemText(0, QCoreApplication.translate("MainWindow", u"N/A", None))
         self.lc_lblSequ.setText(QCoreApplication.translate("MainWindow", u"Sequence:", None))
@@ -509,7 +512,12 @@ class Ui_MainWindow(object):
         self.de_MplWidget.canvas.figure.savefig(path[0])
         self.de_MplWidget
 
+    def build_pos_array(self, array, x, y):
+        array.append(str(x) + ", " + str(y))
+        self.pt_lstPlots.clear()
+        self.pt_lstPlots.addItems(self.array)
+
     def getPos(self, event):
         x = event.pos().x()
         y = event.pos().y()
-        print(x, y)
+        self.build_pos_array(self.array, x, y)

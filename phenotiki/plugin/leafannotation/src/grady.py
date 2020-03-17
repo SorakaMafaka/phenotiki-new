@@ -9,11 +9,10 @@ import skimage
 from skimage.color import rgb2gray
 import cv2
 from skimage import filters
+from phenotiki.plugin.leafannotation.src.test2 import do_things
 
 # Generate noisy synthetic data
-img = cv2.imread(
-    'C:\\Users\\SorakaMafaka\\PycharmProjects\\Phenotiki\\phenotiki\\plugin\\leafannotation\\src\\IMG_2013-09-28_08' \
-    '-00.png ', -1)
+img = cv2.imread("../src/crop_test.png", -1)
 img = rgb2gray(img)
 #img = filters.sobel(img)
 #img = filters.gaussian(img)
@@ -61,7 +60,7 @@ fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(8, 3.2),
 ax1.imshow(data, cmap='gray', interpolation='nearest')
 ax1.axis('off')
 ax1.set_title('Noisy data')
-ax2.imshow(markers, cmap='magma', interpolation='nearest')
+ax2.imshow(markers, cmap='gray', interpolation='nearest')
 ax2.axis('off')
 ax2.set_title('Markers')
 ax3.imshow(labels, cmap='gray')
