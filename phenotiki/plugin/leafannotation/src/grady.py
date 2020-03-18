@@ -12,7 +12,7 @@ from skimage import filters
 from phenotiki.plugin.leafannotation.src.test2 import do_things
 
 # Generate noisy synthetic data
-img = cv2.imread("../src/crop_test.png", -1)
+img = cv2.imread("../src/green_channel.jpg")
 img = rgb2gray(img)
 #img = filters.sobel(img)
 #img = filters.gaussian(img)

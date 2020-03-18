@@ -7,22 +7,19 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-
-from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
-                            QRect, QSize, QUrl, Qt)
-from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
-                           QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
-                           QRadialGradient)
+from PySide2.QtCore import (QCoreApplication, QMetaObject, QRect, QSize, Qt)
+from PySide2.QtGui import (QCursor, QFont,
+                           QIcon, QPixmap)
 from PySide2.QtWidgets import *
 
-from phenotiki.main.gui.mplwidget import MplWidget
-from phenotiki.main.gui.DE_UIFunction import *
-from phenotiki.plugin.dataextraction.src.dataex import *
+from phenotiki.main.gui.DE_Tab import DE_Tab
+from phenotiki.main.src.import_functionality import *
 
 
 class Ui_MainWindow(object):
     def __init__(self):
-        self.array = []
+        self.img_plots_array = []
+        self.img_file_list_array = []
 
     def setupUi(self, MainWindow):
         # set main window
@@ -97,16 +94,19 @@ class Ui_MainWindow(object):
         self.pt_btnImport = QPushButton(self.pt_gbxFileList)
         self.pt_btnImport.setObjectName(u"pt_btnImport")
         self.pt_btnImport.setGeometry(QRect(10, 610, 231, 41))
+        self.pt_btnImport.clicked.connect(self.on_import_click)
         self.pt_lstFileList = QListWidget(self.pt_gbxFileList)
         self.pt_lstFileList.setObjectName(u"pt_lstFileList")
         self.pt_lstFileList.setGeometry(QRect(10, 20, 231, 521))
+        self.pt_lstFileList.clicked.connect(self.on_treeView_clicked)
         self.pt_gbxImage = QGroupBox(self.tabPotTrayAnalysis)
         self.pt_gbxImage.setObjectName(u"pt_gbxImage")
         self.pt_gbxImage.setGeometry(QRect(270, 20, 741, 521))
         self.pt_lblViewImage = QLabel(self.pt_gbxImage)
         self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
+        self.pt_lblViewImage.setCursor(QCursor(Qt.CrossCursor))
         self.pt_lblViewImage.mousePressEvent = self.getPos
-        self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/IMG_2013-09-28_08-00.png"))
+        self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/holder.jpg"))
         self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
         self.pt_lblViewImage.setScaledContents(True)
         self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
@@ -314,88 +314,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tabCounting, "")
 
         # Data Extraction Tab
-        self.tabDataExtraction = QWidget()
-        self.tabDataExtraction.setObjectName(u"tabDataExtraction")
-        self.de_gbxPhenoData = QGroupBox(self.tabDataExtraction)
-        self.de_gbxPhenoData.setObjectName(u"de_gbxPhenoData")
-        self.de_gbxPhenoData.setGeometry(QRect(10, 20, 251, 511))
-        self.de_wgtPhenoData = QListWidget(self.de_gbxPhenoData)
-        self.dataSelections = ["ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness", "Hue",
-                               "Count", "RelativeRateChange", "AbsoluteGrowthRate", "RelativeGrowthRate"]
-        self.de_wgtPhenoData.addItems(self.dataSelections)
-        self.de_wgtPhenoData.clicked.connect(self.on_Choice)
-        self.de_wgtPhenoData.setObjectName(u"de_wgtPhenoData")
-        self.de_wgtPhenoData.setEnabled(True)
-        self.de_wgtPhenoData.setGeometry(QRect(10, 20, 231, 361))
-        self.de_cbxCm = QCheckBox(self.de_gbxPhenoData)
-        self.de_cbxCm.setObjectName(u"de_cbxCm")
-        self.de_cbxCm.setGeometry(QRect(40, 390, 151, 21))
-        self.de_btnLoadDE = QPushButton(self.de_gbxPhenoData)
-        self.de_btnLoadDE.setObjectName(u"de_btnLoadDE")
-        self.de_btnLoadDE.setGeometry(QRect(60, 430, 121, 51))
-        self.de_btnLoadDE.clicked.connect(loadDataset)
-        self.de_gbxPlotParams = QGroupBox(self.tabDataExtraction)
-        self.de_gbxPlotParams.setObjectName(u"de_gbxPlotParams")
-        self.de_gbxPlotParams.setGeometry(QRect(10, 530, 1001, 171))
-        self.de_cbxFrom = QComboBox(self.de_gbxPlotParams)
-        self.de_cbxFrom.setObjectName(u"de_cbxFrom")
-        self.de_cbxFrom.addItem("N/A")
-        self.de_cbxFrom.setGeometry(QRect(160, 50, 221, 31))
-        self.de_cbxFrom.setEnabled(False)
-        self.de_cbxFrom.activated[int].connect(self.update_from)
-        self.de_cbxTo = QComboBox(self.de_gbxPlotParams)
-        self.de_cbxTo.setObjectName(u"de_cbxTo")
-        self.de_cbxTo.addItem("N/A")
-        self.de_cbxTo.setGeometry(QRect(160, 120, 221, 31))
-        self.de_cbxTo.setEnabled(False)
-        self.de_cbxTo.activated[int].connect(self.update_from)
-        self.de_cbxShow = QComboBox(self.de_gbxPlotParams)
-        self.de_cbxShow.setObjectName(u"de_cbxShow")
-        self.de_cbxShow.setGeometry(QRect(490, 50, 221, 31))
-        self.de_cbxShow.addItem("All")
-        self.de_cbxShow.setEnabled(False)
-        self.de_cbxSpecify = QComboBox(self.de_gbxPlotParams)
-        self.de_cbxSpecify.setObjectName(u"de_cbxSpecify")
-        self.de_cbxSpecify.setGeometry(QRect(490, 120, 221, 31))
-        self.de_cbxSpecify.addItem("N/A")
-        self.de_cbxSpecify.setEnabled(False)
-        self.de_lblFrom = QLabel(self.de_gbxPlotParams)
-        self.de_lblFrom.setObjectName(u"de_lblFrom")
-        self.de_lblFrom.setGeometry(QRect(100, 60, 55, 16))
-        font2 = QFont()
-        font2.setPointSize(12)
-        self.de_lblFrom.setFont(font2)
-        self.de_lblTo = QLabel(self.de_gbxPlotParams)
-        self.de_lblTo.setObjectName(u"de_lblTo")
-        self.de_lblTo.setGeometry(QRect(120, 130, 31, 16))
-        self.de_lblTo.setFont(font2)
-        self.de_lblShow = QLabel(self.de_gbxPlotParams)
-        self.de_lblShow.setObjectName(u"de_lblShow")
-        self.de_lblShow.setGeometry(QRect(420, 60, 55, 16))
-        self.de_lblShow.setFont(font2)
-        self.de_lblSpecify = QLabel(self.de_gbxPlotParams)
-        self.de_lblSpecify.setObjectName(u"de_lblSpecify")
-        self.de_lblSpecify.setGeometry(QRect(410, 120, 81, 31))
-        self.de_lblSpecify.setFont(font2)
-        self.de_btnSaveDE = QPushButton(self.de_gbxPlotParams)
-        self.de_btnSaveDE.setObjectName(u"de_btnSaveDE")
-        self.de_btnSaveDE.setGeometry(QRect(830, 30, 131, 51))
-        self.de_btnSaveDE.setEnabled(False)
-        self.de_btnSaveDE.clicked.connect(self.save_plot)
-        self.de_btnExportDE = QPushButton(self.de_gbxPlotParams)
-        self.de_btnExportDE.setObjectName(u"de_btnExportDE")
-        self.de_btnExportDE.setGeometry(QRect(830, 100, 131, 51))
-        self.de_btnExportDE.setEnabled(False)
-        self.de_gbxMatPlot = QGroupBox(self.tabDataExtraction)
-        self.de_gbxMatPlot.setObjectName(u"de_gbxMatPlot")
-        self.de_gbxMatPlot.setGeometry(QRect(270, 20, 741, 511))
-        self.de_MplWidget = MplWidget(self.de_gbxMatPlot)
-        self.de_MplWidget.setObjectName(u"de_MplWidget")
-        self.de_MplWidget.setGeometry(QRect(10, 20, 721, 481))
-        self.tabWidget.addTab(self.tabDataExtraction, "")
-        self.de_gbxMatPlot.raise_()
-        self.de_gbxPhenoData.raise_()
-        self.de_gbxPlotParams.raise_()
+        self.DataExtractionTab = DE_Tab(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -493,49 +412,32 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabCounting),
                                   QCoreApplication.translate("MainWindow", u"Leaf Counting", None))
 
-        # add data extraction items
-        self.de_gbxPhenoData.setTitle(QCoreApplication.translate("MainWindow", u"Phenotyping Data", None))
-        __sortingEnabled = self.de_wgtPhenoData.isSortingEnabled()
-        self.de_wgtPhenoData.setSortingEnabled(False)
-        self.de_wgtPhenoData.setSortingEnabled(__sortingEnabled)
-        self.de_cbxCm.setText(QCoreApplication.translate("MainWindow", u"Convert values to cm", None))
-        self.de_btnLoadDE.setText(QCoreApplication.translate("MainWindow", u"Load Dataset", None))
-        self.de_gbxPlotParams.setTitle(QCoreApplication.translate("MainWindow", u"Plot Patameters", None))
-        self.de_lblFrom.setText(QCoreApplication.translate("MainWindow", u"From:", None))
-        self.de_lblTo.setText(QCoreApplication.translate("MainWindow", u"To:", None))
-        self.de_lblShow.setText(QCoreApplication.translate("MainWindow", u"Show:", None))
-        self.de_lblSpecify.setText(QCoreApplication.translate("MainWindow", u"Specify:", None))
-        self.de_btnSaveDE.setText(QCoreApplication.translate("MainWindow", u"Save Plot As...", None))
-        self.de_btnExportDE.setText(QCoreApplication.translate("MainWindow", u"Export Data", None))
-        self.de_gbxMatPlot.setTitle(QCoreApplication.translate("MainWindow", u"Plot", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabDataExtraction),
-                                  QCoreApplication.translate("MainWindow", u"Data Extraction", None))
-
-    # retranslateUi
-
-    def on_Choice(self):
-        select = self.de_wgtPhenoData.currentItem().text()
-        plot_graph(self, select)
-
-    def save_plot(self):
-        w = QWidget()
-        path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
-        print(path[0])
-        self.de_MplWidget.canvas.figure.savefig(path[0])
-        #self.de_MplWidget
-
-    def update_from(self, index):
-        UpdateFrom(self, index)
-
-    def update_to(self, index):
-        UpdateTo(self, index)
 
     def build_pos_array(self, array, x, y):
         array.append(str(x) + ", " + str(y))
         self.pt_lstPlots.clear()
-        self.pt_lstPlots.addItems(self.array)
+        self.pt_lstPlots.addItems(self.img_plots_array)
 
     def getPos(self, event):
         x = event.pos().x()
         y = event.pos().y()
-        self.build_pos_array(self.array, x, y)
+        self.build_pos_array(self.img_plots_array, x, y)
+
+    def on_import_click(self, event):
+        self.img_file_list_array.clear()
+        for i in print_image_files(self):
+            self.img_file_list_array.append(i)
+        self.pt_lstFileList.clear()
+        self.pt_lstFileList.addItems(self.img_file_list_array)
+        self.pt_btnMask.setEnabled(True)
+        self.pt_btnSave.setEnabled(True)
+        self.pt_btnSettings.setEnabled(True)
+        self.pt_btnTraits.setEnabled(True)
+        self.pt_cmbType.setEnabled(True)
+
+        if len(self.img_file_list_array) > 0:
+            self.pt_lblViewImage.setPixmap(QPixmap(self.img_file_list_array[0]))
+
+    def on_treeView_clicked(self, index):
+        self.pt_lblViewImage.setPixmap(QPixmap(str(index.data())))
+
