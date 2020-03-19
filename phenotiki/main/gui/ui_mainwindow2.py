@@ -14,7 +14,7 @@ from PySide2.QtGui import (QFont,
 from PySide2.QtWidgets import *
 
 from phenotiki.main.gui.mplwidget import MplWidget
-from phenotiki.plugin.dataextraction.src.DE_UIFunction import loadDataset, plot_graph
+#from phenotiki.plugin.dataextraction.src.DE_UIFunction
 
 
 class Ui_MainWindow(object):

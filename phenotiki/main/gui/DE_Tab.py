@@ -43,12 +43,13 @@ class DE_Tab():
         self.de_cbxTo.addItem("N/A")
         self.de_cbxTo.setGeometry(QRect(160, 120, 221, 31))
         self.de_cbxTo.setEnabled(False)
-        self.de_cbxTo.activated[int].connect(self.update_from)
+        self.de_cbxTo.activated[int].connect(self.update_to)
         self.de_cbxShow = QComboBox(self.de_gbxPlotParams)
         self.de_cbxShow.setObjectName(u"de_cbxShow")
         self.de_cbxShow.setGeometry(QRect(490, 50, 221, 31))
         self.de_cbxShow.addItem("All")
         self.de_cbxShow.setEnabled(False)
+        self.de_cbxShow.activated[int].connect(self.update_show)
         self.de_cbxSpecify = QComboBox(self.de_gbxPlotParams)
         self.de_cbxSpecify.setObjectName(u"de_cbxSpecify")
         self.de_cbxSpecify.setGeometry(QRect(490, 120, 221, 31))
@@ -120,10 +121,13 @@ class DE_Tab():
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
         print(path[0])
         self.de_MplWidget.canvas.figure.savefig(path[0])
-        # self.de_MplWidget
+
 
     def update_from(self, index):
         self.DataFunct.UpdateFrom(self, index)
 
     def update_to(self, index):
         self.DataFunct.UpdateTo(self, index)
+
+    def update_show(self, index):
+        self.DataFunct.UpdateShow(self, index)
