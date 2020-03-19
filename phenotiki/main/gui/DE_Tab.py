@@ -55,6 +55,7 @@ class DE_Tab():
         self.de_cbxSpecify.setGeometry(QRect(490, 120, 221, 31))
         self.de_cbxSpecify.addItem("N/A")
         self.de_cbxSpecify.setEnabled(False)
+        self.de_cbxSpecify.activated[int].connect(self.update_select)
         self.de_lblFrom = QLabel(self.de_gbxPlotParams)
         self.de_lblFrom.setObjectName(u"de_lblFrom")
         self.de_lblFrom.setGeometry(QRect(100, 60, 55, 16))
@@ -131,3 +132,6 @@ class DE_Tab():
 
     def update_show(self, index):
         self.DataFunct.UpdateShow(self, index)
+
+    def update_select(self, index):
+        self.DataFunct.UpdateSpecify(self, index)

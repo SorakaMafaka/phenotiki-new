@@ -21,6 +21,7 @@ class DE_Functionality():
         self.bySubject = False
         self.byGroup = False
         self.groups = []
+        self.subjectNum = 0
 
     # Opens a file dialog so that a mmatlabfile can be opened and stored.
     def loadDataset(self):
@@ -100,7 +101,8 @@ class DE_Functionality():
                             count += 1
 
                 elif self.bySubject:
-                    self.y_values.append(0)
+                    select = sub[self.selection]
+                    self.y_values.append(select[self.subjectNum])
 
             # Sets format for time values
             formatter = dates.DateFormatter("%d/%b")
@@ -112,8 +114,7 @@ class DE_Functionality():
             widget.de_MplWidget.canvas.axes.plot(self.x_values[self.fr:self.to], self.y_values[self.fr:self.to])
             # Show range by using standart deviation
             if self.bySubject == False:
-                widget.de_MplWidget.canvas.axes.fill_between(self.x_values[self.fr:self.to], minstd_values[self.fr:self.to],
-                                                             maxstd_values[self.fr:self.to], alpha=0.2)
+                widget.de_MplWidget.canvas.axes.fill_between(self.x_values[self.fr:self.to], minstd_values[self.fr:self.to], maxstd_values[self.fr:self.to], alpha=0.2)
             widget.de_MplWidget.canvas.axes.set_title(self.selection)
             widget.de_MplWidget.canvas.draw()
 
@@ -201,3 +202,9 @@ class DE_Functionality():
                 subNum.append("Subject " + str(i))
             widget.de_cbxSpecify.addItems(subNum)
             print(firstSub['ID'])
+
+        self.plot_graph(widget, self.selection)
+
+    def UpdateSpecify(self, widget, index):
+        self.subjectNum = index
+        self.plot_graph(widget, self.selection)
