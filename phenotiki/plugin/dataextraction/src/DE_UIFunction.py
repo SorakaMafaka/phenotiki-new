@@ -24,27 +24,29 @@ class DE_Functionality():
         self.subjectNum = 0
 
     # Opens a file dialog so that a mmatlabfile can be opened and stored.
-    def loadDataset(self):
+    def loadDataset(self, widget):
         w = QWidget()
         fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("MATLAB files (*mat)"))
         fname = fname[0]
         try:
             self.matdata = self.open_mat_file(fname)
             self.fileOpened = True
+
+            widget.de_wgtPhenoData.setEnabled(True)
+            # stores all time values for x axis and from and to choice buttons
+            timestamps = self.matdata['Timestamp']
+            for i in timestamps:
+                time = datetime.datetime.fromtimestamp(i)
+                self.x_values.append(time)
+                # save times as string for choice buttons
+                if len(self.times) <= len(timestamps):
+                    self.times.append(time.strftime("%d-%b-%Y %H:%m:%S"))
+
+            # set to, so that the latest time is selected
+            self.to = len(self.times)
+
         except:
             print("invalid path")
-
-        # stores all time values for x axis and from and to choice buttons
-        timestamps = self.matdata['Timestamp']
-        for i in timestamps:
-            time = datetime.datetime.fromtimestamp(i)
-            self.x_values.append(time)
-            # save times as string for choice buttons
-            if len(self.times) <= len(timestamps):
-                self.times.append(time.strftime("%d-%b-%Y %H:%m:%S"))
-
-        # set to, so that the latest time is selected
-        self.to = len(self.times)
 
     # opens file dialog to select a directory
     def openFileDialog(self):
@@ -71,7 +73,7 @@ class DE_Functionality():
                 sub = i
                 # append the mean of selected data held in subject to y values
                 # If this is none or another N/A type append none instead
-                if not self.bySubject or not self.byGroup:
+                if not self.bySubject and not self.byGroup:
                     try:
                         self.y_values.append(np.mean(sub[self.selection]))
                     except:
@@ -85,25 +87,27 @@ class DE_Functionality():
                     except:
                         std_values.append(0.0)
 
-                    # get positive and negative std by adding and substracting std from y values
-                    try:
-                        maxstd_values = np.add(std_values, self.y_values)
-                        minstd_values = np.subtract(self.y_values, std_values)
-                    except:
-                        count = 0
-                        for i in self.y_values:
-                            if i == None:
-                                maxstd_values.append(float(0) + float(std_values[count]))
-                                minstd_values.append(float(0) - float(std_values[count]))
-                            else:
-                                maxstd_values.append(float(i) + float(std_values[count]))
-                                minstd_values.append(float(i) - float(std_values[count]))
-                            count += 1
 
                 elif self.bySubject:
                     select = sub[self.selection]
                     self.y_values.append(select[self.subjectNum])
 
+
+            if not self.bySubject and not self.byGroup:
+                # get positive and negative std by adding and substracting std from y values
+                try:
+                    maxstd_values = np.add(std_values, self.y_values)
+                    minstd_values = np.subtract(self.y_values, std_values)
+                except:
+                    count = 0
+                    for i in self.y_values:
+                        if i == None:
+                            maxstd_values.append(float(0) + float(std_values[count]))
+                            minstd_values.append(float(0) - float(std_values[count]))
+                        else:
+                            maxstd_values.append(float(i) + float(std_values[count]))
+                            minstd_values.append(float(i) - float(std_values[count]))
+                        count += 1
             # Sets format for time values
             formatter = dates.DateFormatter("%d/%b")
             # setup plot
@@ -161,6 +165,8 @@ class DE_Functionality():
 
         return self.matdata
 
+#called when show is changed, between all group or subject
+    #
     def UpdateShow(self, widget, index):
         subjects = self.matdata['Subject']
         NumOfSub = 0
@@ -205,6 +211,8 @@ class DE_Functionality():
 
         self.plot_graph(widget, self.selection)
 
+#   called when different dubject or group is selected
+    #only works for subject at the moment
     def UpdateSpecify(self, widget, index):
         self.subjectNum = index
         self.plot_graph(widget, self.selection)

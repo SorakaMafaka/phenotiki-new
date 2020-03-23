@@ -20,7 +20,7 @@ class DE_Tab():
         self.de_wgtPhenoData.addItems(self.dataSelections)
         self.de_wgtPhenoData.clicked.connect(self.on_Choice)
         self.de_wgtPhenoData.setObjectName(u"de_wgtPhenoData")
-        self.de_wgtPhenoData.setEnabled(True)
+        self.de_wgtPhenoData.setEnabled(False)
         self.de_wgtPhenoData.setGeometry(QRect(10, 20, 231, 361))
         self.de_cbxCm = QCheckBox(self.de_gbxPhenoData)
         self.de_cbxCm.setObjectName(u"de_cbxCm")
@@ -28,7 +28,7 @@ class DE_Tab():
         self.de_btnLoadDE = QPushButton(self.de_gbxPhenoData)
         self.de_btnLoadDE.setObjectName(u"de_btnLoadDE")
         self.de_btnLoadDE.setGeometry(QRect(60, 430, 121, 51))
-        self.de_btnLoadDE.clicked.connect(self.DataFunct.loadDataset)
+        self.de_btnLoadDE.clicked.connect(self.load_Dataset)
         self.de_gbxPlotParams = QGroupBox(self.tabDataExtraction)
         self.de_gbxPlotParams.setObjectName(u"de_gbxPlotParams")
         self.de_gbxPlotParams.setGeometry(QRect(10, 530, 1001, 171))
@@ -112,6 +112,9 @@ class DE_Tab():
         self.de_gbxMatPlot.setTitle(QCoreApplication.translate("MainWindow", u"Plot", None))
         self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabDataExtraction),
                               QCoreApplication.translate("MainWindow", u"Data Extraction", None))
+
+    def load_Dataset(self):
+        self.DataFunct.loadDataset(self)
 
     def on_Choice(self):
         select = self.de_wgtPhenoData.currentItem().text()
