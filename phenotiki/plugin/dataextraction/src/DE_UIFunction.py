@@ -141,7 +141,8 @@ class DE_Functionality():
         widget.de_cbxFrom.setEnabled(True)
         widget.de_cbxTo.setEnabled(True)
         widget.de_btnSaveDE.setEnabled(True)
-        widget.de_btnExportDE.setEnabled(True)
+        #export to CSV functionality not implemented yet.
+       # widget.de_btnExportDE.setEnabled(True)
 
         # Setup show button
         widget.de_cbxShow.addItems(["Specific Group", "Specific Subject"])
