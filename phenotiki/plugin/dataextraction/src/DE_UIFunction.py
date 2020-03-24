@@ -1,7 +1,6 @@
 import numpy as np
 from PySide2.QtWidgets import QWidget, QFileDialog
 import datetime
-from phenotiki.main.gui.mplwidget import MplWidget
 from pymatreader import read_mat
 from matplotlib import dates
 

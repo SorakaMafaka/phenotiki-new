@@ -6,7 +6,7 @@ def do_things(image):
     # load image
     original = cv2.imread(image)
     # Resize the image
-    rsize = 600
+    rsize = 900
     original = cv2.resize(original, (rsize, rsize))
 
     # position on the screen where the windows start
@@ -30,11 +30,11 @@ def do_things(image):
         k = cv2.waitKey(1) & 0xFF
 
         # outline plant image
-        l_min_out = 111
+        l_min_out = 240
         a_min_out = 49
         b_min_out = 137
         l_max_out = 174
-        a_max_out = 114
+        a_max_out = 240
         b_max_out = 207
 
         l_min = 111
@@ -57,10 +57,10 @@ def do_things(image):
         result_lab = cv2.bitwise_and(original, original, mask=mask_lab)
         mask_la_bout = cv2.inRange(image_lab, min_la_bout, max_la_bout)
         result_la_bout = cv2.bitwise_and(original, original, mask=mask_la_bout)
-
+        #cv2.imwrite('../src/test.png', result_lab)
         # Show the results
         cv2.imshow('Segmentation', result_lab)
         cv2.imshow('Outline', result_la_bout)
 
 
-do_things("./crop_test.png")
+do_things("./IMG_2013-09-28_08-00.png")

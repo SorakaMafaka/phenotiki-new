@@ -1,9 +1,11 @@
-#seperate file to remove data extraction from main UI file.
+# seperate file to remove data extraction from main UI file.
 from PySide2.QtCore import QRect, QCoreApplication
 
+from phenotiki.plugin.dataextraction.gui.mplwidget import MplWidget
 from phenotiki.plugin.dataextraction.src.DE_UIFunction import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
+
 
 class DE_Tab():
     def __init__(self, tab):
@@ -111,7 +113,7 @@ class DE_Tab():
         self.de_btnExportDE.setText(QCoreApplication.translate("MainWindow", u"Export Data", None))
         self.de_gbxMatPlot.setTitle(QCoreApplication.translate("MainWindow", u"Plot", None))
         self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabDataExtraction),
-                              QCoreApplication.translate("MainWindow", u"Data Extraction", None))
+                                  QCoreApplication.translate("MainWindow", u"Data Extraction", None))
 
     def load_Dataset(self):
         self.DataFunct.loadDataset(self)
@@ -125,7 +127,6 @@ class DE_Tab():
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
         print(path[0])
         self.de_MplWidget.canvas.figure.savefig(path[0])
-
 
     def update_from(self, index):
         self.DataFunct.UpdateFrom(self, index)
