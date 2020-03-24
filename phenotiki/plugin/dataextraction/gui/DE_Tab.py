@@ -1,9 +1,11 @@
-#seperate file to remove data extraction from main UI file.
+# seperate file to remove data extraction from main UI file.
 from PySide2.QtCore import QRect, QCoreApplication
 
+from phenotiki.plugin.dataextraction.gui.mplwidget import MplWidget
 from phenotiki.plugin.dataextraction.src.DE_UIFunction import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
+
 
 class DE_Tab():
     def __init__(self, tab):
@@ -20,7 +22,7 @@ class DE_Tab():
         self.de_wgtPhenoData.addItems(self.dataSelections)
         self.de_wgtPhenoData.clicked.connect(self.on_Choice)
         self.de_wgtPhenoData.setObjectName(u"de_wgtPhenoData")
-        self.de_wgtPhenoData.setEnabled(True)
+        self.de_wgtPhenoData.setEnabled(False)
         self.de_wgtPhenoData.setGeometry(QRect(10, 20, 231, 361))
         self.de_cbxCm = QCheckBox(self.de_gbxPhenoData)
         self.de_cbxCm.setObjectName(u"de_cbxCm")
@@ -28,7 +30,7 @@ class DE_Tab():
         self.de_btnLoadDE = QPushButton(self.de_gbxPhenoData)
         self.de_btnLoadDE.setObjectName(u"de_btnLoadDE")
         self.de_btnLoadDE.setGeometry(QRect(60, 430, 121, 51))
-        self.de_btnLoadDE.clicked.connect(self.DataFunct.loadDataset)
+        self.de_btnLoadDE.clicked.connect(self.load_Dataset)
         self.de_gbxPlotParams = QGroupBox(self.tabDataExtraction)
         self.de_gbxPlotParams.setObjectName(u"de_gbxPlotParams")
         self.de_gbxPlotParams.setGeometry(QRect(10, 530, 1001, 171))
@@ -43,17 +45,19 @@ class DE_Tab():
         self.de_cbxTo.addItem("N/A")
         self.de_cbxTo.setGeometry(QRect(160, 120, 221, 31))
         self.de_cbxTo.setEnabled(False)
-        self.de_cbxTo.activated[int].connect(self.update_from)
+        self.de_cbxTo.activated[int].connect(self.update_to)
         self.de_cbxShow = QComboBox(self.de_gbxPlotParams)
         self.de_cbxShow.setObjectName(u"de_cbxShow")
         self.de_cbxShow.setGeometry(QRect(490, 50, 221, 31))
         self.de_cbxShow.addItem("All")
         self.de_cbxShow.setEnabled(False)
+        self.de_cbxShow.activated[int].connect(self.update_show)
         self.de_cbxSpecify = QComboBox(self.de_gbxPlotParams)
         self.de_cbxSpecify.setObjectName(u"de_cbxSpecify")
         self.de_cbxSpecify.setGeometry(QRect(490, 120, 221, 31))
         self.de_cbxSpecify.addItem("N/A")
         self.de_cbxSpecify.setEnabled(False)
+        self.de_cbxSpecify.activated[int].connect(self.update_select)
         self.de_lblFrom = QLabel(self.de_gbxPlotParams)
         self.de_lblFrom.setObjectName(u"de_lblFrom")
         self.de_lblFrom.setGeometry(QRect(100, 60, 55, 16))
@@ -109,7 +113,10 @@ class DE_Tab():
         self.de_btnExportDE.setText(QCoreApplication.translate("MainWindow", u"Export Data", None))
         self.de_gbxMatPlot.setTitle(QCoreApplication.translate("MainWindow", u"Plot", None))
         self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabDataExtraction),
-                              QCoreApplication.translate("MainWindow", u"Data Extraction", None))
+                                  QCoreApplication.translate("MainWindow", u"Data Extraction", None))
+
+    def load_Dataset(self):
+        self.DataFunct.loadDataset(self)
 
     def on_Choice(self):
         select = self.de_wgtPhenoData.currentItem().text()
@@ -120,10 +127,15 @@ class DE_Tab():
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
         print(path[0])
         self.de_MplWidget.canvas.figure.savefig(path[0])
-        # self.de_MplWidget
 
     def update_from(self, index):
         self.DataFunct.UpdateFrom(self, index)
 
     def update_to(self, index):
         self.DataFunct.UpdateTo(self, index)
+
+    def update_show(self, index):
+        self.DataFunct.UpdateShow(self, index)
+
+    def update_select(self, index):
+        self.DataFunct.UpdateSpecify(self, index)

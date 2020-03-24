@@ -1,0 +1,131 @@
+from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
+                            QRect, QSize, QUrl, Qt)
+from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
+                           QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
+                           QRadialGradient)
+from PySide2.QtWidgets import *
+
+from phenotiki.main.src.import_functionality import print_image_files
+
+
+class PT_Tab():
+    def __init__(self, tab):
+        self.img_plots_array = []
+        self.img_file_list_array = []
+        self.tabsystem = tab
+        self.tabPotTrayAnalysis = QWidget()
+        self.tabPotTrayAnalysis.setObjectName(u"tabPotTrayAnalysis")
+        self.pt_gbxFileList = QGroupBox(self.tabPotTrayAnalysis)
+        self.pt_gbxFileList.setObjectName(u"pt_gbxFileList")
+        self.pt_gbxFileList.setGeometry(QRect(10, 20, 251, 671))
+        self.pt_btnLoad = QPushButton(self.pt_gbxFileList)
+        self.pt_btnLoad.setObjectName(u"pt_btnLoad")
+        self.pt_btnLoad.setGeometry(QRect(10, 560, 231, 41))
+        self.pt_btnImport = QPushButton(self.pt_gbxFileList)
+        self.pt_btnImport.setObjectName(u"pt_btnImport")
+        self.pt_btnImport.setGeometry(QRect(10, 610, 231, 41))
+        self.pt_btnImport.clicked.connect(self.on_import_click)
+        self.pt_lstFileList = QListWidget(self.pt_gbxFileList)
+        self.pt_lstFileList.setObjectName(u"pt_lstFileList")
+        self.pt_lstFileList.setGeometry(QRect(10, 20, 231, 521))
+        self.pt_lstFileList.clicked.connect(self.on_treeView_clicked)
+        self.pt_gbxImage = QGroupBox(self.tabPotTrayAnalysis)
+        self.pt_gbxImage.setObjectName(u"pt_gbxImage")
+        self.pt_gbxImage.setGeometry(QRect(270, 20, 741, 521))
+        self.pt_lblViewImage = QLabel(self.pt_gbxImage)
+        self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
+        self.pt_lblViewImage.setCursor(QCursor(Qt.CrossCursor))
+        self.pt_lblViewImage.mousePressEvent = self.getPos
+        self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/holder.jpg"))
+        self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
+        self.pt_lblViewImage.setScaledContents(True)
+        self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
+        self.pt_horizontalSlider.setObjectName(u"pt_horizontalSlider")
+        self.pt_horizontalSlider.setGeometry(QRect(90, 470, 321, 31))
+        self.pt_horizontalSlider.setOrientation(Qt.Horizontal)
+        self.pt_cmbType = QComboBox(self.pt_gbxImage)
+        self.pt_cmbType.addItem("")
+        self.pt_cmbType.addItem("")
+        self.pt_cmbType.addItem("")
+        self.pt_cmbType.addItem("")
+        self.pt_cmbType.setObjectName(u"pt_cmbType")
+        self.pt_cmbType.setEnabled(False)
+        self.pt_cmbType.setGeometry(QRect(590, 470, 121, 31))
+        self.pt_cmbType.setFrame(True)
+        self.pt_lstPlots = QListWidget(self.pt_gbxImage)
+        self.pt_lstPlots.setObjectName(u"pt_lstPlots")
+        self.pt_lstPlots.setGeometry(QRect(540, 30, 191, 431))
+        self.pt_gbxToolbox = QGroupBox(self.tabPotTrayAnalysis)
+        self.pt_gbxToolbox.setObjectName(u"pt_gbxToolbox")
+        self.pt_gbxToolbox.setGeometry(QRect(270, 550, 741, 141))
+        self.pt_progressBar = QProgressBar(self.pt_gbxToolbox)
+        self.pt_progressBar.setObjectName(u"pt_progressBar")
+        self.pt_progressBar.setGeometry(QRect(20, 60, 431, 31))
+        self.pt_progressBar.setValue(0)
+        self.pt_progressBar.setTextVisible(False)
+        self.pt_btnSettings = QPushButton(self.pt_gbxToolbox)
+        self.pt_btnSettings.setObjectName(u"pt_btnSettings")
+        self.pt_btnSettings.setEnabled(False)
+        self.pt_btnSettings.setGeometry(QRect(480, 20, 121, 51))
+        self.pt_btnMask = QPushButton(self.pt_gbxToolbox)
+        self.pt_btnMask.setObjectName(u"pt_btnMask")
+        self.pt_btnMask.setEnabled(False)
+        self.pt_btnMask.setGeometry(QRect(610, 20, 121, 51))
+        self.pt_btnTraits = QPushButton(self.pt_gbxToolbox)
+        self.pt_btnTraits.setObjectName(u"pt_btnTraits")
+        self.pt_btnTraits.setEnabled(False)
+        self.pt_btnTraits.setGeometry(QRect(480, 80, 121, 51))
+        self.pt_btnSave = QPushButton(self.pt_gbxToolbox)
+        self.pt_btnSave.setObjectName(u"pt_btnSave")
+        self.pt_btnSave.setEnabled(False)
+        self.pt_btnSave.setGeometry(QRect(610, 80, 121, 51))
+        self.pt_cmbType.setCurrentIndex(0)
+        tab.addTab(self.tabPotTrayAnalysis, "")
+        self.retranslate_UI()
+
+    def retranslate_UI(self):
+        self.pt_gbxFileList.setTitle(QCoreApplication.translate("MainWindow", u"File List", None))
+        self.pt_btnLoad.setText(QCoreApplication.translate("MainWindow", u"Load Dataset", None))
+        self.pt_btnImport.setText(QCoreApplication.translate("MainWindow", u"Import", None))
+        self.pt_gbxImage.setTitle(QCoreApplication.translate("MainWindow", u"Image", None))
+        self.pt_cmbType.setItemText(0, QCoreApplication.translate("MainWindow", u"Raw Image", None))
+        self.pt_cmbType.setItemText(1, QCoreApplication.translate("MainWindow", u"Detected Plants", None))
+        self.pt_cmbType.setItemText(2, QCoreApplication.translate("MainWindow", u"Contour", None))
+        self.pt_cmbType.setItemText(3, QCoreApplication.translate("MainWindow", u"FG Mask", None))
+        self.pt_cmbType.setCurrentText(QCoreApplication.translate("MainWindow", u"Raw Image", None))
+        self.pt_lblViewImage.setText("")
+        self.pt_gbxToolbox.setTitle(QCoreApplication.translate("MainWindow", u"Toolbox", None))
+        self.pt_btnSettings.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
+        self.pt_btnMask.setText(QCoreApplication.translate("MainWindow", u"Extract Mask", None))
+        self.pt_btnTraits.setText(QCoreApplication.translate("MainWindow", u"Get Traits", None))
+        self.pt_btnSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabPotTrayAnalysis),
+                                  QCoreApplication.translate("MainWindow", u"Pot Tray Analysis", None))
+
+    def build_pos_array(self, array, x, y):
+        array.append(str(x) + ", " + str(y))
+        self.pt_lstPlots.clear()
+        self.pt_lstPlots.addItems(self.img_plots_array)
+
+    def getPos(self, event):
+        x = event.pos().x()
+        y = event.pos().y()
+        self.build_pos_array(self.img_plots_array, x, y)
+
+    def on_import_click(self, event):
+        self.img_file_list_array.clear()
+        for i in print_image_files(self):
+            self.img_file_list_array.append(i)
+        self.pt_lstFileList.clear()
+        self.pt_lstFileList.addItems(self.img_file_list_array)
+        self.pt_btnMask.setEnabled(True)
+        self.pt_btnSave.setEnabled(True)
+        self.pt_btnSettings.setEnabled(True)
+        self.pt_btnTraits.setEnabled(True)
+        self.pt_cmbType.setEnabled(True)
+
+        if len(self.img_file_list_array) > 0:
+            self.pt_lblViewImage.setPixmap(QPixmap(self.img_file_list_array[0]))
+
+    def on_treeView_clicked(self, index):
+        self.pt_lblViewImage.setPixmap(QPixmap(str(index.data())))
