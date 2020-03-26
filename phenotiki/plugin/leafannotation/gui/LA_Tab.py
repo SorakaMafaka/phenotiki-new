@@ -80,6 +80,7 @@ class LA_Tab():
         tab.addTab(self.tabLeafLabelling, "")
         self.retranslate_UI()
 
+    ## Puts in proper text names on variour retranslated elements
     def retranslate_UI(self):
         self.ll_gbxFileList_2.setTitle(QCoreApplication.translate("MainWindow", u"File List", None))
         self.ll_lblSubject.setText(QCoreApplication.translate("MainWindow", u"Subject:", None))
