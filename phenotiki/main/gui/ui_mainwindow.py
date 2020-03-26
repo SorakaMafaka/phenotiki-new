@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(1024, 740)
+        MainWindow.resize(1024, 740)# change this line to make resizable
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -83,7 +83,17 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
+        self.main_btnAbout.clicked.connect(self.show_popup)
         QMetaObject.connectSlotsByName(MainWindow)
+
+
+    def show_popup(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("About this Program")
+        msg.setText("This is where the copied text will go")
+
+        x= msg.exec_()
+
 
     # add main tab items
     def retranslateUi(self, MainWindow):
