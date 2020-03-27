@@ -73,35 +73,43 @@ class PT_Tab():
         self.pt_cmbType.setGeometry(QRect(590, 470, 121, 31))
         self.pt_cmbType.setFrame(True)
 
+        ## Plots widget setup in Image Qbox
         self.pt_lstPlots = QListWidget(self.pt_gbxImage)
         self.pt_lstPlots.setObjectName(u"pt_lstPlots")
         self.pt_lstPlots.setGeometry(QRect(540, 30, 191, 431))
 
+
+        ## Toolbox Qbox setup
         self.pt_gbxToolbox = QGroupBox(self.tabPotTrayAnalysis)
         self.pt_gbxToolbox.setObjectName(u"pt_gbxToolbox")
         self.pt_gbxToolbox.setGeometry(QRect(270, 550, 741, 141))
 
+        ## Progress bar in Toolbox setup
         self.pt_progressBar = QProgressBar(self.pt_gbxToolbox)
         self.pt_progressBar.setObjectName(u"pt_progressBar")
         self.pt_progressBar.setGeometry(QRect(20, 60, 431, 31))
         self.pt_progressBar.setValue(0)
         self.pt_progressBar.setTextVisible(False)
 
+        ## Settings Button
         self.pt_btnSettings = QPushButton(self.pt_gbxToolbox)
         self.pt_btnSettings.setObjectName(u"pt_btnSettings")
         self.pt_btnSettings.setEnabled(False)
         self.pt_btnSettings.setGeometry(QRect(480, 20, 121, 51))
 
+        ## Mask Button
         self.pt_btnMask = QPushButton(self.pt_gbxToolbox)
         self.pt_btnMask.setObjectName(u"pt_btnMask")
         self.pt_btnMask.setEnabled(False)
         self.pt_btnMask.setGeometry(QRect(610, 20, 121, 51))
 
+        ##Task Button
         self.pt_btnTraits = QPushButton(self.pt_gbxToolbox)
         self.pt_btnTraits.setObjectName(u"pt_btnTraits")
         self.pt_btnTraits.setEnabled(False)
         self.pt_btnTraits.setGeometry(QRect(480, 80, 121, 51))
 
+        ## Save Button
         self.pt_btnSave = QPushButton(self.pt_gbxToolbox)
         self.pt_btnSave.setObjectName(u"pt_btnSave")
         self.pt_btnSave.setEnabled(False)
@@ -112,6 +120,7 @@ class PT_Tab():
         tab.addTab(self.tabPotTrayAnalysis, "")
         self.retranslate_UI()
 
+    ## Naming things
     def retranslate_UI(self):
         self.pt_gbxFileList.setTitle(QCoreApplication.translate("MainWindow", u"File List", None))
         self.pt_btnLoad.setText(QCoreApplication.translate("MainWindow", u"Load Dataset", None))
