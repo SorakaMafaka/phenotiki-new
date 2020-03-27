@@ -15,8 +15,10 @@ class PT_Tab():
         self.img_plots_array = []
         self.img_file_list_array = []
         self.tabsystem = tab
+        self.tabsystem.setFont(QFont("Helvetica", 12))
         self.tabPotTrayAnalysis = QWidget()
         self.tabPotTrayAnalysis.setObjectName(u"tabPotTrayAnalysis")
+        self.tabPotTrayAnalysis.setFont(QFont("Helvetica", 8))
 
 
         ## File list group box Setup

@@ -12,8 +12,10 @@ class DE_Tab():
 
         self.DataFunct = DE_Functionality()
         self.tabsystem = tab
+        self.tabsystem.setFont(QFont("Helvetica", 12))
         self.tabDataExtraction = QWidget()
         self.tabDataExtraction.setObjectName(u"tabDataExtraction")
+        self.tabDataExtraction.setFont(QFont("Helvetica", 8))
 
         ## PhenoData QGroup Box setup
         self.de_gbxPhenoData = QGroupBox(self.tabDataExtraction)

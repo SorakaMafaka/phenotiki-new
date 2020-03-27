@@ -9,8 +9,10 @@ from PySide2.QtWidgets import *
 class LC_Tab():
     def __init__(self,tab):
         self.tabsystem = tab
+        self.tabsystem.setFont(QFont("Helvetica", 12))
         self.tabCounting = QWidget()
         self.tabCounting.setObjectName(u"tabCounting")
+        self.tabCounting.setFont(QFont("Helvetica", 8))
 
         ## Plant List Group Box
         self.lc_gbxPlantList = QGroupBox(self.tabCounting)

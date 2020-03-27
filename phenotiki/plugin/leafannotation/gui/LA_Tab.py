@@ -11,8 +11,10 @@ class LA_Tab():
 
         ## Tab setup
         self.tabsystem = tab
+        self.tabsystem.setFont(QFont("Helvetica", 12))
         self.tabLeafLabelling = QWidget()
         self.tabLeafLabelling.setObjectName(u"tabLeafLabelling")
+        self.tabLeafLabelling.setFont(QFont("Helvetica", 8))
 
         ## File List Group Box set up
         self.ll_gbxFileList_2 = QGroupBox(self.tabLeafLabelling)
