@@ -3,7 +3,7 @@ from PySide2.QtWidgets import QWidget, QFileDialog
 import datetime
 from pymatreader import read_mat
 from matplotlib import dates
-
+import csv
 
 # class holds the dataset after it has been loaded from file and other values,
 # to plot the data (x_values, and y_values.
@@ -141,7 +141,7 @@ class DE_Functionality():
         widget.de_cbxTo.setEnabled(True)
         widget.de_btnSaveDE.setEnabled(True)
         #export to CSV functionality not implemented yet.
-       # widget.de_btnExportDE.setEnabled(True)
+        widget.de_btnExportDE.setEnabled(True)
 
         # Setup show button
         widget.de_cbxShow.addItems(["Specific Group", "Specific Subject"])
@@ -216,3 +216,41 @@ class DE_Functionality():
     def UpdateSpecify(self, widget, index):
         self.subjectNum = index
         self.plot_graph(widget, self.selection)
+
+    #function to write data to CSV
+    def to_csv(self, selections):
+        subjects = self.matdata['Subject']
+        sub = subjects[0]
+ #      print(subjects)
+        selects = ["Date", "ID" , "Group" , "ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness",
+                   "Hue","Count","RelativeRateChange","AbsoluteGrowthRate","RelativeGrowthRate"]
+        csv_file = "exportText.csv"
+        try:
+            with open(csv_file, 'w') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=selects)
+                writer.writeheader()
+                index = 0
+                data = ""
+                #why is there a gab?
+                while(index < len(subjects)):
+                    sub = subjects[index]
+                    i = 0
+                    while(i < len(sub['ID'])):
+                        data += str(self.times[index])
+                        for key in selects:
+                            if(key != "Date"):
+                                row = sub[key]
+                                if row[i] != None:
+                                    data += "," + str(row[i])
+                                else:
+                                    data += ","
+                        data += "\n"
+                        i += 1
+
+                    index += 1
+                print(data)
+                csvfile.write(data)
+        #dictionary has to be restructured.
+                 #       writer.writerow(x)
+        except IOError:
+            print("I/O error")

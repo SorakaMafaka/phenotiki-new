@@ -85,6 +85,7 @@ class DE_Tab():
         self.de_btnExportDE.setObjectName(u"de_btnExportDE")
         self.de_btnExportDE.setGeometry(QRect(830, 100, 131, 51))
         self.de_btnExportDE.setEnabled(False)
+        self.de_btnExportDE.clicked.connect(self.save_data)
         self.de_gbxMatPlot = QGroupBox(self.tabDataExtraction)
         self.de_gbxMatPlot.setObjectName(u"de_gbxMatPlot")
         self.de_gbxMatPlot.setGeometry(QRect(270, 20, 741, 511))
@@ -139,3 +140,6 @@ class DE_Tab():
 
     def update_select(self, index):
         self.DataFunct.UpdateSpecify(self, index)
+
+    def save_data(self):
+        self.DataFunct.to_csv(self.dataSelections)
