@@ -3,7 +3,7 @@ from PySide2.QtWidgets import QWidget, QFileDialog
 import datetime
 from pymatreader import read_mat
 from matplotlib import dates
-
+import csv
 
 # class holds the dataset after it has been loaded from file and other values,
 # to plot the data (x_values, and y_values.
@@ -19,7 +19,8 @@ class DE_Functionality():
         self.to = 0
         self.bySubject = False
         self.byGroup = False
-        self.groups = []
+        self.groupsStr = []
+       # self.groups = []
         self.subjectNum = 0
 
     # Opens a file dialog so that a mmatlabfile can be opened and stored.
@@ -43,6 +44,7 @@ class DE_Functionality():
 
             # set to, so that the latest time is selected
             self.to = len(self.times)
+            widget.de_btnExportDE.setEnabled(True)
 
         except:
             print("invalid path")
@@ -91,8 +93,30 @@ class DE_Functionality():
                     select = sub[self.selection]
                     self.y_values.append(select[self.subjectNum])
 
+                elif self.byGroup:
+                    # get the selected subject values
+                    select = sub[self.selection]
+                    groupvalues = []
+                   #check for the group members and append values to group values
+                    for item in sub['Group']:
+                        #subjectnum = groupnumber
+                        if item == self.subjectNum:
+                            groupvalues.append(select[sub['Group'].index()])
 
-            if not self.bySubject and not self.byGroup:
+                    #mean
+                    try:
+                        self.y_values.append(np.mean(groupvalues))
+                    except:
+                        self.y_values.append(None)
+                    #std
+                    try:
+                        std_values.append(np.std(groupvalues))
+                    except:
+                        std_values.append(0.0)
+
+
+
+            if not self.bySubject:
                 # get positive and negative std by adding and substracting std from y values
                 try:
                     maxstd_values = np.add(std_values, self.y_values)
@@ -119,7 +143,9 @@ class DE_Functionality():
             if self.bySubject == False:
                 widget.de_MplWidget.canvas.axes.fill_between(self.x_values[self.fr:self.to], minstd_values[self.fr:self.to], maxstd_values[self.fr:self.to], alpha=0.2)
             widget.de_MplWidget.canvas.axes.set_title(self.selection)
+            widget.de_MplWidget.canvas.axes.grid(linestyle='-', linewidth=0.5, alpha=0.5);
             widget.de_MplWidget.canvas.draw()
+
 
             # If from choice widget has not been enabled yet
             if not widget.de_cbxFrom.isEnabled():
@@ -140,8 +166,7 @@ class DE_Functionality():
         widget.de_cbxFrom.setEnabled(True)
         widget.de_cbxTo.setEnabled(True)
         widget.de_btnSaveDE.setEnabled(True)
-        #export to CSV functionality not implemented yet.
-       # widget.de_btnExportDE.setEnabled(True)
+        widget.de_btnExportDE.setEnabled(True)
 
         # Setup show button
         widget.de_cbxShow.addItems(["Specific Group", "Specific Subject"])
@@ -176,27 +201,33 @@ class DE_Functionality():
                 NumOfSub = len(sub['ID'])
             if len(sub['ID']) > NumOfSub or len(sub['ID']) < NumOfSub:
                 print("subject number not equal")
+        # User selected display all
         if index == 0:
             self.byGroup = False
             self.bySubject = False
+        #User selected by group displayed
         elif index == 1:
             for sub in subjects:
-                if sub['Group'] != 0:
-                    valid = True
+                for item in sub['Group']:
+                    if item != []:
+                        valid = True
             if valid:
                 firstSub = subjects[0]
-                self.groups = []
+                self.groupsStr = []
                 for i in firstSub['Group']:
-                    if i != None or i != "":
+                    if i is not None or i != "":
                         group = "Group " + str(i)
-                        if not np.isin(self.groups, group):
-                            self.groups.append(group)
+                        if not np.isin(self.groupsStr, group):
+                            self.groupsStr.append(group)
+                        #    self.groups.append(i)
                 if not len(group) == 0:
                     self.byGroup = True
                     self.bySubject = False
                     widget.de_cbxSpecify.clear()
                     widget.de_cbxSpecify.setEnabled(True)
-                    widget.de_cbxSpecify.addItems(self.groups)
+                    widget.de_cbxSpecify.addItems(self.groupsStr)
+
+        #user selected by subject
         elif index == 2:
             self.byGroup = False
             self.bySubject = True
@@ -211,8 +242,42 @@ class DE_Functionality():
 
         self.plot_graph(widget, self.selection)
 
-#   called when different dubject or group is selected
+#   called when different subject or group is selected
     #only works for subject at the moment
     def UpdateSpecify(self, widget, index):
         self.subjectNum = index
         self.plot_graph(widget, self.selection)
+
+    #function to write data to CSV
+    def to_csv(self, path):
+        subjects = self.matdata['Subject']
+        sub = subjects[0]
+        selects = ["Date", "ID", "Group", "ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness",
+                   "Hue","Count","RelativeRateChange","AbsoluteGrowthRate","RelativeGrowthRate"]
+        try:
+            with open(path, 'w') as csvfile:
+                writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n', fieldnames=selects)
+                writer.writeheader()
+                index = 0
+                data = ""
+                while (index < len(subjects)):
+                    sub = subjects[index]
+                    i = 0
+                    while (i < len(sub['ID'])):
+                        data += str(self.times[index])
+                        for key in selects:
+                            if (key != "Date"):
+                                row = sub[key]
+                                if row[i] != None:
+                                    data += "," + str(row[i])
+                                else:
+                                    data += ","
+                        data += "\n"
+                        i += 1
+
+                    index += 1
+                print(data)
+                csvfile.write(data)
+
+        except IOError:
+            print("I/O error")

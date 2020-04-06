@@ -85,6 +85,7 @@ class DE_Tab():
         self.de_btnExportDE.setObjectName(u"de_btnExportDE")
         self.de_btnExportDE.setGeometry(QRect(830, 100, 131, 51))
         self.de_btnExportDE.setEnabled(False)
+        self.de_btnExportDE.clicked.connect(self.save_data)
         self.de_gbxMatPlot = QGroupBox(self.tabDataExtraction)
         self.de_gbxMatPlot.setObjectName(u"de_gbxMatPlot")
         self.de_gbxMatPlot.setGeometry(QRect(270, 20, 741, 511))
@@ -124,9 +125,11 @@ class DE_Tab():
 
     def save_plot(self):
         w = QWidget()
-        path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.png'))
-        print(path[0])
-        self.de_MplWidget.canvas.figure.savefig(path[0])
+        path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*png'))
+        if path[0] != "":
+            self.de_MplWidget.canvas.figure.savefig(path[0])
+        else:
+            self.show_errormsg()
 
     def update_from(self, index):
         self.DataFunct.UpdateFrom(self, index)
@@ -139,3 +142,26 @@ class DE_Tab():
 
     def update_select(self, index):
         self.DataFunct.UpdateSpecify(self, index)
+
+    def save_data(self):
+        w = QWidget()
+        path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.csv'))
+        if path[0] != "":
+            self.DataFunct.to_csv(path[0])
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Information)
+            msgBox.setText("New document saved at " + path[0])
+            msgBox.setWindowTitle("Document saved")
+            msgBox.setStandardButtons(QMessageBox.Ok)
+
+            msgBox.exec()
+        else:
+            self.show_errormsg()
+
+    def show_errormsg(self):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setText("document could not be saved")
+        msgBox.setWindowTitle("Error")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec()
