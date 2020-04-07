@@ -41,9 +41,13 @@ class Ui_MainWindow(object):
         self.tabMain.setObjectName(u"tabMain")
         sizePolicy.setHeightForWidth(self.tabMain.sizePolicy().hasHeightForWidth())
         self.tabMain.setSizePolicy(sizePolicy)
+
         self.main_btnAbout = QPushButton(self.tabMain)
         self.main_btnAbout.setObjectName(u"main_btnAbout")
         self.main_btnAbout.setGeometry(QRect(900, 350, 111, 51))
+        ##About button image
+
+        ##
         self.main_lblHeader = QLabel(self.tabMain)
         self.main_lblHeader.setObjectName(u"main_lblHeader")
         self.main_lblHeader.setGeometry(QRect(10, 280, 301, 81))
@@ -72,7 +76,6 @@ class Ui_MainWindow(object):
         self.main_lblNews.setObjectName(u"main_lblNews")
         self.main_lblNews.setGeometry(QRect(10, 40, 281, 21))
         self.tabWidget.addTab(self.tabMain, "")
-
         # Add Module UI Tabs
         self.PotTrayTab = PT_Tab(self.tabWidget)
         self.LeafAnnotationTab = LA_Tab(self.tabWidget)
@@ -83,14 +86,23 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
-        self.main_btnAbout.clicked.connect(self.show_popup)
+        self.main_btnAbout.clicked.connect(self.show_about)
         QMetaObject.connectSlotsByName(MainWindow)
 
 
-    def show_popup(self):
+    def show_about(self):
         msg = QMessageBox()
-        msg.setWindowTitle("About this Program")
-        msg.setText("This is where the copied text will go")
+        msg.setWindowTitle("About")
+        # Program Title
+        msg.setText("<h1> Phenotiki </h1> <h2> True Phenotyping-in-a-box solution </h2> ")
+        #Main Text of the About Page
+        # Read Changelog in Hyperlink colour as well as "Freepik" "Plainicon" "www.flaticon.com"
+        msg.setInformativeText('Current Version 1.2 \n \nRead CHANGELOG\n  \nM.Minervini[1], M.V.Giuffrida[1], S,Tsaftaris[2] '
+                               '\nIMT Advanced Studies of Lucca[1] \nUniversity of Edinburgh[2] \n '
+                               '\nSoftware License reported in the user\'s manual. \n \nIcons made by Freepik, Plainicon'
+                               'from www.flaticon.com is licensed by CC BY 3.0')
+        #Add Authors University Logos
+        msg.setIconPixmap(QPixmap(u"../gui/img/Test.PNG"))
 
         x= msg.exec_()
 

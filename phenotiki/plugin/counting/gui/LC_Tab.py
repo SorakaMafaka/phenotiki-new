@@ -87,6 +87,7 @@ class LC_Tab():
         self.lc_cbxTraining.setObjectName(u"lc_cbxTraining")
         self.lc_cbxTraining.setGeometry(QRect(120, 20, 135, 30))
         ##Originial X & Y 280, 20, 271, 41))
+
         ## Help button for training
         self.About_Training = QPushButton(self.lc_gbx_tt)
         self.About_Training.setObjectName(u"About_Training")
@@ -103,9 +104,9 @@ class LC_Tab():
         self.lc_cbxTesting.setGeometry(QRect(120, 70, 135, 30))
         ## Original  X & Y 280, 70, 271, 41
         ## About button for Testing
-        #self.About_Testing = QPushButton(self.lc_gbx_tt)
-        #self.About_Testing.setObjectName(u"About_Testing")
-        #self.About_Testing.setGeometry(QRect(260, 70, 30, 30))
+        self.About_Testing = QPushButton(self.lc_gbx_tt)
+        self.About_Testing.setObjectName(u"About_Testing")
+        self.About_Testing.setGeometry(QRect(260, 70, 30, 30))
 
         ## Name of the Test setup (editable line ?)
         self.lc__tbName = QLineEdit(self.lc_gbx_tt)
@@ -197,6 +198,7 @@ class LC_Tab():
         self.lc_tblView.setObjectName(u"lc_tblView")
         self.lc_tblView.setGeometry(QRect(90, 180, 550, 135)) #40, 180, 641, 135
         ## Original X & Y 40, 120, 641, 81))
+
         ## Result Window Help popup
         self.Result_help = QPushButton(self.lc_gbxResults)
         self.Result_help.setObjectName(u"Result_help")
@@ -227,25 +229,39 @@ class LC_Tab():
         ## Original  X & Y 160, 130, 111, 16))
 
         tab.addTab(self.tabCounting, "")
-        #self.About_Training.clicked.connect(self.training_help)
-        #self.About_Testing.clicked.connect(self.testing_help)
-        #self.About_Testing.clicked.connect(self.lc_operation)
+
+        self.About_Training.clicked.connect(self.training_help)
+        self.About_Testing.clicked.connect(self.testing_help)
+        self.About_Operation.clicked.connect(self.lc_operation)
+        self.Result_help.clicked.connect(self.help_result)
         self.retranslate_UI()
 
-        def training_help(self):
-            msg= QMessageBox()
-            msg.setWindowTitle("Training Help")
-            msg.setText('Training message test')
+    def training_help(self):
+        msg= QMessageBox()
+        msg.setWindowTitle("Training Help")
+        msg.setText('Training message test')
 
-        def testing_help(self):
-            msg= QMessageBox()
-            msg.setWindowTitle("Training Help")
-            msg.setText('Information about Testing')
+        x = msg.exec_()
 
-        def lc_operation(self):
-            msg= QMessageBox()
-            msg.setWindowTitle("Training Help")
-            msg.setText('Message to describe the 4 operations to be done.')
+    def testing_help(self):
+        msg= QMessageBox()
+        msg.setWindowTitle("Training Help")
+        msg.setText('Information about Testing')
+
+        x = msg.exec_()
+
+    def lc_operation(self):
+        msg= QMessageBox()
+        msg.setWindowTitle("Training Help")
+        msg.setText('Message to describe the 4 operations to be done.')
+
+        x = msg.exec_()
+
+    def help_result(self):
+        msg = QMessageBox()
+        msg.setWindowFilePath(u"phenotiki/plugin/counting/gui/test.txt")
+
+        x = msg.exec_()
 
 
     def retranslate_UI(self):
@@ -263,9 +279,9 @@ class LC_Tab():
         self.lc_gbx_tt.setTitle(QCoreApplication.translate("MainWindow", u"Training/Testing Setup", None))
         ##
         self.About_Training.setText(QCoreApplication.translate("MainWindow", u"?", None))
-        self.Result_help.setText(QCoreApplication.translate("MainWindow", u"?", None))
-        #self.About_Testing.setText(QCoreApplication.translate("MainWindow", u"?", None))
+        self.About_Testing.setText(QCoreApplication.translate("MainWindow", u"?", None))
         self.About_Operation.setText(QCoreApplication.translate("MainWindow", u"?", None))
+        self.Result_help.setText(QCoreApplication.translate("MainWindow", u"?", None))
         ##
         self.lc_cbxTraining.setItemText(0, QCoreApplication.translate("MainWindow", u"All labelled images", None))
         self.lc_cbxTraining.setItemText(1, QCoreApplication.translate("MainWindow", u"Custom...", None))

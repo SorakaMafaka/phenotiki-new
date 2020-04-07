@@ -1,17 +1,13 @@
 import cv2
-import numpy as np
 import matplotlib.pyplot as plt
-from skimage import io
-from skimage.segmentation import random_walker
-from skimage.data import binary_blobs
-from skimage.exposure import rescale_intensity
+import numpy as np
 import skimage
 from skimage.color import rgb2gray
-import cv2
-from skimage import filters
+from skimage.exposure import rescale_intensity
+from skimage.segmentation import random_walker
 
 # Generate noisy synthetic data
-img = cv2.imread("../src/test.png")
+img = cv2.imread("../src/IMG_2013-09-28_08-00.png")
 img = rgb2gray(img)
 #img = filters.sobel(img)
 #img = filters.gaussian(img)
