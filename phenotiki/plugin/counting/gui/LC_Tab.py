@@ -259,7 +259,8 @@ class LC_Tab():
 
     def help_result(self):
         msg = QMessageBox()
-        msg.setWindowFilePath(u"phenotiki/plugin/counting/gui/test.txt")
+        msg.setWindowTitle("TEST NAME")
+        msg.setText('Test message')
 
         x = msg.exec_()
 
