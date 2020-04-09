@@ -118,12 +118,10 @@ class DE_Tab():
         self.de_btnExportDE.setObjectName(u"de_btnExportDE")
         self.de_btnExportDE.setGeometry(QRect(830, 100, 131, 51))
         self.de_btnExportDE.setEnabled(False)
-        #UIDevelopment
+        self.de_btnExportDE.clicked.connect(self.save_data)
+
 
         ## MatPlot Group Box
-
-        self.de_btnExportDE.clicked.connect(self.save_data)
-        #master
         self.de_gbxMatPlot = QGroupBox(self.tabDataExtraction)
         self.de_gbxMatPlot.setObjectName(u"de_gbxMatPlot")
         self.de_gbxMatPlot.setGeometry(QRect(270, 20, 741, 511))
