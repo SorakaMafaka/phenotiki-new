@@ -2,6 +2,7 @@ from typing import List, Any
 import os  # Used to get absolute current working directory
 import numpy as np
 import math
+from scipy.signal import medfilt
 from scipy.spatial.distance import cdist
 
 from phenotiki.plugin.counting.src.PlantDataset import PlantDataset
@@ -99,10 +100,56 @@ class LeafCounting:
             ###
             #Resp_curve submodule
             fg = self.dataset.Sequences[t].Subject[id].AdditionalData.polar.fg
-            #not sure if this is right
             ratio = np.zeros(1, np.size(fg, 2))
+            for theta in range(1,np.size(fg, 2)):
+                fg_hl = fg
+                #I dont't know about this one
+                #fg_hl(CircularIndexing(fg_hl, [], range(round(theta - resp_curve_width), round(theta  + resp_curve_width)))) = 1
 
+                P = fg_hl(CircularIndexing(fg_hl, [], len(range(round(theta - resp_curve_width), round(theta + resp_curve_width)))))
 
+            self.dataset.Sequences[t].Subject[id].AdditionalData.ratio = ratio
+
+            ####
+            #Resp_curve local Maxima Detection Submodule
+            f = self.dataset.Sequences[t].Subject[id].AdditionalData.ratio
+            f = medfilt(f,7)
+            M = np.max(f)
+            m = np.min(f)
+
+            self.dataset.Sequences[t].Subject[id].AdditionalData.maxima = M
+            rel_minima = np.zeros(2, len(M))
+
+            for k in range(1, len(M)):
+                x = M(k)
+
+                #?
+                lft = np.transpose(m(m<x))
+                rgt = np.transpose(m(m>x))
+
+                D_l = cdist(lft, x)
+                i_l = min(D_l)
+
+                D_r = cdist(rgt, x)
+                i_r = min(D_r)
+
+                left = []
+                right = []
+
+                if not lft:
+                    i_l = max(D_r)
+                    lft = rgt
+                elif not rgt:
+                    i_r = max(D_l)
+                    rgt = lft
+
+                left = lft(i_l)
+                right = rgt(i_r)
+
+                #?
+                rel_minima[:,k] = [left, right]
+
+            self.dataset.Sequences[t].Subject[id].AdditionalData.associated_minima = rel_minima
 
     def patchClustering(self, F_lp, F_c): #Start clustering
 
