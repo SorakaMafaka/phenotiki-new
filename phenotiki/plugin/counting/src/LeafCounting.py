@@ -37,7 +37,7 @@ class LeafCounting:
                                  'Fields' : 'ProjectedLeafArea',
                                  'TimeFeature' : ''}  # unix - delta
 
-##Matts function
+    ## Matts function
     def leafCounting(self,Dataset,Name):
         Dataset = self.Dataset
         if 'Name' in locals():
@@ -45,18 +45,24 @@ class LeafCounting:
         internalListener: object = listener(object, 'ComputationInProgress', )
     # Not finished
 
-    def extractingImagePatches(self, IDX):
+    ## Extract Patches
+    def extractingImagePatches(self, index):
         ##LogPolar Reprocessing#
         if (not parameters['Fast'])
             ##progress update
             progressUpdate('LeafCountingTrain', 1/8*100, 'Logpolar reprocessing')
             if parameters['LogPolarFeatures']:
-                computeLogPolarPreprocessing(IDX)
+                self.computeLogPolarPreprocessing(index)
 
-    def computeLogPolarPreprocessing(self, IDX):
-        N = len(IDX)
+    def computeLogPolarPreprocessing(self, index):
+        N = len(index)
         Pathsize = parameters['PatchSize']
         resp_curve_width = parameters['RatioCurveWindowWidth']
         D = parameters['LogPolarNormalization']
 
-        for x in IDX
+        for x in index
+
+    def patchClustering(self, F_lp, F_c): #Start clustering
+
+
+        # End clustering
