@@ -4,7 +4,7 @@ import numpy as np
 import math
 from scipy.signal import medfilt
 from scipy.spatial.distance import cdist
-
+import polarTransform
 from phenotiki.plugin.counting.src.PlantDataset import PlantDataset
 
 
@@ -58,6 +58,32 @@ class LeafCounting:
             if self.parameters['LogPolarFeatures']:
                 self.computeLogPolarPreprocessing(index)
 
+        ##
+        #Extract patches
+        #progress bar update
+        progressUpdate('LeafCountingTrain', 2/8*100, 'Feature Extraction')
+        if not self.parameters['Fast'] or not self.getCacheFile('Features'):
+            varToSave = []
+            if self.parameters['LogPolarFeatures']:
+                [Patches_lp, PCoords_lp] = self.computeLogPolarPatchEctraction(index)
+                [F_lp, PC_lp, PA_lp] = self.computeFeatureExtraction(Patches_lp, PCoords_lp)
+
+                varToSave = [F_lp, PC_lp, PA_lp]
+
+            if self.parameters['CartesianFeatures']:
+                [Patches_c, PCoords_c, CartCenters] = self.computeCartesianPatchExtraction(index)
+                [F_c, PC_c, PA_c] = self.computeFeatureExtraction(Patches_c, PCoords_c)
+                varToSave.append(F_c, PC_c, PA_c, CartCenters)
+
+            if self.parameters['Autosave']:
+                save(self.getCacheFile('Features'), varToSave, '-v7.3')
+
+        else:
+            load(self.getCacheFile('Features'))
+
+        #clear patches
+
+
     def computeLogPolarPreprocessing(self, index):
         N = len(index)
         Pathsize = self.parameters['PatchSize']
@@ -88,9 +114,10 @@ class LeafCounting:
                 Dr = D
 
             #convert fg mask and green channel
-            [fg_lg, ] = polartrans(T.FGMask, Dr, 360, np.double(center(2)), np.double(center(1)), 'log', 'full')
+            #Where is the polartrans function
+            [fg_lg, ] = polarTransform.convertToPolarImage(T.FGMask, Dr, 360, np.double(center(2)), np.double(center(1)), 'log', 'full')
             fg_lg = np.uint8_t(round(fg_lg))
-            lg = np.uint8_t(im, Dr, 360, np.double(center(2)), np.double(center(1)), 'log', 'full')
+            lg = np.uint8_t(polarTransform.convertToPolarImage(im, Dr, 360, np.double(center(2)), np.double(center(1)), 'log', 'full'))
             lg = lg * fg_lg
 
             #storing
