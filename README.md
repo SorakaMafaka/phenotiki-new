@@ -8,3 +8,5 @@ skimage
 pyqt5
 pyside2
 scipy
+polarTransform
+pymatreader
