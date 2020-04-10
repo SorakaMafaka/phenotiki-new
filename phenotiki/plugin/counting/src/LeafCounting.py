@@ -68,7 +68,7 @@ class LeafCounting:
         if not self.parameters['Fast'] or not self.getCacheFile('Features'):
             varToSave = []
             if self.parameters['LogPolarFeatures']:
-                [Patches_lp, PCoords_lp] = self.computeLogPolarPatchEctraction(index)
+                [Patches_lp, PCoords_lp] = self.computeLogPolarPatchExtraction(index)
                 [F_lp, PC_lp, PA_lp] = self.computeFeatureExtraction(Patches_lp, PCoords_lp)
 
                 varToSave = [F_lp, PC_lp, PA_lp]
@@ -79,10 +79,11 @@ class LeafCounting:
                 varToSave.append(F_c, PC_c, PA_c, CartCenters)
 
             if self.parameters['Autosave']:
-                save(self.getCacheFile('Features'), varToSave, '-v7.3')
+                #np save
+                np.save(self.getCacheFile('Features'), varToSave)
 
         else:
-            load(self.getCacheFile('Features'))
+            np.load(self.getCacheFile('Features'))
 
         #clear patches
 
@@ -144,6 +145,7 @@ class LeafCounting:
             #Resp_curve local Maxima Detection Submodule
             f = self.dataset.Sequences[t].Subject[id].AdditionalData.ratio
             f = medfilt(f,7)
+            #npt sure this is right
             M = np.max(f)
             m = np.min(f)
 
@@ -181,8 +183,42 @@ class LeafCounting:
 
             self.dataset.Sequences[t].Subject[id].AdditionalData.associated_minima = rel_minima
 
+    def computeLogPolarPatchExtraction(self, index):
+        N = len(index)
+        PatchSize = self.parameters['PatchSize']
+        WindowWidth = self.parameters['RatioCurveWindowWidth']
+
+        Patches = [N, 1]
+        PCoords = [N, 1]
+
+        for i in range(1, N):
+            [t, id] = self.dataset.getPlantIndex(index(i))
+            T = self.dataset.getSample(t, id)
+
+            PatchesInPlant = [len(T.AdditionalData.maxima), 1]
+            CoordsInPlant = [len(PatchesInPlant), 1]
+
+            fg = T.AdditionalData.polar.green_ch
+
+            for i in range(1, T.AdditionalData.maxima)
+                theta = T.AdditionalData.maxima(j)
+
+                slic = fg(CircularIndexing(fg, [], -WindowWidth+theta, WindowWidth + theta-1))
+                slic = np.reshape(slic, np.size(fg, 1))
+
+                wdth = np.size(fg, 2)
+
+                th = max(np.trim(slic), PatchSize)
+
+                [P, C] = extractPatches(slic, [PatchSize, PatchSize], [th+floor(WindowWidth/2), 2*WindowWidth])
+
+                #stop continue soon
+
+
+
+
     def getCacheFile(self, cacheName):
-        filename = "" +self.parameters['CacheDirectory'] + self.experimentName + cacheName +".py"
+        filename = "" +self.parameters['CacheDirectory'] + self.experimentName + cacheName +".npy"
         return filename
 
     def patchClustering(self, F_lp, F_c): #Start clustering
