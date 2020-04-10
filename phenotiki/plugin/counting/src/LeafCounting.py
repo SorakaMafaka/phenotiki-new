@@ -5,6 +5,8 @@ import math
 from scipy.signal import medfilt
 from scipy.spatial.distance import cdist
 import polarTransform
+
+from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
 from phenotiki.plugin.counting.src.PlantDataset import PlantDataset
 
 
@@ -13,13 +15,14 @@ class LeafCounting:
         self.properties()  # Transient doesn't exist in Python, TODO: https://stackoverflow.com/questions/6313421/can-i-mark-variables-as-transient-so-they-wont-be-pickled
         self.dataset = PlantDataset() # Not sure if correct?
         self.internalListener: []
+        self.ProgB = ProgressBar()
 
     def currentDirectory(self):
         os.getcwd()
         pass
 
     def properties(self):
-        experimentName: str = 'noname'
+        self.experimentName: str = 'noname'
         self.parameters = {'PatchSize': 19,
                                  'RatioCurveWindowWidth': 20,
                                  'LogPolarPoolingBands': 5,
@@ -54,14 +57,14 @@ class LeafCounting:
         ##LogPolar Reprocessing#
         if not self.parameters['Fast']:
             ##progress update
-            progressUpdate('LeafCountingTrain', 1/8*100, 'Logpolar reprocessing')
+            self.ProgB.progressUpdate('LeafCountingTrain', 1/8*100, 'Logpolar reprocessing')
             if self.parameters['LogPolarFeatures']:
                 self.computeLogPolarPreprocessing(index)
 
         ##
         #Extract patches
         #progress bar update
-        progressUpdate('LeafCountingTrain', 2/8*100, 'Feature Extraction')
+        self.ProgB.progressUpdate('LeafCountingTrain', 2/8*100, 'Feature Extraction')
         if not self.parameters['Fast'] or not self.getCacheFile('Features'):
             varToSave = []
             if self.parameters['LogPolarFeatures']:
@@ -177,6 +180,10 @@ class LeafCounting:
                 rel_minima[:,k] = [left, right]
 
             self.dataset.Sequences[t].Subject[id].AdditionalData.associated_minima = rel_minima
+
+    def getCacheFile(self, cacheName):
+        filename = "" +self.parameters['CacheDirectory'] + self.experimentName + cacheName +".py"
+        return filename
 
     def patchClustering(self, F_lp, F_c): #Start clustering
 
