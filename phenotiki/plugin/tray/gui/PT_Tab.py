@@ -1,11 +1,15 @@
+import skimage
 from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
                             QRect, QSize, QUrl, Qt)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
                            QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
                            QRadialGradient)
 from PySide2.QtWidgets import *
+import matplotlib.pyplot as plt
 
 from phenotiki.main.src.import_functionality import print_image_files
+from phenotiki.plugin.tray.gui.mplwidget import MplWidget
+from phenotiki.plugin.tray.src.pt_src import *
 
 
 class PT_Tab():
@@ -19,7 +23,6 @@ class PT_Tab():
         self.tabPotTrayAnalysis = QWidget()
         self.tabPotTrayAnalysis.setObjectName(u"tabPotTrayAnalysis")
         self.tabPotTrayAnalysis.setFont(QFont("Helvetica", 8))
-
 
         ## File list group box Setup
         self.pt_gbxFileList = QGroupBox(self.tabPotTrayAnalysis)
@@ -49,14 +52,19 @@ class PT_Tab():
         self.pt_gbxImage.setObjectName(u"pt_gbxImage")
         self.pt_gbxImage.setGeometry(QRect(270, 20, 741, 521))
 
+        ## MatPlot Widget
+        self.pt_MplWidget = MplWidget(self.pt_gbxImage)
+        self.pt_MplWidget.setObjectName(u"pt_MplWidget")
+        self.pt_MplWidget.setGeometry(QRect(2, 40, 537, 378))
+
         ##Active image inside Image group box setup
-        self.pt_lblViewImage = QLabel(self.pt_gbxImage)
-        self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
-        self.pt_lblViewImage.setCursor(QCursor(Qt.CrossCursor))
-        self.pt_lblViewImage.mousePressEvent = self.getPos
-        self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/holder.jpg"))
-        self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
-        self.pt_lblViewImage.setScaledContents(True)
+        # self.pt_lblViewImage = QLabel(self.pt_gbxImage)
+        # self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
+        # self.pt_lblViewImage.setCursor(QCursor(Qt.CrossCursor))
+        # self.pt_lblViewImage.mousePressEvent = self.getPos
+        # self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/holder.jpg"))
+        # self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
+        # self.pt_lblViewImage.setScaledContents(True)
 
         ## Slider in Image group box setup
         self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
@@ -79,7 +87,6 @@ class PT_Tab():
         self.pt_lstPlots = QListWidget(self.pt_gbxImage)
         self.pt_lstPlots.setObjectName(u"pt_lstPlots")
         self.pt_lstPlots.setGeometry(QRect(540, 30, 191, 431))
-
 
         ## Toolbox Qbox setup
         self.pt_gbxToolbox = QGroupBox(self.tabPotTrayAnalysis)
@@ -104,6 +111,7 @@ class PT_Tab():
         self.pt_btnMask.setObjectName(u"pt_btnMask")
         self.pt_btnMask.setEnabled(False)
         self.pt_btnMask.setGeometry(QRect(610, 20, 121, 51))
+        self.pt_btnMask.clicked.connect(self.on_mask_click)
 
         ##Task Button
         self.pt_btnTraits = QPushButton(self.pt_gbxToolbox)
@@ -133,7 +141,8 @@ class PT_Tab():
         self.pt_cmbType.setItemText(2, QCoreApplication.translate("MainWindow", u"Contour", None))
         self.pt_cmbType.setItemText(3, QCoreApplication.translate("MainWindow", u"FG Mask", None))
         self.pt_cmbType.setCurrentText(QCoreApplication.translate("MainWindow", u"Raw Image", None))
-        self.pt_lblViewImage.setText("")
+
+        # self.pt_lblViewImage.setText("")
         self.pt_gbxToolbox.setTitle(QCoreApplication.translate("MainWindow", u"Toolbox", None))
         self.pt_btnSettings.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
         self.pt_btnMask.setText(QCoreApplication.translate("MainWindow", u"Extract Mask", None))
@@ -142,16 +151,16 @@ class PT_Tab():
         self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabPotTrayAnalysis),
                                   QCoreApplication.translate("MainWindow", u"Pot Tray Analysis", None))
 
-    def build_pos_array(self, array, x, y):
-        array.append(str(x) + ", " + str(y))
+    def build_pos_array(self, array):
+        array.append(array)
         self.pt_lstPlots.clear()
-        self.pt_lstPlots.addItems(self.img_plots_array)
+        self.pt_lstPlots.addItems(array)
 
     ##Gets coordinates of a click within Image and puts them inside image plots array
-    def getPos(self, event):
-        x = event.pos().x()
-        y = event.pos().y()
-        self.build_pos_array(self.img_plots_array, x, y)
+    # def getPos(self, event):
+    #     x = event.pos().x()
+    #     y = event.pos().y()
+    #     self.build_pos_array(self.img_plots_array, x, y)
 
     ## Function performed when import button is clicked
     def on_import_click(self, event):
@@ -167,8 +176,29 @@ class PT_Tab():
         self.pt_cmbType.setEnabled(True)
 
         if len(self.img_file_list_array) > 0:
-            self.pt_lblViewImage.setPixmap(QPixmap(self.img_file_list_array[0]))
+            img = plt.imread(self.img_file_list_array[0])
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.imshow(img)
+            ax.set_axis_off()
+            plt.tight_layout()
+            points = plt.ginput(n=24)
+            self.build_pos_array(points)
 
-    ## Function performed when treeview button is clicked
+    # Function performed when treeview button is clicked
     def on_treeView_clicked(self, index):
-        self.pt_lblViewImage.setPixmap(QPixmap(str(index.data())))
+        for i in self.img_file_list_array:
+            if i == index.data():
+                print(self.img_file_list_array.index(i))
+                img = plt.imread(self.img_file_list_array[self.img_file_list_array.index(i)])
+                fig, ax = plt.subplots(figsize=(10, 6))
+                ax.imshow(img)
+                ax.set_axis_off()
+                plt.tight_layout()
+                points = plt.ginput(n=24)
+                self.build_pos_array(points)
+
+    def on_mask_click(self, event):
+        for i in self.img_file_list_array:
+            print("Image: " + str(i))
+            log(i)
+        plt.show()
