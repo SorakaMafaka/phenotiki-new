@@ -6,7 +6,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
                            QRadialGradient)
 from PySide2.QtWidgets import *
 import matplotlib.pyplot as plt
-
+from matplotlib.figure import Figure
 from phenotiki.main.src.import_functionality import print_image_files
 from phenotiki.plugin.tray.gui.mplwidget import MplWidget
 from phenotiki.plugin.tray.src.pt_src import *
@@ -163,7 +163,7 @@ class PT_Tab():
     #     self.build_pos_array(self.img_plots_array, x, y)
 
     ## Function performed when import button is clicked
-    def on_import_click(self, event):
+    def on_import_click(self):
         self.img_file_list_array.clear()
         for i in print_image_files(self):
             self.img_file_list_array.append(i)
@@ -177,28 +177,29 @@ class PT_Tab():
 
         if len(self.img_file_list_array) > 0:
             img = plt.imread(self.img_file_list_array[0])
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.imshow(img)
-            ax.set_axis_off()
-            plt.tight_layout()
-            points = plt.ginput(n=24)
+            self.pt_MplWidget.canvas.axes.clear()
+            self.pt_MplWidget.canvas.axes.imshow(img)
+            self.pt_MplWidget.canvas.axes.set_axis_off()
+            self.pt_MplWidget.canvas.draw()
+            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
             self.build_pos_array(points)
+
 
     # Function performed when treeview button is clicked
     def on_treeView_clicked(self, index):
-        for i in self.img_file_list_array:
-            if i == index.data():
-                print(self.img_file_list_array.index(i))
-                img = plt.imread(self.img_file_list_array[self.img_file_list_array.index(i)])
-                fig, ax = plt.subplots(figsize=(10, 6))
-                ax.imshow(img)
-                ax.set_axis_off()
-                plt.tight_layout()
-                points = plt.ginput(n=24)
+                i = self.img_file_list_array.index(index.data())
+                #print(self.img_file_list_array.index(i))
+                print(i)
+                img = plt.imread(self.img_file_list_array[i])
+                self.pt_MplWidget.canvas.axes.clear()
+                self.pt_MplWidget.canvas.axes.imshow(img)
+                self.pt_MplWidget.canvas.axes.set_axis_off()
+                self.pt_MplWidget.canvas.draw()
+                points = self.pt_MplWidget.canvas.figure.ginput(n=24)
                 self.build_pos_array(points)
 
-    def on_mask_click(self, event):
+    def on_mask_click(self):
         for i in self.img_file_list_array:
             print("Image: " + str(i))
-            log(i)
-        plt.show()
+            log(self, i)
+        #self.pt_MplWidget.canvas.draw()

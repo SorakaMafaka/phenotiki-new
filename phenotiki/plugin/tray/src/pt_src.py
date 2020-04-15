@@ -10,7 +10,7 @@ from skimage.color import label2rgb, rgb2gray
 import numpy as np
 
 
-def log(image):
+def log(widget, image):
     original = cv2.imread(image)
 
     l_min = 111
@@ -44,8 +44,11 @@ def log(image):
     label_image = label(cleared)
     image_label_overlay = label2rgb(label_image, image=image, bg_label=0)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.imshow(image_label_overlay)
+    widget.pt_MplWidget.canvas.axes.clear()
+   # widget.pt_MplWidget.figure.subplots(figsize=(10, 6))
+    widget.pt_MplWidget.canvas.axes.imshow(image_label_overlay)
+    #fig, ax = plt.subplots(figsize=(10, 6))
+    #ax.imshow(image_label_overlay)
     subjects = []
     area = []
     center = []
@@ -64,10 +67,10 @@ def log(image):
             print("region: " + str(len(subjects)) + "\nminr: " + str(minr) + "\nminc: " +
                   str(minc) +"\nmaxr: " + str(maxr) + "\nmaxc: " + str(maxc) + "\ncentroid: " + str(region.centroid)
                   + "\narea: " + str(region.area))
-            ax.add_patch(rect)
+            widget.pt_MplWidget.canvas.axes.add_patch(rect)
 
 
     print("number of subjects: " + str(len(subjects)))
-    ax.set_axis_off()
-    plt.tight_layout()
-    plt.draw()
+    widget.pt_MplWidget.canvas.axes.set_axis_off()
+    widget.pt_MplWidget.canvas.figure.tight_layout()
+    widget.pt_MplWidget.canvas.draw()
