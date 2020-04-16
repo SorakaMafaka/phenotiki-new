@@ -8,6 +8,7 @@ from PySide2.QtWidgets import *
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from phenotiki.main.src.import_functionality import print_image_files
+from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
 from phenotiki.plugin.tray.gui.mplwidget import MplWidget
 from phenotiki.plugin.tray.src.pt_src import *
 
@@ -71,6 +72,11 @@ class PT_Tab():
         self.pt_horizontalSlider.setObjectName(u"pt_horizontalSlider")
         self.pt_horizontalSlider.setGeometry(QRect(90, 470, 321, 31))
         self.pt_horizontalSlider.setOrientation(Qt.Horizontal)
+        self.pt_horizontalSlider.valueChanged[int].connect(self.slider_selected)
+        self.pt_horizontalSlider.setSingleStep(1)
+        self.pt_horizontalSlider.setEnabled(False)
+        self.pt_horizontalSlider.setMinimum(0)
+
 
         ## Type drop down menu setup in image group box
         self.pt_cmbType = QComboBox(self.pt_gbxImage)
@@ -98,6 +104,7 @@ class PT_Tab():
         self.pt_progressBar.setObjectName(u"pt_progressBar")
         self.pt_progressBar.setGeometry(QRect(20, 60, 431, 31))
         self.pt_progressBar.setValue(0)
+        self.pt_progressBar.setRange(0, 100)
         self.pt_progressBar.setTextVisible(False)
 
         ## Settings Button
@@ -124,6 +131,11 @@ class PT_Tab():
         self.pt_btnSave.setObjectName(u"pt_btnSave")
         self.pt_btnSave.setEnabled(False)
         self.pt_btnSave.setGeometry(QRect(610, 80, 121, 51))
+
+        ##Progress bar
+       # self.pt_progressBar = ProgressBar()
+        #self.pt_progressBar.hide()
+
 
         self.pt_cmbType.setCurrentIndex(0)
 
@@ -181,25 +193,26 @@ class PT_Tab():
             self.pt_MplWidget.canvas.axes.imshow(img)
             self.pt_MplWidget.canvas.axes.set_axis_off()
             self.pt_MplWidget.canvas.draw()
-            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
-            self.build_pos_array(points)
+            self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array)-1)
+            self.pt_horizontalSlider.setEnabled(True)
+#            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
+#            self.build_pos_array(points)
+
 
 
     # Function performed when treeview button is clicked
-    def on_treeView_clicked(self, index):
-                i = self.img_file_list_array.index(index.data())
+    def on_treeView_clicked(self):
+                i = self.pt_lstFileList.currentRow()
                 #print(self.img_file_list_array.index(i))
                 print(i)
-                img = plt.imread(self.img_file_list_array[i])
-                self.pt_MplWidget.canvas.axes.clear()
-                self.pt_MplWidget.canvas.axes.imshow(img)
-                self.pt_MplWidget.canvas.axes.set_axis_off()
-                self.pt_MplWidget.canvas.draw()
-                points = self.pt_MplWidget.canvas.figure.ginput(n=24)
-                self.build_pos_array(points)
+                updateImage(self, i)
+
 
     def on_mask_click(self):
         for i in self.img_file_list_array:
             print("Image: " + str(i))
             log(self, i)
-        #self.pt_MplWidget.canvas.draw()
+        self.pt_MplWidget.canvas.draw()
+
+    def slider_selected(self, index):
+        updateImage(self, index)

@@ -9,7 +9,7 @@ class ProgressBar(QMainWindow):
         super().__init__()
 
         self.pbar = QProgressBar(self)
-        self.pbar.saveGeometry(30, 40, 200, 25)
+        self.pbar.setGeometry(30, 40, 200, 25)
         self.pbar.setValue(0)
         self.label = QLabel("")
 
@@ -17,10 +17,14 @@ class ProgressBar(QMainWindow):
         self.setWindowTitle(title)
         self.setGeometry(32, 32, 320, 200)
         self.show()
+        self.pbar.setEnabled(True)
+        self.pbar.show()
 
-    def progressUpdate(self, computation, progressValue, info):
+
+    def progressUpdate(self, progressValue, info):
         self.pbar.setValue(progressValue)
-        self.label.setText(info)
+       # self.pbar.show()
+        self.label.setText(str(progressValue))
 
 
     def progressEnd(self):

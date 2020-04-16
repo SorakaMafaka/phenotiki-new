@@ -12,7 +12,8 @@ import numpy as np
 
 def log(widget, image):
     original = cv2.imread(image)
-
+   # widget.pt_progressBar.progressInit("Mask Extraction")
+    widget.pt_progressBar.setEnabled(True)
     l_min = 111
     a_min = 49
     b_min = 137
@@ -52,8 +53,11 @@ def log(widget, image):
     subjects = []
     area = []
     center = []
+    progUpdate = 100 % len(regionprops(label_image))
+    print(len(regionprops(label_image)))
     for region in regionprops(label_image):
         # take regions with large enough areas
+
         if region.area >= 1000:
             # draw rectangle around segmented plants
             minr, minc, maxr, maxc = region.bbox
@@ -63,6 +67,8 @@ def log(widget, image):
             subjects.append(region.centroid)
             area.append(region.area)
             center.append(region.centroid)
+            newVal = widget.pt_progressBar.value() + progUpdate
+            widget.pt_progressBar.setValue(newVal)
             print("---------UPDATE PROGRESS BAR---------")
             print("region: " + str(len(subjects)) + "\nminr: " + str(minr) + "\nminc: " +
                   str(minc) +"\nmaxr: " + str(maxr) + "\nmaxc: " + str(maxc) + "\ncentroid: " + str(region.centroid)
@@ -74,3 +80,16 @@ def log(widget, image):
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()
+    widget.pt_progressBar.setValue(100)
+
+def updateImage(widget, i):
+    print(i)
+    img = plt.imread(widget.img_file_list_array[i])
+    #img = plt.imread(i)
+    widget.pt_MplWidget.canvas.axes.clear()
+    widget.pt_MplWidget.canvas.axes.imshow(img)
+    widget.pt_MplWidget.canvas.axes.set_axis_off()
+    widget.pt_MplWidget.canvas.draw()
+    points = widget.pt_MplWidget.canvas.figure.ginput(n=24)
+    widget.build_pos_array(points)
+
