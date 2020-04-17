@@ -180,10 +180,11 @@ class PT_Tab():
     ## Function performed when import button is clicked
     def on_import_click(self):
         self.img_file_list_array.clear()
-        for i in print_image_files(self):
-            self.img_file_list_array.append(i)
+        self.dictionary = print_image_files(self)
+        for i in self.dictionary.values():
+           self.img_file_list_array.append(i)
         self.pt_lstFileList.clear()
-        self.pt_lstFileList.addItems(self.img_file_list_array)
+        self.pt_lstFileList.addItems(self.dictionary.keys())
         self.pt_btnMask.setEnabled(True)
         self.pt_btnSave.setEnabled(True)
         self.pt_btnSettings.setEnabled(True)

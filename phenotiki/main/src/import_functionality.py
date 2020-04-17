@@ -18,13 +18,18 @@ def print_image_files(self):
         print("Load Image Cancelled")
     filenames = []
     paths = []
+    names = {}
     for file in glob.glob('IMG?*png'):
+
+
         filenames.append(file)
         full_path = path + "/" + file
         name = "/" + file
-        paths.append(full_path)
-
-    return paths
+        names[file] = full_path
+        #paths.append(names[file])
+    #print(paths)
+    print(names.items())
+    return names
 
 
 
