@@ -90,6 +90,6 @@ def updateImage(widget, i):
     widget.pt_MplWidget.canvas.axes.imshow(img)
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.draw()
-    points = widget.pt_MplWidget.canvas.figure.ginput(n=24)
-    widget.build_pos_array(points)
+    #points = widget.pt_MplWidget.canvas.figure.ginput(n=24)
+    #widget.build_pos_array(points)
 

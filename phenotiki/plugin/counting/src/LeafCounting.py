@@ -221,7 +221,16 @@ class LeafCounting:
         filename = "" +self.parameters['CacheDirectory'] + self.experimentName + cacheName +".npy"
         return filename
 
-    def patchClustering(self, F_lp, F_c): #Start clustering
+    def patchClustering(self, F_lp, F_c):  # Start clustering
+        Clustering = dict
+        global parameters
+        if parameters('LogPolarFeatures'):
+            F_lp = F_lp
+            start_time = time.time()
+
+            elapsed_time = time.time() - start_time
+            print(elapsed_time)
+
+    # End clustering
 
 
-        # End clustering

@@ -164,9 +164,12 @@ class PT_Tab():
                                   QCoreApplication.translate("MainWindow", u"Pot Tray Analysis", None))
 
     def build_pos_array(self, array):
-        array.append(array)
         self.pt_lstPlots.clear()
-        self.pt_lstPlots.addItems(array)
+        print(array)
+        for coords in array:
+            self.pt_lstPlots.addItem(str(coords))
+
+
 
     ##Gets coordinates of a click within Image and puts them inside image plots array
     # def getPos(self, event):
@@ -195,8 +198,10 @@ class PT_Tab():
             self.pt_MplWidget.canvas.draw()
             self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array)-1)
             self.pt_horizontalSlider.setEnabled(True)
-#            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
-#            self.build_pos_array(points)
+            #print(self.pt_MplWidget.canvas.figure.ginput(n=5))
+            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
+            self.build_pos_array(points)
+            #print(points)
 
 
 

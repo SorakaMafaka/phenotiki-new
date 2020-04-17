@@ -21,6 +21,11 @@ def print_image_files(self):
     for file in glob.glob('IMG?*png'):
         filenames.append(file)
         full_path = path + "/" + file
+        name = "/" + file
         paths.append(full_path)
+
     return paths
+
+
+
 
