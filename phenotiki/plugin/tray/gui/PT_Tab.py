@@ -8,7 +8,7 @@ from PySide2.QtWidgets import *
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from phenotiki.main.src.import_functionality import print_image_files
-from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
+#from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
 from phenotiki.plugin.tray.gui.mplwidget import MplWidget
 from phenotiki.plugin.tray.src.pt_src import *
 
