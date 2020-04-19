@@ -13,7 +13,7 @@ from skimage.color import label2rgb, rgb2gray
 import numpy as np
 
 
-def log(widget, image, img, plant_dict):
+def log(widget, image, img, plant_dict,total_subjects, sequences):
     original = cv2.imread(image)
     # widget.pt_progressBar.progressInit("Mask Extraction")
     widget.pt_progressBar.setEnabled(True)
@@ -53,12 +53,15 @@ def log(widget, image, img, plant_dict):
     widget.pt_MplWidget.canvas.axes.imshow(image_label_overlay)
     # fig, ax = plt.subplots(figsize=(10, 6))
     # ax.imshow(image_label_overlay)
-    subjects = []
     progUpdate = 100 % len(regionprops(label_image))
-    image_list = []
     image_dict = {}
-    dataset = {}
     id = 0
+    date_match = re.search(r'\d{4}-\d{2}-\d{2}_\d{2}-\d{2}', img)
+    date = datetime.strptime(date_match.group(), '%Y-%m-%d_%H-%M').date()
+    time = datetime.strptime(date_match.group(), '%Y-%m-%d_%H-%M').time()
+    date_time = str(date) + " " + str(time)
+    subjects = []
+
 
     for region in regionprops(label_image):
         # take regions with large enough areas
@@ -90,21 +93,22 @@ def log(widget, image, img, plant_dict):
             absolute_growth_rate = None
             relative_growth_rate = None
 
-            date_match = re.search(r'\d{4}-\d{2}-\d{2}_\d{2}-\d{2}', img)
-            date = datetime.strptime(date_match.group(), '%Y-%m-%d_%H-%M').date()
-            time = datetime.strptime(date_match.group(), '%Y-%m-%d_%H-%M').time()
-            date_time = str(date) + " " + str(time)
-
-            subject_dict = {'Date': date_time, 'ID': str(id), 'ProjectedLeafArea': str(filled_area),
+            subject_dict = {'ID': str(id), 'ProjectedLeafArea': str(filled_area),
                             'Perimeter': str(perimeter), 'Diameter': str(diameter), 'Stockiness': str(stockiness),
                             'Compactness': str(compactness), 'Hue': str(hue), 'Count': str(count),
-                            'RelativeRateChange': str(relative_rate_change), 'AbsoluteGrowthRate': str(absolute_growth_rate),
+                            'RelativeRateChange': str(relative_rate_change),
+                            'AbsoluteGrowthRate': str(absolute_growth_rate),
                             'RelativeGrowthRate': str(relative_growth_rate)}
+            subjects.append(subject_dict)
+            total_subjects.append(subject_dict)
 
-            image_dict.update({date_time + " " + str(id): subject_dict})
+
             widget.pt_MplWidget.canvas.axes.add_patch(rect)
 
-    plant_dict.update({img: image_dict})
+    image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': None})
+    sequences.append(image_dict)
+    plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,
+                       'BasePath': None, 'ml': None})
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()

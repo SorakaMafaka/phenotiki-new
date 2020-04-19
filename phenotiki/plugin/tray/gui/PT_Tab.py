@@ -210,9 +210,15 @@ class PT_Tab():
 
     def on_mask_click(self):
         plant_dict = {}
+        total_subjects = []
+        sequences = []
+        number = 0
         for i in self.img_dict.keys():
-            log(self, i, str(i), plant_dict)
+            number +=1
+            log(self, i, str(i), plant_dict, total_subjects, sequences)
+
         self.pt_MplWidget.canvas.draw()
+        print(plant_dict['NumberOfSubjects'])
 
         with open('json_data.json', 'w') as outfile:
             json.dump(plant_dict, outfile, indent=4)
