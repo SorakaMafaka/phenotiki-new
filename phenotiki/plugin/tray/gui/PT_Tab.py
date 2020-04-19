@@ -8,9 +8,10 @@ from PySide2.QtWidgets import *
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from phenotiki.main.src.import_functionality import print_image_files
-#from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
+# from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
 from phenotiki.plugin.tray.gui.mplwidget import MplWidget
 from phenotiki.plugin.tray.src.pt_src import *
+import json
 
 
 class PT_Tab():
@@ -77,7 +78,6 @@ class PT_Tab():
         self.pt_horizontalSlider.setEnabled(False)
         self.pt_horizontalSlider.setMinimum(0)
 
-
         ## Type drop down menu setup in image group box
         self.pt_cmbType = QComboBox(self.pt_gbxImage)
         self.pt_cmbType.addItem("")
@@ -133,9 +133,8 @@ class PT_Tab():
         self.pt_btnSave.setGeometry(QRect(610, 80, 121, 51))
 
         ##Progress bar
-       # self.pt_progressBar = ProgressBar()
-        #self.pt_progressBar.hide()
-
+        # self.pt_progressBar = ProgressBar()
+        # self.pt_progressBar.hide()
 
         self.pt_cmbType.setCurrentIndex(0)
 
@@ -169,8 +168,6 @@ class PT_Tab():
         for coords in array:
             self.pt_lstPlots.addItem(str(coords))
 
-
-
     ##Gets coordinates of a click within Image and puts them inside image plots array
     # def getPos(self, event):
     #     x = event.pos().x()
@@ -180,11 +177,11 @@ class PT_Tab():
     ## Function performed when import button is clicked
     def on_import_click(self):
         self.img_file_list_array.clear()
-        self.dictionary = print_image_files(self)
-        for i in self.dictionary.values():
-           self.img_file_list_array.append(i)
+        self.img_dict = print_image_files(self)
+        for i in self.img_dict.values():
+            self.img_file_list_array.append(i)
         self.pt_lstFileList.clear()
-        self.pt_lstFileList.addItems(self.dictionary.keys())
+        self.pt_lstFileList.addItems(self.img_dict.keys())
         self.pt_btnMask.setEnabled(True)
         self.pt_btnSave.setEnabled(True)
         self.pt_btnSettings.setEnabled(True)
@@ -197,28 +194,28 @@ class PT_Tab():
             self.pt_MplWidget.canvas.axes.imshow(img)
             self.pt_MplWidget.canvas.axes.set_axis_off()
             self.pt_MplWidget.canvas.draw()
-            self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array)-1)
+            self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array) - 1)
             self.pt_horizontalSlider.setEnabled(True)
-            #print(self.pt_MplWidget.canvas.figure.ginput(n=5))
+
             points = self.pt_MplWidget.canvas.figure.ginput(n=24)
             self.build_pos_array(points)
-            #print(points)
-
-
+            # print(points)
 
     # Function performed when treeview button is clicked
     def on_treeView_clicked(self):
-                i = self.pt_lstFileList.currentRow()
-                #print(self.img_file_list_array.index(i))
-                print(i)
-                updateImage(self, i)
-
+        i = self.pt_lstFileList.currentRow()
+        # print(self.img_file_list_array.index(i))
+        print(i)
+        updateImage(self, i)
 
     def on_mask_click(self):
-        for i in self.img_file_list_array:
-            print("Image: " + str(i))
-            log(self, i)
+        plant_dict = {}
+        for i in self.img_dict.keys():
+            log(self, i, str(i), plant_dict)
         self.pt_MplWidget.canvas.draw()
+
+        with open('json_data.json', 'w') as outfile:
+            json.dump(plant_dict, outfile, indent=4)
 
     def slider_selected(self, index):
         updateImage(self, index)

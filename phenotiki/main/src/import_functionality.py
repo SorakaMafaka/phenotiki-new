@@ -28,7 +28,7 @@ def print_image_files(self):
         names[file] = full_path
         #paths.append(names[file])
     #print(paths)
-    print(names.items())
+    #print(names.items())
     return names
 
 
