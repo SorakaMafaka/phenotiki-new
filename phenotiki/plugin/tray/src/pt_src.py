@@ -62,6 +62,7 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
     date_time = str(date) + " " + str(time)
     subjects = []
     subject_ids = []
+    subject_group = []
     subject_project_leaf_areas = []
     subject_perimeters = []
     subject_diameters = []
@@ -97,6 +98,7 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
 
             stockiness = (4 * np.math.pi * filled_area / (perimeter ^ 2))
             compactness = filled_area / convex_area
+            group = None
             hue = None  # needs to be added
             count = None  # needs to be added
             relative_rate_change = None
@@ -110,6 +112,7 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
             subject_stockiness.append(float(stockiness))
             subject_compactness.append(float(compactness))
             subject_hue.append(hue)
+            #subject_group.append(group)
             subject_count.append(count)
             subject_relative_rate_change.append(relative_rate_change)
             subject_absolute_growth_rate.append(absolute_growth_rate)
@@ -121,6 +124,7 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
             widget.pt_MplWidget.canvas.axes.add_patch(rect)
 
     subject_dict = {'ID': subject_ids,
+                    'Group': subject_group,
                     'ProjectedLeafArea': subject_project_leaf_areas,
                     'Perimeter': subject_perimeters,
                     'Diameter': subject_diameters,
