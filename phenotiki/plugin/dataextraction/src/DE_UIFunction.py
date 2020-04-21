@@ -4,6 +4,7 @@ import datetime
 from pymatreader import read_mat
 from matplotlib import dates
 import csv
+import json
 
 # class holds the dataset after it has been loaded from file and other values,
 # to plot the data (x_values, and y_values.
@@ -26,21 +27,24 @@ class DE_Functionality():
     # Opens a file dialog so that a mmatlabfile can be opened and stored.
     def loadDataset(self, widget):
         w = QWidget()
-        fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("MATLAB files (*mat)"))
+       # fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("MATLAB files (*mat)"))
+        fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("JSON files (*json)"))
         fname = fname[0]
         try:
-            self.matdata = self.open_mat_file(fname)
+            self.matdata = self.open_json_file(fname)
             self.fileOpened = True
 
             widget.de_wgtPhenoData.setEnabled(True)
             # stores all time values for x axis and from and to choice buttons
-            timestamps = self.matdata['Timestamp']
-            for i in timestamps:
-                time = datetime.datetime.fromtimestamp(i)
-                self.x_values.append(time)
-                # save times as string for choice buttons
-                if len(self.times) <= len(timestamps):
-                    self.times.append(time.strftime("%d-%b-%Y %H:%m:%S"))
+            timestamps = self.matdata['TimeStamp']
+           # self.x_values = timestamps
+            self.times = timestamps
+            self.x_values = []
+            datevalues = [datetime.datetime.strptime(x, "%Y-%m-%d %H:%M:%S") for x in self.times]
+
+            for x in datevalues:
+                self.x_values.append(x.strftime("%d/%b %H:%M"))
+
 
             # set to, so that the latest time is selected
             self.to = len(self.times)
@@ -131,17 +135,16 @@ class DE_Functionality():
                             maxstd_values.append(float(i) + float(std_values[count]))
                             minstd_values.append(float(i) - float(std_values[count]))
                         count += 1
-            # Sets format for time values
-            formatter = dates.DateFormatter("%d/%b")
+
             # setup plot
             widget.de_MplWidget.canvas.axes.clear()
-            widget.de_MplWidget.canvas.axes.xaxis.set_major_formatter(formatter)
-            widget.de_MplWidget.canvas.figure.autofmt_xdate()
-            # I think maybe this should be zoomed in instead of changed, didn't realise earlier
+
             widget.de_MplWidget.canvas.axes.plot(self.x_values[self.fr:self.to], self.y_values[self.fr:self.to])
+
             # Show range by using standart deviation
             if self.bySubject == False:
                 widget.de_MplWidget.canvas.axes.fill_between(self.x_values[self.fr:self.to], minstd_values[self.fr:self.to], maxstd_values[self.fr:self.to], alpha=0.2)
+
             widget.de_MplWidget.canvas.axes.set_title(self.selection)
             widget.de_MplWidget.canvas.axes.grid(linestyle='-', linewidth=0.5, alpha=0.5);
             widget.de_MplWidget.canvas.draw()
@@ -190,6 +193,27 @@ class DE_Functionality():
 
         return self.matdata
 
+    #open json
+    def open_json_file(self, filename):
+
+        with open(filename, "r") as read_file:
+            print("Converting JSON encoded data into Python dictionary")
+            data = json.load(read_file)
+
+            times = []
+            Filename = []
+            Subjects = []
+            FGMask = []
+            mdata = data['Sequences']
+            for i in mdata:
+                times.append(i['TimeStamp'])
+                Filename.append(i['Filename'])
+                Subjects.append(i['Subjects'][0])
+                FGMask.append(i['FGMask'])
+
+            return {"Filename": Filename, "TimeStamp" : times, "Subject": Subjects, "FGMask": FGMask}
+
+
 #called when show is changed, between all group or subject
     #
     def UpdateShow(self, widget, index):
@@ -233,12 +257,14 @@ class DE_Functionality():
             self.bySubject = True
             widget.de_cbxSpecify.clear()
             widget.de_cbxSpecify.setEnabled(True)
-            firstSub = subjects[0]
+            subjectmin = []
+            for i in subjects:
+                subjectmin.append(np.max(i['ID']))
+            subjectmin = np.min(subjectmin)
             subNum = []
-            for i in firstSub['ID']:
+            for i in range(1, subjectmin):
                 subNum.append("Subject " + str(i))
             widget.de_cbxSpecify.addItems(subNum)
-            print(firstSub['ID'])
 
         self.plot_graph(widget, self.selection)
 
