@@ -277,7 +277,6 @@ class DE_Functionality():
     #function to write data to CSV
     def to_csv(self, path):
         subjects = self.matdata['Subject']
-        sub = subjects[0]
         selects = ["Date", "ID", "Group", "ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness",
                    "Hue","Count","RelativeRateChange","AbsoluteGrowthRate","RelativeGrowthRate"]
         try:
@@ -294,10 +293,14 @@ class DE_Functionality():
                         for key in selects:
                             if (key != "Date"):
                                 row = sub[key]
-                                if row[i] != None:
-                                    data += "," + str(row[i])
+                                if row:
+                                    if row[i] != None:
+                                        data += "," + str(row[i])
+                                    else:
+                                        data += ","
                                 else:
                                     data += ","
+
                         data += "\n"
                         i += 1
 
