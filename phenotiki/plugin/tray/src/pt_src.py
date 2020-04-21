@@ -14,6 +14,7 @@ import numpy as np
 
 
 def log(widget, image, img, plant_dict,total_subjects, sequences):
+    #fg mask
     original = cv2.imread(image)
     # widget.pt_progressBar.progressInit("Mask Extraction")
     widget.pt_progressBar.setEnabled(True)
@@ -60,9 +61,12 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
     date = datetime.strptime(date_match.group(), '%Y-%m-%d_%H-%M').date()
     time = datetime.strptime(date_match.group(), '%Y-%m-%d_%H-%M').time()
     date_time = str(date) + " " + str(time)
-    subjects = []
+
+    #declare property lists
+    subjects, subject_ids, subject_project_leaf_areas, subject_perimeters, subject_diameters,  subject_stockiness, subject_compactness, subject_hue, subject_count, subject_relative_rate_change, subject_absolute_growth_rate, subject_relative_growth_rate, = []
 
 
+    #plant detection
     for region in regionprops(label_image):
         # take regions with large enough areas
 
@@ -93,18 +97,36 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
             absolute_growth_rate = None
             relative_growth_rate = None
 
-            subject_dict = {'ID': str(id), 'ProjectedLeafArea': str(filled_area),
-                            'Perimeter': str(perimeter), 'Diameter': str(diameter), 'Stockiness': str(stockiness),
-                            'Compactness': str(compactness), 'Hue': str(hue), 'Count': str(count),
-                            'RelativeRateChange': str(relative_rate_change),
-                            'AbsoluteGrowthRate': str(absolute_growth_rate),
-                            'RelativeGrowthRate': str(relative_growth_rate)}
-            subjects.append(subject_dict)
-            total_subjects.append(subject_dict)
+            subject_ids.append(id)
+            subject_project_leaf_areas.append(filled_area)
+            subject_perimeters.append(perimeter)
+            subject_diameters.append(diameter)
+            subject_stockiness.append(stockiness)
+            subject_compactness.append(compactness)
+            subject_hue.append(hue)
+            subject_count.append(count)
+            subject_relative_rate_change.append(relative_rate_change)
+            subject_absolute_growth_rate.append(absolute_growth_rate)
+            subject_relative_growth_rate.append(relative_growth_rate)
+
+            total_subjects.append(id)
 
 
             widget.pt_MplWidget.canvas.axes.add_patch(rect)
 
+    subject_dict = {'ID': str(subject_ids),
+                    'ProjectedLeafArea': str(subject_project_leaf_areas),
+                    'Perimeter': str(subject_perimeters),
+                    'Diameter': str(subject_diameters),
+                    'Stockiness': str(subject_stockiness),
+                    'Compactness': str(subject_compactness),
+                    'Hue': str(subject_hue),
+                    'Count': str(subject_count),
+                    'RelativeRateChange': str(subject_relative_rate_change),
+                    'AbsoluteGrowthRate': str(subject_absolute_growth_rate),
+                    'RelativeGrowthRate': str(subject_relative_growth_rate)}
+
+    subjects.append(subject_dict)
     image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': None})
     sequences.append(image_dict)
     plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,
