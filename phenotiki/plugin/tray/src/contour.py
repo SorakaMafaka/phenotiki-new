@@ -16,6 +16,6 @@ def contour(image_file, contour_list):
     mask_green = cv2.inRange(imghsv, lower_green, upper_green)
     contours, _ = cv2.findContours(mask_green, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     im = np.copy(img)
-    cv2.drawContours(im, contours, -1, (128, 0, 128), 3)
+    cv2.drawContours(im, contours, -1, (138,43,226), 3)
     contour_list.append(im)
     return im

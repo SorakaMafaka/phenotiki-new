@@ -114,13 +114,14 @@ class PT_Tab():
         self.pt_btnSettings = QPushButton(self.pt_gbxToolbox)
         self.pt_btnSettings.setObjectName(u"pt_btnSettings")
         self.pt_btnSettings.setEnabled(False)
-        self.pt_btnSettings.setGeometry(QRect(480, 20, 121, 51))
+        self.pt_btnSettings.setGeometry(QRect(610, 20, 121, 51))
 
         ## Mask Button
         self.pt_btnMask = QPushButton(self.pt_gbxToolbox)
         self.pt_btnMask.setObjectName(u"pt_btnMask")
         self.pt_btnMask.setEnabled(False)
-        self.pt_btnMask.setGeometry(QRect(610, 20, 121, 51))
+        self.pt_btnMask.setGeometry(QRect(480, 20, 121, 51))
+
         self.pt_btnMask.clicked.connect(self.on_mask_click)
 
         ##Task Button
