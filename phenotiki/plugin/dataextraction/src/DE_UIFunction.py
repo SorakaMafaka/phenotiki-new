@@ -7,27 +7,25 @@ import csv
 import json
 
 # class holds the dataset after it has been loaded from file and other values,
-# to plot the data (x_values, and y_values.
+# to plot the data (x_values, and y_values)
 class DE_Functionality():
     def __init__(self):
-        self.fileOpened = False
-        self.matdata = {}
-        self.selection = ""
-        self.times = []
-        self.x_values = []
-        self.y_values = []
-        self.fr = 0
-        self.to = 0
-        self.bySubject = False
-        self.byGroup = False
-        self.groupsStr = []
-       # self.groups = []
-        self.subjectNum = 0
+        self.fileOpened = False #has data set been loaded
+        self.matdata = {} # dataset
+        self.selection = "" #part of data selected, such as Diameter of plant
+        self.times = [] #full lenght string representation of timestamp
+        self.x_values = [] #timestamp formatted for plot
+        self.y_values = [] #plot y values
+        self.fr = 0 #from which date the data should be shown
+        self.to = 0 #y_values maximum index
+        self.bySubject = False #Is data displayed by subject
+        self.byGroup = False #Is data displayed by group
+        self.groupsStr = [] #String representation of group
+        self.subjectNum = 0 #Currently displayed subject, if by subject is true
 
-    # Opens a file dialog so that a mmatlabfile can be opened and stored.
+    # Opens a file dialog so that a json file can be opened and stored.
     def loadDataset(self, widget):
         w = QWidget()
-       # fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("MATLAB files (*mat)"))
         fname = QFileDialog.getOpenFileName(w, "Open File", "C:", ("JSON files (*json)"))
         fname = fname[0]
         try:
@@ -35,13 +33,13 @@ class DE_Functionality():
             self.fileOpened = True
 
             widget.de_wgtPhenoData.setEnabled(True)
-            # stores all time values for x axis and from and to choice buttons
+            #store all time values for x axis and for from and to choice buttons
             timestamps = self.matdata['TimeStamp']
-           # self.x_values = timestamps
             self.times = timestamps
             self.x_values = []
             datevalues = [datetime.datetime.strptime(x, "%Y-%m-%d %H:%M:%S") for x in self.times]
 
+            #Formats datetime value into string for plot xaxis
             for x in datevalues:
                 self.x_values.append(x.strftime("%d/%b %H:%M"))
 
@@ -61,6 +59,7 @@ class DE_Functionality():
 
     # for plotting and updating the graph based on selection
     def plot_graph(self, widget, select):
+        #get the selected type of data from ui
         self.selection = select
 
         # If file has been opened go ahead with plotting and getting the data for the graph
@@ -74,8 +73,7 @@ class DE_Functionality():
 
             # For all instances in subject
             # Subject instance holds a dictionary
-            for i in ys:
-                sub = i
+            for sub in ys:
                 # append the mean of selected data held in subject to y values
                 # If this is none or another N/A type append none instead
                 if not self.bySubject and not self.byGroup:
@@ -92,7 +90,7 @@ class DE_Functionality():
                     except:
                         std_values.append(0.0)
 
-
+                #If graph is displayed by subject, only append y values for selected subject number
                 elif self.bySubject:
                     select = sub[self.selection]
                     self.y_values.append(select[self.subjectNum])
@@ -166,6 +164,8 @@ class DE_Functionality():
         widget.de_cbxFrom.addItems(self.times)
         widget.de_cbxTo.addItems(self.times)
         widget.de_cbxTo.setCurrentIndex(widget.de_cbxTo.count() - 1)
+
+        #enable choice wigets
         widget.de_cbxFrom.setEnabled(True)
         widget.de_cbxTo.setEnabled(True)
         widget.de_btnSaveDE.setEnabled(True)
@@ -196,10 +196,12 @@ class DE_Functionality():
     #open json
     def open_json_file(self, filename):
 
+    #open json file
         with open(filename, "r") as read_file:
-            print("Converting JSON encoded data into Python dictionary")
+            # Converting JSON encoded data into Python dictionary
             data = json.load(read_file)
 
+            #restucture file so, the structure is similar to the previously used matlab structure
             times = []
             Filename = []
             Subjects = []
@@ -211,24 +213,28 @@ class DE_Functionality():
                 Subjects.append(i['Subjects'][0])
                 FGMask.append(i['FGMask'])
 
+            #return dataset contents
             return {"Filename": Filename, "TimeStamp" : times, "Subject": Subjects, "FGMask": FGMask}
 
 
-#called when show is changed, between all group or subject
-    #
+
+#called when show is changed, between all, by group or subject
     def UpdateShow(self, widget, index):
         subjects = self.matdata['Subject']
         NumOfSub = 0
         valid = False
+        #check if subject num is equal for each set of data
         for sub in subjects:
             if NumOfSub == 0:
                 NumOfSub = len(sub['ID'])
             if len(sub['ID']) > NumOfSub or len(sub['ID']) < NumOfSub:
                 print("subject number not equal")
+
         # User selected display all
         if index == 0:
             self.byGroup = False
             self.bySubject = False
+
         #User selected by group displayed
         elif index == 1:
             for sub in subjects:
@@ -243,7 +249,7 @@ class DE_Functionality():
                         group = "Group " + str(i)
                         if not np.isin(self.groupsStr, group):
                             self.groupsStr.append(group)
-                        #    self.groups.append(i)
+
                 if not len(group) == 0:
                     self.byGroup = True
                     self.bySubject = False
@@ -257,6 +263,7 @@ class DE_Functionality():
             self.bySubject = True
             widget.de_cbxSpecify.clear()
             widget.de_cbxSpecify.setEnabled(True)
+            #get an the subject number min, in case that the subject num is not equal among all sets
             subjectmin = []
             for i in subjects:
                 subjectmin.append(np.max(i['ID']))
@@ -264,6 +271,7 @@ class DE_Functionality():
             subNum = []
             for i in range(1, subjectmin):
                 subNum.append("Subject " + str(i))
+            #Add subject numbers to choice widget
             widget.de_cbxSpecify.addItems(subNum)
 
         self.plot_graph(widget, self.selection)
@@ -278,13 +286,15 @@ class DE_Functionality():
     def to_csv(self, path):
         subjects = self.matdata['Subject']
         selects = ["Date", "ID", "Group", "ProjectedLeafArea", "Diameter", "Perimeter", "Stockiness", "Compactness",
-                   "Hue","Count","RelativeRateChange","AbsoluteGrowthRate","RelativeGrowthRate"]
+                   "Hue", "Count", "RelativeRateChange", "AbsoluteGrowthRate", "RelativeGrowthRate"]
         try:
             with open(path, 'w') as csvfile:
                 writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n', fieldnames=selects)
+                #writer header to csv
                 writer.writeheader()
                 index = 0
                 data = ""
+                #Add the data from all subjects
                 while (index < len(subjects)):
                     sub = subjects[index]
                     i = 0
@@ -305,7 +315,6 @@ class DE_Functionality():
                         i += 1
 
                     index += 1
-                print(data)
                 csvfile.write(data)
 
         except IOError:
