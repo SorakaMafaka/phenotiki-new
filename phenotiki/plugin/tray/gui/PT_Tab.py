@@ -20,6 +20,9 @@ class PT_Tab():
         ## Tab setup
         self.img_plots_array = []
         self.img_file_list_array = []
+        self.fg_mask_list = []
+        self.raw_image_list = []
+        self.active_list = self.raw_image_list
         self.tabsystem = tab
         self.tabsystem.setFont(QFont("Helvetica", 12))
         self.tabPotTrayAnalysis = QWidget()
@@ -80,14 +83,15 @@ class PT_Tab():
 
         ## Type drop down menu setup in image group box
         self.pt_cmbType = QComboBox(self.pt_gbxImage)
-        self.pt_cmbType.addItem("")
-        self.pt_cmbType.addItem("")
-        self.pt_cmbType.addItem("")
-        self.pt_cmbType.addItem("")
+        self.pt_cmbType.addItem("Raw Image")
+        self.pt_cmbType.addItem("Detected Plants")
+        self.pt_cmbType.addItem("Contour")
+        self.pt_cmbType.addItem("FG Mask")
         self.pt_cmbType.setObjectName(u"pt_cmbType")
         self.pt_cmbType.setEnabled(False)
         self.pt_cmbType.setGeometry(QRect(590, 470, 121, 31))
         self.pt_cmbType.setFrame(True)
+        self.pt_cmbType.currentIndexChanged.connect(self.on_dropdown_clicked)
 
         ## Plots widget setup in Image Qbox
         self.pt_lstPlots = QListWidget(self.pt_gbxImage)
@@ -180,6 +184,7 @@ class PT_Tab():
         self.img_dict = print_image_files(self)
         for i in self.img_dict.values():
             self.img_file_list_array.append(i)
+            self.raw_image_list.append(plt.imread(i))
         self.pt_lstFileList.clear()
         self.pt_lstFileList.addItems(self.img_dict.keys())
         self.pt_btnMask.setEnabled(True)
@@ -190,9 +195,21 @@ class PT_Tab():
 
         if len(self.img_file_list_array) > 0:
             img = plt.imread(self.img_file_list_array[0])
+
+            # for i in self.img_file_list_array:
+            #     self.raw_image_list.append(plt.imread(self.img_file_list_array[i]))
+            #
+            # print(self.raw_image_list)
+            #print(img)
+            #raw_image = sk.img_as_float64(img)
+            #print(raw_image)
+            #self.raw_image_list.append(img)
+            #print(self.raw_image_list)
+
             self.pt_MplWidget.canvas.axes.clear()
             self.pt_MplWidget.canvas.axes.imshow(img)
             self.pt_MplWidget.canvas.axes.set_axis_off()
+            self.pt_MplWidget.canvas.figure.tight_layout()
             self.pt_MplWidget.canvas.draw()
             self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array) - 1)
             self.pt_horizontalSlider.setEnabled(True)
@@ -205,17 +222,18 @@ class PT_Tab():
     def on_treeView_clicked(self):
         i = self.pt_lstFileList.currentRow()
         # print(self.img_file_list_array.index(i))
-        print(i)
-        updateImage(self, i)
+        # print(i)
+        updateImage(self, i, self.active_list)
 
     def on_mask_click(self):
         plant_dict = {}
         total_subjects = []
         sequences = []
         number = 0
+
         for i in self.img_dict.keys():
             number +=1
-            log(self, i, str(i), plant_dict, total_subjects, sequences)
+            log(self, i, str(i), plant_dict, total_subjects, sequences, self.fg_mask_list)
 
         self.pt_MplWidget.canvas.draw()
         print(plant_dict['NumberOfSubjects'])
@@ -224,4 +242,15 @@ class PT_Tab():
             json.dump(plant_dict, outfile, indent=4)
 
     def slider_selected(self, index):
-        updateImage(self, index)
+        updateImage(self, index, self.active_list)
+
+
+    def on_dropdown_clicked(self):
+        if self.pt_cmbType.currentIndex() == 0:
+            self.active_list = self.raw_image_list
+        elif self.pt_cmbType.currentIndex() == 1:
+            print("detected")
+        elif self.pt_cmbType.currentIndex() == 2:
+            print("contour")
+        elif self.pt_cmbType.currentIndex() == 3:
+            self.active_list = self.fg_mask_list
