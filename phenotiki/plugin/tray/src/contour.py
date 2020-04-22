@@ -6,7 +6,7 @@ import argparse
 import imutils
 import cv2
 
-
+# return the image with contour added
 def contour(image_file, contour_list):
 
     img = cv2.imread(image_file)

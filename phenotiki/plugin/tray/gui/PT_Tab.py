@@ -171,20 +171,13 @@ class PT_Tab():
         self.pt_lblProgress.setText(
             QCoreApplication.translate("MainWindow", u"Progress: ", None))
 
+    # Builds an array of center points and adds them to the list
     def build_pos_array(self, array):
         self.pt_lstPlots.clear()
-
         for coords in array:
             self.pt_lstPlots.addItem(str(coords))
 
-
-    ##Gets coordinates of a click within Image and puts them inside image plots array
-    # def getPos(self, event):
-    #     x = event.pos().x()
-    #     y = event.pos().y()
-    #     self.build_pos_array(self.img_plots_array, x, y)
-
-    ## Function performed when import button is clicked
+    # Function performed when import button is clicked
     def on_import_click(self):
         self.img_file_list_array.clear()
         self.img_dict = print_image_files(self)
@@ -195,7 +188,7 @@ class PT_Tab():
         self.pt_lstFileList.addItems(self.img_dict.keys())
         self.pt_btnMask.setEnabled(True)
         self.pt_btnSave.setEnabled(True)
-        #self.pt_btnSettings.setEnabled(True)
+        # self.pt_btnSettings.setEnabled(True)
         self.pt_btnTraits.setEnabled(True)
         self.pt_cmbType.setEnabled(False)
 
@@ -212,15 +205,15 @@ class PT_Tab():
 
             # get coords of mouse click in original image
             # Currently nothing is done with points
-            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
-            self.build_pos_array(points)
-
+            #points = self.pt_MplWidget.canvas.figure.ginput(n=24)
+            #self.build_pos_array(points)
 
     # Function performed when treeview button is clicked
     def on_treeView_clicked(self):
         i = self.pt_lstFileList.currentRow()
         updateImage(self, i, self.active_list)
 
+    # Function to run when Extract Mask button is clicked
     def on_mask_click(self):
         for i in self.img_dict.keys():
             self.number += 1
@@ -232,10 +225,12 @@ class PT_Tab():
         self.pt_MplWidget.canvas.draw()
         self.pt_progressBar.setValue(100)
         self.pt_lblProgress.setText(
-            QCoreApplication.translate("MainWindow", u"Progress: Mask Extraction Complete Successfully - Now Get Traits", None))
+            QCoreApplication.translate("MainWindow",
+                                       u"Progress: Mask Extraction Complete Successfully - Now Get Traits", None))
         self.pt_cmbType.setEnabled(True)
-        self.pt_cmbType.setCurrentIndex(3)
+        self.pt_cmbType.setCurrentIndex(1)
 
+    # Function to run when slider is selected
     def slider_selected(self, index):
         updateImage(self, index, self.active_list)
         self.pt_lstPlots.clear()
@@ -244,6 +239,7 @@ class PT_Tab():
         else:
             print("No Center Found - Extract Masks")
 
+    # Function to run when drop down menu is changed
     def on_dropdown_clicked(self):
         if self.pt_cmbType.currentIndex() == 0:
             self.active_list = self.raw_image_list
@@ -262,20 +258,22 @@ class PT_Tab():
             index = self.pt_horizontalSlider.value()
             updateImage(self, index, self.active_list)
 
+    # Function to run when save button is clicked
     def on_save_click(self):
         save_data(self, self.plant_dict)
 
+    # Function to run when Extract Traits button is clicked
     def on_traits_click(self):
         for i in self.img_dict.keys():
             traits_log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
-                self.detected_plants_list)
+                       self.detected_plants_list)
         self.pt_progressBar.setValue(100)
         self.pt_lblProgress.setText(
             QCoreApplication.translate("MainWindow",
                                        u"Progress: Traits Successfully Extracted", None))
         self.pt_cmbType.setCurrentIndex(1)
 
-    #displays error message
+    # displays error message
     def show_errormsg(self, text):
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Warning)

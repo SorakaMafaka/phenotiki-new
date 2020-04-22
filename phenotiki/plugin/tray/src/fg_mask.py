@@ -3,11 +3,10 @@ import skimage as sk
 from cv2 import cv2
 from skimage.color import rgb2gray
 
-
+# FG_Mask segmentation
 def fg_mask(image):
     original = cv2.imread(image)
-    # widget.pt_progressBar.progressInit("Mask Extraction")
-    #widget.pt_progressBar.setEnabled(True)
+
     l_min = 111
     a_min = 49
     b_min = 137
