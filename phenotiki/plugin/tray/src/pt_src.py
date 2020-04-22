@@ -16,29 +16,7 @@ import numpy as np
 from phenotiki.plugin.tray.src.fg_mask import fg_mask
 
 
-def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list):
-    # original = cv2.imread(image)
-    # # widget.pt_progressBar.progressInit("Mask Extraction")
-    # widget.pt_progressBar.setEnabled(True)
-    # l_min = 111
-    # a_min = 49
-    # b_min = 137
-    # l_max = 240
-    # a_max = 114
-    # b_max = 240
-    #
-    # min_lab = np.array([l_min, a_min, b_min])
-    # max_lab = np.array([l_max, a_max, b_max])
-    #
-    # # Convert the BGR image to other color spaces
-    # image_lab = cv2.cvtColor(original, cv2.COLOR_BGR2LAB)
-    #
-    # # Create the mask using the min and max values obtained from trackbar and apply bitwise and operation to get the results
-    # mask_lab = cv2.inRange(image_lab, min_lab, max_lab)
-    # result_lab = cv2.bitwise_and(original, original, mask=mask_lab)
-    #
-    # # Apply Masks
-    # image = rgb2gray(result_lab)
+def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list, subject_center_list):
 
     image = fg_mask(image)
 
@@ -67,6 +45,7 @@ def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list,
     date_time = str(date) + " " + str(time)
     subjects = []
     subject_ids = []
+    subject_center = []
     subject_group = []
     subject_project_leaf_areas = []
     subject_perimeters = []
@@ -111,9 +90,11 @@ def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list,
             relative_rate_change = None
             absolute_growth_rate = None
             relative_growth_rate = None
+            center = region.centroid
 
             # add traits to lists
             subject_ids.append(int(id))
+            subject_center.append(center)
             subject_project_leaf_areas.append(int(filled_area))
             subject_perimeters.append(int(perimeter))
             subject_diameters.append(int(diameter))
@@ -131,7 +112,6 @@ def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list,
 
             widget.pt_MplWidget.canvas.axes.add_patch(rect)
 
-
     subject_dict = {'ID': subject_ids,
                     'Group': subject_group,
                     'ProjectedLeafArea': subject_project_leaf_areas,
@@ -146,7 +126,7 @@ def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list,
                     'RelativeGrowthRate': subject_relative_growth_rate}
 
     subjects.append(subject_dict)
-    fg_mask_list.append(image)
+    subject_center_list.append(subject_center)
     image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': str(fg_mask_list)})
     sequences.append(image_dict)
     plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,

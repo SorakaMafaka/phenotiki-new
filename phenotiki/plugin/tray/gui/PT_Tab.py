@@ -26,6 +26,7 @@ class PT_Tab():
         self.plant_dict = {}
         self.total_subjects = []
         self.sequences = []
+        self.subject_center_list = []
         self.number = 0
         self.active_list = self.raw_image_list
         self.tabsystem = tab
@@ -134,6 +135,7 @@ class PT_Tab():
         self.pt_btnTraits.setObjectName(u"pt_btnTraits")
         self.pt_btnTraits.setEnabled(False)
         self.pt_btnTraits.setGeometry(QRect(480, 80, 121, 51))
+        self.pt_btnTraits.clicked.connect(self.on_traits_click)
 
         ## Save Button
         self.pt_btnSave = QPushButton(self.pt_gbxToolbox)
@@ -175,8 +177,10 @@ class PT_Tab():
     def build_pos_array(self, array):
         self.pt_lstPlots.clear()
         print(array)
+
         for coords in array:
             self.pt_lstPlots.addItem(str(coords))
+
 
     ##Gets coordinates of a click within Image and puts them inside image plots array
     # def getPos(self, event):
@@ -197,7 +201,7 @@ class PT_Tab():
         self.pt_btnSave.setEnabled(True)
         #self.pt_btnSettings.setEnabled(True)
         self.pt_btnTraits.setEnabled(True)
-        self.pt_cmbType.setEnabled(True)
+        self.pt_cmbType.setEnabled(False)
 
         if len(self.img_file_list_array) > 0:
             img = plt.imread(self.img_file_list_array[0])
@@ -210,8 +214,8 @@ class PT_Tab():
             self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array) - 1)
             self.pt_horizontalSlider.setEnabled(True)
 
-            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
-            self.build_pos_array(points)
+            #points = self.pt_MplWidget.canvas.figure.ginput(n=24)
+            #self.build_pos_array(points)
             # print(points)
 
     # Function performed when treeview button is clicked
@@ -222,17 +226,22 @@ class PT_Tab():
         updateImage(self, i, self.active_list)
 
     def on_mask_click(self):
-
         for i in self.img_dict.keys():
             self.number += 1
+            self.fg_mask_list.append(fg_mask(i))
             log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
-                self.detected_plants_list)
+                self.detected_plants_list, self.subject_center_list)
+            self.build_pos_array(self.subject_center_list[0])
 
         self.pt_MplWidget.canvas.draw()
         self.pt_progressBar.setValue(100)
+        self.pt_cmbType.setEnabled(True)
+        self.pt_cmbType.setCurrentIndex(3)
 
     def slider_selected(self, index):
         updateImage(self, index, self.active_list)
+        self.pt_lstPlots.clear()
+        self.build_pos_array(self.subject_center_list[index])
 
     def on_dropdown_clicked(self):
         if self.pt_cmbType.currentIndex() == 0:
@@ -252,3 +261,10 @@ class PT_Tab():
 
     def on_save_click(self):
         save_data(self, self.plant_dict)
+
+    def on_traits_click(self):
+        for i in self.img_dict.keys():
+            log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
+                self.detected_plants_list, self.subject_center_list)
+        self.pt_progressBar.setValue(100)
+        self.pt_cmbType.setCurrentIndex(1)
