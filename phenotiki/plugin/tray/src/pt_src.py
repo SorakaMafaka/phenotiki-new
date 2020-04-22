@@ -16,7 +16,7 @@ import numpy as np
 from phenotiki.plugin.tray.src.fg_mask import fg_mask
 
 
-def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list, subject_center_list):
+def traits_log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list):
 
     image = fg_mask(image)
 
@@ -90,11 +90,10 @@ def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list,
             relative_rate_change = None
             absolute_growth_rate = None
             relative_growth_rate = None
-            center = region.centroid
 
             # add traits to lists
             subject_ids.append(int(id))
-            subject_center.append(center)
+
             subject_project_leaf_areas.append(int(filled_area))
             subject_perimeters.append(int(perimeter))
             subject_diameters.append(int(diameter))
@@ -126,11 +125,57 @@ def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list,
                     'RelativeGrowthRate': subject_relative_growth_rate}
 
     subjects.append(subject_dict)
-    subject_center_list.append(subject_center)
+    #subject_center_list.append(subject_center)
     image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': str(fg_mask_list)})
     sequences.append(image_dict)
     plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,
                        'BasePath': None, 'ml': None})
+    widget.pt_MplWidget.canvas.axes.set_axis_off()
+    widget.pt_MplWidget.canvas.figure.tight_layout()
+    widget.pt_MplWidget.canvas.draw()
+    detected_plants_list.append(image_label_overlay)
+    widget.pt_progressBar.setValue(50)
+
+
+def log(widget, image, detected_plants_list, subject_center_list):
+
+    image = fg_mask(image)
+
+    # apply threshold
+    thresh = threshold_otsu(image)
+    bw = closing(image > thresh, square(3))
+
+    # remove artifacts connected to image border
+    cleared = clear_border(bw)
+
+    # label image regions
+    label_image = label(cleared)
+    image_label_overlay = label2rgb(label_image, image=image, bg_label=0)
+
+    widget.pt_MplWidget.canvas.axes.clear()
+    widget.pt_MplWidget.canvas.axes.imshow(image_label_overlay)
+
+    progUpdate = 100 % len(regionprops(label_image))
+
+    subject_center = []
+
+
+    for region in regionprops(label_image):
+        # take regions with large enough areas
+
+        if region.area >= 100:
+            minr, minc, maxr, maxc = region.bbox
+            rect = mpatches.Rectangle((minc, minr), maxc - minc, maxr - minr,
+                                      fill=False, edgecolor='red', linewidth=1)
+            newVal = widget.pt_progressBar.value() + progUpdate
+            widget.pt_progressBar.setValue(newVal)
+            center = region.centroid
+            subject_center.append(center)
+
+            widget.pt_MplWidget.canvas.axes.add_patch(rect)
+
+    subject_center_list.append(subject_center)
+
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()

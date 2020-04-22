@@ -11,6 +11,7 @@ from phenotiki.main.src.import_functionality import print_image_files, save_data
 # from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
 from phenotiki.plugin.tray.gui.mplwidget import MplWidget
 from phenotiki.plugin.tray.src.pt_src import *
+from phenotiki.plugin.tray.src.contour import contour
 import json
 
 
@@ -23,6 +24,7 @@ class PT_Tab():
         self.fg_mask_list = []
         self.raw_image_list = []
         self.detected_plants_list = []
+        self.contour_list = []
         self.plant_dict = {}
         self.total_subjects = []
         self.sequences = []
@@ -176,7 +178,6 @@ class PT_Tab():
 
     def build_pos_array(self, array):
         self.pt_lstPlots.clear()
-        print(array)
 
         for coords in array:
             self.pt_lstPlots.addItem(str(coords))
@@ -214,23 +215,18 @@ class PT_Tab():
             self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array) - 1)
             self.pt_horizontalSlider.setEnabled(True)
 
-            #points = self.pt_MplWidget.canvas.figure.ginput(n=24)
-            #self.build_pos_array(points)
-            # print(points)
 
     # Function performed when treeview button is clicked
     def on_treeView_clicked(self):
         i = self.pt_lstFileList.currentRow()
-        # print(self.img_file_list_array.index(i))
-        # print(i)
         updateImage(self, i, self.active_list)
 
     def on_mask_click(self):
         for i in self.img_dict.keys():
             self.number += 1
             self.fg_mask_list.append(fg_mask(i))
-            log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
-                self.detected_plants_list, self.subject_center_list)
+            contour(i, self.contour_list)
+            log(self, i, self.detected_plants_list, self.subject_center_list)
             self.build_pos_array(self.subject_center_list[0])
 
         self.pt_MplWidget.canvas.draw()
@@ -253,7 +249,9 @@ class PT_Tab():
             index = self.pt_horizontalSlider.value()
             updateImage(self, index, self.active_list)
         elif self.pt_cmbType.currentIndex() == 2:
-            print("contour")
+            self.active_list = self.contour_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
         elif self.pt_cmbType.currentIndex() == 3:
             self.active_list = self.fg_mask_list
             index = self.pt_horizontalSlider.value()
@@ -264,7 +262,7 @@ class PT_Tab():
 
     def on_traits_click(self):
         for i in self.img_dict.keys():
-            log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
-                self.detected_plants_list, self.subject_center_list)
+            traits_log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
+                self.detected_plants_list)
         self.pt_progressBar.setValue(100)
         self.pt_cmbType.setCurrentIndex(1)
