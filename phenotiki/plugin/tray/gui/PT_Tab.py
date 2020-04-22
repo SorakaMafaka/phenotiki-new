@@ -210,6 +210,11 @@ class PT_Tab():
             self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array) - 1)
             self.pt_horizontalSlider.setEnabled(True)
 
+            # get coords of mouse click in original image
+            # Currently nothing is done with points
+            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
+            self.build_pos_array(points)
+
 
     # Function performed when treeview button is clicked
     def on_treeView_clicked(self):
