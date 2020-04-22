@@ -16,7 +16,7 @@ import numpy as np
 from phenotiki.plugin.tray.src.fg_mask import fg_mask
 
 
-def log(widget, image, img, plant_dict,total_subjects, sequences, fg_mask_list):
+def log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list):
     # original = cv2.imread(image)
     # # widget.pt_progressBar.progressInit("Mask Extraction")
     # widget.pt_progressBar.setEnabled(True)
@@ -90,14 +90,16 @@ def log(widget, image, img, plant_dict,total_subjects, sequences, fg_mask_list):
                                       fill=False, edgecolor='red', linewidth=1)
             newVal = widget.pt_progressBar.value() + progUpdate
             widget.pt_progressBar.setValue(newVal)
+
+            # extract traits
             convex_area = region.convex_area
             filled_area = region.filled_area
             perimeter = (2 * ((maxr - minr) + (maxc - minc)))
-            length = maxr - minr
-            width = maxc - minc
+            height = rect.get_height()
+            width = rect.get_width()
 
-            if length >= width:
-                diameter = length
+            if height >= width:
+                diameter = height
             else:
                 diameter = width
 
@@ -110,6 +112,7 @@ def log(widget, image, img, plant_dict,total_subjects, sequences, fg_mask_list):
             absolute_growth_rate = None
             relative_growth_rate = None
 
+            # add traits to lists
             subject_ids.append(int(id))
             subject_project_leaf_areas.append(int(filled_area))
             subject_perimeters.append(int(perimeter))
@@ -117,16 +120,17 @@ def log(widget, image, img, plant_dict,total_subjects, sequences, fg_mask_list):
             subject_stockiness.append(float(stockiness))
             subject_compactness.append(float(compactness))
             subject_hue.append(hue)
-            #subject_group.append(group)
+            # subject_group.append(group)
             subject_count.append(count)
             subject_relative_rate_change.append(relative_rate_change)
             subject_absolute_growth_rate.append(absolute_growth_rate)
             subject_relative_growth_rate.append(relative_growth_rate)
 
+            # get total number of subjects
             total_subjects.append(id)
 
-
             widget.pt_MplWidget.canvas.axes.add_patch(rect)
+
 
     subject_dict = {'ID': subject_ids,
                     'Group': subject_group,
@@ -143,14 +147,15 @@ def log(widget, image, img, plant_dict,total_subjects, sequences, fg_mask_list):
 
     subjects.append(subject_dict)
     fg_mask_list.append(image)
-    image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': image.tolist()})
+    image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': str(fg_mask_list)})
     sequences.append(image_dict)
     plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,
                        'BasePath': None, 'ml': None})
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()
-    widget.pt_progressBar.setValue(100)
+    detected_plants_list.append(image_label_overlay)
+    widget.pt_progressBar.setValue(50)
 
 
 def updateImage(widget, i, active_list):
@@ -160,5 +165,3 @@ def updateImage(widget, i, active_list):
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()
-
-

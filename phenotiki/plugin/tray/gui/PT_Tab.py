@@ -7,7 +7,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from phenotiki.main.src.import_functionality import print_image_files
+from phenotiki.main.src.import_functionality import print_image_files, save_data
 # from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
 from phenotiki.plugin.tray.gui.mplwidget import MplWidget
 from phenotiki.plugin.tray.src.pt_src import *
@@ -17,11 +17,16 @@ import json
 class PT_Tab():
     def __init__(self, tab):
 
-        ## Tab setup
+        ## Tab setup and variables
         self.img_plots_array = []
         self.img_file_list_array = []
         self.fg_mask_list = []
         self.raw_image_list = []
+        self.detected_plants_list = []
+        self.plant_dict = {}
+        self.total_subjects = []
+        self.sequences = []
+        self.number = 0
         self.active_list = self.raw_image_list
         self.tabsystem = tab
         self.tabsystem.setFont(QFont("Helvetica", 12))
@@ -135,6 +140,7 @@ class PT_Tab():
         self.pt_btnSave.setObjectName(u"pt_btnSave")
         self.pt_btnSave.setEnabled(False)
         self.pt_btnSave.setGeometry(QRect(610, 80, 121, 51))
+        self.pt_btnSave.clicked.connect(self.on_save_click)
 
         ##Progress bar
         # self.pt_progressBar = ProgressBar()
@@ -189,22 +195,12 @@ class PT_Tab():
         self.pt_lstFileList.addItems(self.img_dict.keys())
         self.pt_btnMask.setEnabled(True)
         self.pt_btnSave.setEnabled(True)
-        self.pt_btnSettings.setEnabled(True)
+        #self.pt_btnSettings.setEnabled(True)
         self.pt_btnTraits.setEnabled(True)
         self.pt_cmbType.setEnabled(True)
 
         if len(self.img_file_list_array) > 0:
             img = plt.imread(self.img_file_list_array[0])
-
-            # for i in self.img_file_list_array:
-            #     self.raw_image_list.append(plt.imread(self.img_file_list_array[i]))
-            #
-            # print(self.raw_image_list)
-            #print(img)
-            #raw_image = sk.img_as_float64(img)
-            #print(raw_image)
-            #self.raw_image_list.append(img)
-            #print(self.raw_image_list)
 
             self.pt_MplWidget.canvas.axes.clear()
             self.pt_MplWidget.canvas.axes.imshow(img)
@@ -226,31 +222,33 @@ class PT_Tab():
         updateImage(self, i, self.active_list)
 
     def on_mask_click(self):
-        plant_dict = {}
-        total_subjects = []
-        sequences = []
-        number = 0
 
         for i in self.img_dict.keys():
-            number +=1
-            log(self, i, str(i), plant_dict, total_subjects, sequences, self.fg_mask_list)
+            self.number += 1
+            log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
+                self.detected_plants_list)
 
         self.pt_MplWidget.canvas.draw()
-        print(plant_dict['NumberOfSubjects'])
-
-        with open('json_data.json', 'w') as outfile:
-            json.dump(plant_dict, outfile, indent=4)
+        self.pt_progressBar.setValue(100)
 
     def slider_selected(self, index):
         updateImage(self, index, self.active_list)
 
-
     def on_dropdown_clicked(self):
         if self.pt_cmbType.currentIndex() == 0:
             self.active_list = self.raw_image_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
         elif self.pt_cmbType.currentIndex() == 1:
-            print("detected")
+            self.active_list = self.detected_plants_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
         elif self.pt_cmbType.currentIndex() == 2:
             print("contour")
         elif self.pt_cmbType.currentIndex() == 3:
             self.active_list = self.fg_mask_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
+
+    def on_save_click(self):
+        save_data(self, self.plant_dict)
