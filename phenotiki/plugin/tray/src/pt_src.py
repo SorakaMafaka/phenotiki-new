@@ -10,32 +10,37 @@ from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.morphology import closing, square
 from skimage.color import label2rgb, rgb2gray
+import skimage as sk
 import numpy as np
 
+from phenotiki.plugin.tray.src.fg_mask import fg_mask
 
-def log(widget, image, img, plant_dict,total_subjects, sequences):
-    original = cv2.imread(image)
-    # widget.pt_progressBar.progressInit("Mask Extraction")
-    widget.pt_progressBar.setEnabled(True)
-    l_min = 111
-    a_min = 49
-    b_min = 137
-    l_max = 240
-    a_max = 114
-    b_max = 240
 
-    min_lab = np.array([l_min, a_min, b_min])
-    max_lab = np.array([l_max, a_max, b_max])
+def log(widget, image, img, plant_dict,total_subjects, sequences, fg_mask_list):
+    # original = cv2.imread(image)
+    # # widget.pt_progressBar.progressInit("Mask Extraction")
+    # widget.pt_progressBar.setEnabled(True)
+    # l_min = 111
+    # a_min = 49
+    # b_min = 137
+    # l_max = 240
+    # a_max = 114
+    # b_max = 240
+    #
+    # min_lab = np.array([l_min, a_min, b_min])
+    # max_lab = np.array([l_max, a_max, b_max])
+    #
+    # # Convert the BGR image to other color spaces
+    # image_lab = cv2.cvtColor(original, cv2.COLOR_BGR2LAB)
+    #
+    # # Create the mask using the min and max values obtained from trackbar and apply bitwise and operation to get the results
+    # mask_lab = cv2.inRange(image_lab, min_lab, max_lab)
+    # result_lab = cv2.bitwise_and(original, original, mask=mask_lab)
+    #
+    # # Apply Masks
+    # image = rgb2gray(result_lab)
 
-    # Convert the BGR image to other color spaces
-    image_lab = cv2.cvtColor(original, cv2.COLOR_BGR2LAB)
-
-    # Create the mask using the min and max values obtained from trackbar and apply bitwise and operation to get the results
-    mask_lab = cv2.inRange(image_lab, min_lab, max_lab)
-    result_lab = cv2.bitwise_and(original, original, mask=mask_lab)
-
-    # Apply Masks
-    image = rgb2gray(result_lab)
+    image = fg_mask(image)
 
     # apply threshold
     thresh = threshold_otsu(image)
@@ -137,7 +142,8 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
                     'RelativeGrowthRate': subject_relative_growth_rate}
 
     subjects.append(subject_dict)
-    image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': None})
+    fg_mask_list.append(image)
+    image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': image.tolist()})
     sequences.append(image_dict)
     plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,
                        'BasePath': None, 'ml': None})
@@ -147,10 +153,12 @@ def log(widget, image, img, plant_dict,total_subjects, sequences):
     widget.pt_progressBar.setValue(100)
 
 
-def updateImage(widget, i):
-    img = plt.imread(widget.img_file_list_array[i])
+def updateImage(widget, i, active_list):
+    img = active_list[i]
     widget.pt_MplWidget.canvas.axes.clear()
     widget.pt_MplWidget.canvas.axes.imshow(img)
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()
+
+
