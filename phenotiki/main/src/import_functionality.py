@@ -27,7 +27,7 @@ def save_data(self, file):
         self.show_errormsg("Save Cancelled")
 
 
-def print_image_files(self):
+def print_image_files(self, path_list):
     path = openFileDialog(self)
     try:
         os.chdir(path)
@@ -41,5 +41,5 @@ def print_image_files(self):
         full_path = path + "/" + file
         name = "/" + file
         names[file] = full_path
-
+    path_list.append(path)
     return names

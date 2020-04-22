@@ -30,6 +30,7 @@ class PT_Tab():
         self.sequences = []
         self.subject_center_list = []
         self.number = 0
+        self.path_list = []
         self.active_list = self.raw_image_list
         self.tabsystem = tab
         self.tabsystem.setFont(QFont("Helvetica", 12))
@@ -180,7 +181,7 @@ class PT_Tab():
     # Function performed when import button is clicked
     def on_import_click(self):
         self.img_file_list_array.clear()
-        self.img_dict = print_image_files(self)
+        self.img_dict = print_image_files(self, self.path_list)
         for i in self.img_dict.values():
             self.img_file_list_array.append(i)
             self.raw_image_list.append(plt.imread(i))
@@ -266,7 +267,7 @@ class PT_Tab():
     def on_traits_click(self):
         for i in self.img_dict.keys():
             traits_log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
-                       self.detected_plants_list)
+                       self.detected_plants_list, self.path_list)
         self.pt_progressBar.setValue(100)
         self.pt_lblProgress.setText(
             QCoreApplication.translate("MainWindow",

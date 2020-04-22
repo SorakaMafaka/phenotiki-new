@@ -18,8 +18,9 @@ import numpy as np
 from phenotiki.plugin.tray.src.fg_mask import fg_mask
 
 
-def traits_log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list):
+def traits_log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list, path_list):
     image = fg_mask(image)
+
 
     # apply threshold
     thresh = threshold_otsu(image)
@@ -130,7 +131,7 @@ def traits_log(widget, image, img, plant_dict, total_subjects, sequences, fg_mas
     image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': str(fg_mask_list)})
     sequences.append(image_dict)
     plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,
-                       'BasePath': None, 'ml': None})
+                       'BasePath': path_list[0], 'ml': None})
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()
