@@ -24,7 +24,7 @@ def save_data(self, file):
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec()
     else:
-        self.show_errormsg()
+        self.show_errormsg("Save Cancelled")
 
 
 def print_image_files(self):

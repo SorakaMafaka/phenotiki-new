@@ -266,3 +266,12 @@ class PT_Tab():
                 self.detected_plants_list)
         self.pt_progressBar.setValue(100)
         self.pt_cmbType.setCurrentIndex(1)
+
+    #displays error message
+    def show_errormsg(self, text):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setText(text)
+        msgBox.setWindowTitle("Error")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec()
