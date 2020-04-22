@@ -4,12 +4,14 @@ from datetime import datetime
 import cv2
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from PySide2.QtCore import QCoreApplication
 
 from skimage.filters import threshold_otsu
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.morphology import closing, square
 from skimage.color import label2rgb, rgb2gray
+from skimage import io
 import skimage as sk
 import numpy as np
 
@@ -17,7 +19,6 @@ from phenotiki.plugin.tray.src.fg_mask import fg_mask
 
 
 def traits_log(widget, image, img, plant_dict, total_subjects, sequences, fg_mask_list, detected_plants_list):
-
     image = fg_mask(image)
 
     # apply threshold
@@ -125,7 +126,7 @@ def traits_log(widget, image, img, plant_dict, total_subjects, sequences, fg_mas
                     'RelativeGrowthRate': subject_relative_growth_rate}
 
     subjects.append(subject_dict)
-    #subject_center_list.append(subject_center)
+    # subject_center_list.append(subject_center)
     image_dict.update({'Filename': img, 'TimeStamp': date_time, 'Subjects': subjects, 'FGMask': str(fg_mask_list)})
     sequences.append(image_dict)
     plant_dict.update({'Sequences': sequences, 'NumberOfSubjects': len(total_subjects), 'MaxImageSize': None,
@@ -135,10 +136,11 @@ def traits_log(widget, image, img, plant_dict, total_subjects, sequences, fg_mas
     widget.pt_MplWidget.canvas.draw()
     detected_plants_list.append(image_label_overlay)
     widget.pt_progressBar.setValue(50)
+    widget.pt_lblProgress.setText(
+        QCoreApplication.translate("MainWindow", u"Progress: Extracting Traits", None))
 
 
 def log(widget, image, detected_plants_list, subject_center_list):
-
     image = fg_mask(image)
 
     # apply threshold
@@ -159,7 +161,6 @@ def log(widget, image, detected_plants_list, subject_center_list):
 
     subject_center = []
 
-
     for region in regionprops(label_image):
         # take regions with large enough areas
 
@@ -179,8 +180,14 @@ def log(widget, image, detected_plants_list, subject_center_list):
     widget.pt_MplWidget.canvas.axes.set_axis_off()
     widget.pt_MplWidget.canvas.figure.tight_layout()
     widget.pt_MplWidget.canvas.draw()
-    detected_plants_list.append(image_label_overlay)
+    det_img = "./det_img.png"
+    widget.pt_MplWidget.canvas.figure.savefig(det_img, bbox_inches='tight',
+                                              pad_inches=0)
+    det_img = sk.io.imread("./det_img.png")
+    detected_plants_list.append(det_img)
     widget.pt_progressBar.setValue(50)
+    widget.pt_lblProgress.setText(
+        QCoreApplication.translate("MainWindow", u"Progress: Extracting Masks", None))
 
 
 def updateImage(widget, i, active_list):

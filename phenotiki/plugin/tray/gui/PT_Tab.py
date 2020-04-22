@@ -70,15 +70,6 @@ class PT_Tab():
         self.pt_MplWidget.setObjectName(u"pt_MplWidget")
         self.pt_MplWidget.setGeometry(QRect(2, 40, 537, 378))
 
-        ##Active image inside Image group box setup
-        # self.pt_lblViewImage = QLabel(self.pt_gbxImage)
-        # self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
-        # self.pt_lblViewImage.setCursor(QCursor(Qt.CrossCursor))
-        # self.pt_lblViewImage.mousePressEvent = self.getPos
-        # self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/holder.jpg"))
-        # self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
-        # self.pt_lblViewImage.setScaledContents(True)
-
         ## Slider in Image group box setup
         self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
         self.pt_horizontalSlider.setObjectName(u"pt_horizontalSlider")
@@ -146,9 +137,10 @@ class PT_Tab():
         self.pt_btnSave.setGeometry(QRect(610, 80, 121, 51))
         self.pt_btnSave.clicked.connect(self.on_save_click)
 
-        ##Progress bar
-        # self.pt_progressBar = ProgressBar()
-        # self.pt_progressBar.hide()
+        ## Progress Label
+        self.pt_lblProgress = QLabel(self.pt_gbxToolbox)
+        self.pt_lblProgress.setObjectName(u"pt_lblProgress")
+        self.pt_lblProgress.setGeometry(QRect(20, 100, 390, 21))
 
         self.pt_cmbType.setCurrentIndex(0)
 
@@ -175,6 +167,8 @@ class PT_Tab():
         self.pt_btnSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabPotTrayAnalysis),
                                   QCoreApplication.translate("MainWindow", u"Pot Tray Analysis", None))
+        self.pt_lblProgress.setText(
+            QCoreApplication.translate("MainWindow", u"Progress: ", None))
 
     def build_pos_array(self, array):
         self.pt_lstPlots.clear()
@@ -231,13 +225,18 @@ class PT_Tab():
 
         self.pt_MplWidget.canvas.draw()
         self.pt_progressBar.setValue(100)
+        self.pt_lblProgress.setText(
+            QCoreApplication.translate("MainWindow", u"Progress: Mask Extraction Complete Successfully - Now Get Traits", None))
         self.pt_cmbType.setEnabled(True)
         self.pt_cmbType.setCurrentIndex(3)
 
     def slider_selected(self, index):
         updateImage(self, index, self.active_list)
         self.pt_lstPlots.clear()
-        self.build_pos_array(self.subject_center_list[index])
+        if len(self.subject_center_list) > 0:
+            self.build_pos_array(self.subject_center_list[index])
+        else:
+            print("No Center Found - Extract Masks")
 
     def on_dropdown_clicked(self):
         if self.pt_cmbType.currentIndex() == 0:
@@ -265,6 +264,9 @@ class PT_Tab():
             traits_log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
                 self.detected_plants_list)
         self.pt_progressBar.setValue(100)
+        self.pt_lblProgress.setText(
+            QCoreApplication.translate("MainWindow",
+                                       u"Progress: Traits Successfully Extracted", None))
         self.pt_cmbType.setCurrentIndex(1)
 
     #displays error message

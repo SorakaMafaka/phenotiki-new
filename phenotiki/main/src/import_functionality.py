@@ -41,7 +41,5 @@ def print_image_files(self):
         full_path = path + "/" + file
         name = "/" + file
         names[file] = full_path
-        # paths.append(names[file])
-    # print(paths)
-    # print(names.items())
+
     return names
