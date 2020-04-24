@@ -117,8 +117,11 @@ class Ui_MainWindow(object):
         # Main Text of the About Page
         # Read Changelog in Hyperlink colour as well as "Freepik" "Plainicon" "www.flaticon.com"
         msg.setInformativeText(
-            'Current Version 1.2 \n \nRead CHANGELOG\n  \nM.Minervini[1], M.V.Giuffrida[1], S,Tsaftaris[2] '
+            'Current Version 1.2 \n \nRead CHANGELOG\n  \nAuthor(s): M.Minervini[1], M.V.Giuffrida[1], S,Tsaftaris[2] '
             '\nIMT Advanced Studies of Lucca[1] \nUniversity of Edinburgh[2] \n '
+            '\n Converted from "Phenotiki - True phenotyping-in-a-box solution"\n'
+            '\n by Steven Dixon, Milena Bromm, Mateusz Glowacki as part of "Make Phenotiki Great Again" Edinburgh Napier University Group Project\n'
+            '\n UI conversion by Steven Dixon, Maciej Garbowski, Ross Macleod and Lech Psztyk\n'
             '\nSoftware License reported in the user\'s manual. \n \nIcons made by Freepik, Plainicon'
             'from www.flaticon.com is licensed by CC BY 3.0')
         # Add Authors University Logos
