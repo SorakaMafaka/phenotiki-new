@@ -10,9 +10,9 @@ from phenotiki.main.gui.ui_mainwindow import Ui_MainWindow
 #   Original "Phenotiki - True phenotyping-in-a-box solution"
 #   by M. Minervini and M.V. Giuffrida from IMT Advanced Studies of Lucca, S. Tsaftaris from University of Edinburgh
 #
-#   Contact:   massimo.minervini@imtlucca.it
+#
 #   Version:   1.0
-#   Date:      22/04/2020
+#   Date:      24/04/2020
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
