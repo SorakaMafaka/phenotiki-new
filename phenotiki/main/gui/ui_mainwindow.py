@@ -9,6 +9,15 @@ from phenotiki.main.src.import_functionality import *
 from phenotiki.plugin.leafannotation.gui.LA_Tab import LA_Tab
 from phenotiki.plugin.tray.gui.PT_Tab import PT_Tab
 
+#Author(s):
+#   Converted from "Phenotiki - True phenotyping-in-a-box solution"
+#   by Steven Dixon, Milena Bromm, Mateusz Glowacki
+#   Original "Phenotiki - True phenotyping-in-a-box solution"
+#   by M. Minervini and M.V. Giuffrida from IMT Advanced Studies of Lucca, S. Tsaftaris from University of Edinburgh
+#
+#
+#   Version:   1.0
+#   Date:      24/04/2020
 
 class Ui_MainWindow(object):
 
