@@ -101,6 +101,7 @@ class Ui_MainWindow(object):
         self.LeafCountingTab = LC_Tab(self.tabWidget)
         self.DataExtractionTab = DE_Tab(self.tabWidget)
 
+
         # Finish Building Main UI
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
@@ -121,7 +122,7 @@ class Ui_MainWindow(object):
             '\nSoftware License reported in the user\'s manual. \n \nIcons made by Freepik, Plainicon'
             'from www.flaticon.com is licensed by CC BY 3.0')
         # Add Authors University Logos
-        msg.setIconPixmap(QPixmap(u"../gui/img/Test.PNG"))
+        msg.setIconPixmap(QPixmap(u"../gui/img/unis.PNG"))
 
         x = msg.exec_()
 
