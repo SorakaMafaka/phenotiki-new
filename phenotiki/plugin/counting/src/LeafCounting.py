@@ -53,7 +53,7 @@ class LeafCounting:
                                  'Fields' : 'ProjectedLeafArea',
                                  'TimeFeature' : ''}  # unix - delta
 
-    ## Matts function
+    #
     def leafCounting(self,Dataset,Name):
         Dataset = self.Dataset
         if 'Name' in locals():

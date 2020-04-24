@@ -13,7 +13,7 @@ from PyQt5.QtCore import Qt
 #   Date:      24/04/2020
 
 class ProgressBar(QMainWindow):
-
+#work in progress, made for leave counting
     def __init__(self):
         super().__init__()
 
@@ -32,7 +32,6 @@ class ProgressBar(QMainWindow):
 
     def progressUpdate(self, progressValue, info):
         self.pbar.setValue(progressValue)
-       # self.pbar.show()
         self.label.setText(str(progressValue))
 
 

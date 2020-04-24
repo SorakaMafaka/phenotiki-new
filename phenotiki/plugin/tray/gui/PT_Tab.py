@@ -7,10 +7,11 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from phenotiki.main.src.import_functionality import print_image_files
+from phenotiki.main.src.import_functionality import print_image_files, save_data
 # from phenotiki.plugin.counting.gui.ProgressBar import ProgressBar
 from phenotiki.plugin.tray.gui.mplwidget import MplWidget
 from phenotiki.plugin.tray.src.pt_src import *
+from phenotiki.plugin.tray.src.contour import contour
 import json
 
 #Author(s):
@@ -26,11 +27,19 @@ import json
 class PT_Tab():
     def __init__(self, tab):
 
-        ## Tab setup
+        ## Tab setup and variables
         self.img_plots_array = []
         self.img_file_list_array = []
         self.fg_mask_list = []
         self.raw_image_list = []
+        self.detected_plants_list = []
+        self.contour_list = []
+        self.plant_dict = {}
+        self.total_subjects = []
+        self.sequences = []
+        self.subject_center_list = []
+        self.number = 0
+        self.path_list = []
         self.active_list = self.raw_image_list
         self.tabsystem = tab
         self.tabsystem.setFont(QFont("Helvetica", 12))
@@ -70,15 +79,6 @@ class PT_Tab():
         self.pt_MplWidget = MplWidget(self.pt_gbxImage)
         self.pt_MplWidget.setObjectName(u"pt_MplWidget")
         self.pt_MplWidget.setGeometry(QRect(2, 40, 537, 378))
-
-        ##Active image inside Image group box setup
-        # self.pt_lblViewImage = QLabel(self.pt_gbxImage)
-        # self.pt_lblViewImage.setObjectName(u"pt_lblViewImage")
-        # self.pt_lblViewImage.setCursor(QCursor(Qt.CrossCursor))
-        # self.pt_lblViewImage.mousePressEvent = self.getPos
-        # self.pt_lblViewImage.setPixmap(QPixmap(u"../gui/img/holder.jpg"))
-        # self.pt_lblViewImage.setGeometry(QRect(2, 40, 537, 378))
-        # self.pt_lblViewImage.setScaledContents(True)
 
         ## Slider in Image group box setup
         self.pt_horizontalSlider = QSlider(self.pt_gbxImage)
@@ -124,13 +124,14 @@ class PT_Tab():
         self.pt_btnSettings = QPushButton(self.pt_gbxToolbox)
         self.pt_btnSettings.setObjectName(u"pt_btnSettings")
         self.pt_btnSettings.setEnabled(False)
-        self.pt_btnSettings.setGeometry(QRect(480, 20, 121, 51))
+        self.pt_btnSettings.setGeometry(QRect(610, 20, 121, 51))
 
         ## Mask Button
         self.pt_btnMask = QPushButton(self.pt_gbxToolbox)
         self.pt_btnMask.setObjectName(u"pt_btnMask")
         self.pt_btnMask.setEnabled(False)
-        self.pt_btnMask.setGeometry(QRect(610, 20, 121, 51))
+        self.pt_btnMask.setGeometry(QRect(480, 20, 121, 51))
+
         self.pt_btnMask.clicked.connect(self.on_mask_click)
 
         ##Task Button
@@ -138,16 +139,19 @@ class PT_Tab():
         self.pt_btnTraits.setObjectName(u"pt_btnTraits")
         self.pt_btnTraits.setEnabled(False)
         self.pt_btnTraits.setGeometry(QRect(480, 80, 121, 51))
+        self.pt_btnTraits.clicked.connect(self.on_traits_click)
 
         ## Save Button
         self.pt_btnSave = QPushButton(self.pt_gbxToolbox)
         self.pt_btnSave.setObjectName(u"pt_btnSave")
         self.pt_btnSave.setEnabled(False)
         self.pt_btnSave.setGeometry(QRect(610, 80, 121, 51))
+        self.pt_btnSave.clicked.connect(self.on_save_click)
 
-        ##Progress bar
-        # self.pt_progressBar = ProgressBar()
-        # self.pt_progressBar.hide()
+        ## Progress Label
+        self.pt_lblProgress = QLabel(self.pt_gbxToolbox)
+        self.pt_lblProgress.setObjectName(u"pt_lblProgress")
+        self.pt_lblProgress.setGeometry(QRect(20, 100, 390, 21))
 
         self.pt_cmbType.setCurrentIndex(0)
 
@@ -174,23 +178,19 @@ class PT_Tab():
         self.pt_btnSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabPotTrayAnalysis),
                                   QCoreApplication.translate("MainWindow", u"Pot Tray Analysis", None))
+        self.pt_lblProgress.setText(
+            QCoreApplication.translate("MainWindow", u"Progress: ", None))
 
+    # Builds an array of center points and adds them to the list
     def build_pos_array(self, array):
         self.pt_lstPlots.clear()
-        print(array)
         for coords in array:
             self.pt_lstPlots.addItem(str(coords))
 
-    ##Gets coordinates of a click within Image and puts them inside image plots array
-    # def getPos(self, event):
-    #     x = event.pos().x()
-    #     y = event.pos().y()
-    #     self.build_pos_array(self.img_plots_array, x, y)
-
-    ## Function performed when import button is clicked
+    # Function performed when import button is clicked
     def on_import_click(self):
         self.img_file_list_array.clear()
-        self.img_dict = print_image_files(self)
+        self.img_dict = print_image_files(self, self.path_list)
         for i in self.img_dict.values():
             self.img_file_list_array.append(i)
             self.raw_image_list.append(plt.imread(i))
@@ -198,22 +198,12 @@ class PT_Tab():
         self.pt_lstFileList.addItems(self.img_dict.keys())
         self.pt_btnMask.setEnabled(True)
         self.pt_btnSave.setEnabled(True)
-        self.pt_btnSettings.setEnabled(True)
+        # self.pt_btnSettings.setEnabled(True)
         self.pt_btnTraits.setEnabled(True)
-        self.pt_cmbType.setEnabled(True)
+        self.pt_cmbType.setEnabled(False)
 
         if len(self.img_file_list_array) > 0:
             img = plt.imread(self.img_file_list_array[0])
-
-            # for i in self.img_file_list_array:
-            #     self.raw_image_list.append(plt.imread(self.img_file_list_array[i]))
-            #
-            # print(self.raw_image_list)
-            #print(img)
-            #raw_image = sk.img_as_float64(img)
-            #print(raw_image)
-            #self.raw_image_list.append(img)
-            #print(self.raw_image_list)
 
             self.pt_MplWidget.canvas.axes.clear()
             self.pt_MplWidget.canvas.axes.imshow(img)
@@ -223,43 +213,81 @@ class PT_Tab():
             self.pt_horizontalSlider.setMaximum(len(self.img_file_list_array) - 1)
             self.pt_horizontalSlider.setEnabled(True)
 
-            points = self.pt_MplWidget.canvas.figure.ginput(n=24)
-            self.build_pos_array(points)
-            # print(points)
+            # get coords of mouse click in original image
+            # Currently nothing is done with points
+            #points = self.pt_MplWidget.canvas.figure.ginput(n=24)
+            #self.build_pos_array(points)
 
     # Function performed when treeview button is clicked
     def on_treeView_clicked(self):
         i = self.pt_lstFileList.currentRow()
-        # print(self.img_file_list_array.index(i))
-        # print(i)
         updateImage(self, i, self.active_list)
 
+    # Function to run when Extract Mask button is clicked
     def on_mask_click(self):
-        plant_dict = {}
-        total_subjects = []
-        sequences = []
-        number = 0
-
         for i in self.img_dict.keys():
-            number +=1
-            log(self, i, str(i), plant_dict, total_subjects, sequences, self.fg_mask_list)
+            self.number += 1
+            self.fg_mask_list.append(fg_mask(i))
+            contour(i, self.contour_list)
+            log(self, i, self.detected_plants_list, self.subject_center_list)
+            self.build_pos_array(self.subject_center_list[0])
 
         self.pt_MplWidget.canvas.draw()
-        print(plant_dict['NumberOfSubjects'])
+        self.pt_progressBar.setValue(100)
+        self.pt_lblProgress.setText(
+            QCoreApplication.translate("MainWindow",
+                                       u"Progress: Mask Extraction Complete Successfully - Now Get Traits", None))
+        self.pt_cmbType.setEnabled(True)
+        self.pt_cmbType.setCurrentIndex(1)
 
-        with open('json_data.json', 'w') as outfile:
-            json.dump(plant_dict, outfile, indent=4)
-
+    # Function to run when slider is selected
     def slider_selected(self, index):
         updateImage(self, index, self.active_list)
+        self.pt_lstPlots.clear()
+        if len(self.subject_center_list) > 0:
+            self.build_pos_array(self.subject_center_list[index])
+        else:
+            print("No Center Found - Extract Masks")
 
-
+    # Function to run when drop down menu is changed
     def on_dropdown_clicked(self):
         if self.pt_cmbType.currentIndex() == 0:
             self.active_list = self.raw_image_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
         elif self.pt_cmbType.currentIndex() == 1:
-            print("detected")
+            self.active_list = self.detected_plants_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
         elif self.pt_cmbType.currentIndex() == 2:
-            print("contour")
+            self.active_list = self.contour_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
         elif self.pt_cmbType.currentIndex() == 3:
             self.active_list = self.fg_mask_list
+            index = self.pt_horizontalSlider.value()
+            updateImage(self, index, self.active_list)
+
+    # Function to run when save button is clicked
+    def on_save_click(self):
+        save_data(self, self.plant_dict)
+
+    # Function to run when Extract Traits button is clicked
+    def on_traits_click(self):
+        for i in self.img_dict.keys():
+            traits_log(self, i, str(i), self.plant_dict, self.total_subjects, self.sequences, self.fg_mask_list,
+                       self.detected_plants_list, self.path_list)
+        self.pt_progressBar.setValue(100)
+        self.pt_lblProgress.setText(
+            QCoreApplication.translate("MainWindow",
+                                       u"Progress: Traits Successfully Extracted", None))
+        self.pt_cmbType.setCurrentIndex(1)
+
+    # displays error message
+    def show_errormsg(self, text):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setText(text)
+        msgBox.setWindowTitle("Error")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec()

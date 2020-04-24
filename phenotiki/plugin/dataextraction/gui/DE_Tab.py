@@ -1,4 +1,4 @@
-# seperate file to remove data extraction from main UI file.
+
 from PySide2.QtCore import QRect, QCoreApplication
 
 from phenotiki.plugin.dataextraction.gui.mplwidget import MplWidget
@@ -165,33 +165,44 @@ class DE_Tab():
         self.tabsystem.setTabText(self.tabsystem.indexOf(self.tabDataExtraction),
                                   QCoreApplication.translate("MainWindow", u"Data Extraction", None))
 
+
+    #called by load button
     def load_Dataset(self):
         self.DataFunct.loadDataset(self)
+        if not self.DataFunct.fileOpened:
+              self.show_errormsg("Selected Dataset could not be accessed")
 
+    #called if tree item was selected
     def on_Choice(self):
         select = self.de_wgtPhenoData.currentItem().text()
         self.DataFunct.plot_graph(self, select)
 
+    #saves current plot as png
     def save_plot(self):
         w = QWidget()
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*png'))
         if path[0] != "":
             self.de_MplWidget.canvas.figure.savefig(path[0])
         else:
-            self.show_errormsg()
+            self.show_errormsg("document could not be saved")
 
+    #updates the from values
     def update_from(self, index):
         self.DataFunct.UpdateFrom(self, index)
 
+    #updates the to values
     def update_to(self, index):
         self.DataFunct.UpdateTo(self, index)
 
+    #updates the show button and the plot accordingly
     def update_show(self, index):
         self.DataFunct.UpdateShow(self, index)
 
+    #called when group or subject number is selected
     def update_select(self, index):
         self.DataFunct.UpdateSpecify(self, index)
 
+    #saves data from dataset to csv file
     def save_data(self):
         w = QWidget()
         path = (QFileDialog.getSaveFileName(w, 'Save as', "", '*.csv'))
@@ -205,12 +216,13 @@ class DE_Tab():
 
             msgBox.exec()
         else:
-            self.show_errormsg()
+            self.show_errormsg("document could not be saved")
 
-    def show_errormsg(self):
+    #displays error message
+    def show_errormsg(self, text):
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Warning)
-        msgBox.setText("document could not be saved")
+        msgBox.setText(text)
         msgBox.setWindowTitle("Error")
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec()
