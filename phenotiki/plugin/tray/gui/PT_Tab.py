@@ -193,6 +193,7 @@ class PT_Tab():
         self.pt_btnTraits.setEnabled(True)
         self.pt_cmbType.setEnabled(False)
 
+        # If the array has values, display on the canvas
         if len(self.img_file_list_array) > 0:
             img = plt.imread(self.img_file_list_array[0])
 
