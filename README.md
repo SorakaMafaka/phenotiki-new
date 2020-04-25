@@ -17,3 +17,14 @@ You need the following addons for it work:
 - scikit-image 0.16.2
 - scipy 1.4.1
 - shiboken2 5.14.1
+
+TO Start in pycharm:
+
+select file main.py in Main -> src and select run
+
+in settings set up project interpreter to python 3.7
+
+In case of errors > click on last error a file will open with error underlined
+
+doubleclick the error and install missing library
+
