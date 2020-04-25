@@ -17,6 +17,8 @@ You need the following addons for it work:
 - scikit-image 0.16.2
 - scipy 1.4.1
 - shiboken2 5.14.1
+- pymatreader 0.0.2.1
+- imutils 0.5.3
 
 TO Start in pycharm:
 
