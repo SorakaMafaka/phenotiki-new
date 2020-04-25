@@ -1,6 +1,6 @@
 # Phenotiki
 Make sure you have Python 3.8.2 installed before running the code.
-You need the following addons for it work:
+You need the following addons for it work by 'pip3 install -r requirements.txt' on the "requirements.txt" file.
 
 - Pillow 7.0.0
 - PyQt5 5.14.1
